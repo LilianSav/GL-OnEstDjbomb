@@ -33,10 +33,13 @@ Thumbs.db
 *.iws
 *.iml
 
-## Gradle
+# Gradle
 /local.properties
 .gradle/
 gradle-app.setting
 /build/
 /core/build/
 /desktop/build/
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
