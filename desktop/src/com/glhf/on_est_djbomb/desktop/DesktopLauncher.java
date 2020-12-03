@@ -1,12 +1,17 @@
 package com.glhf.on_est_djbomb.desktop;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new OnEstDjbombGame(), config);
+		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+
+		config.setTitle("On Est Djbomb");
+		config.setWindowedMode(800, 600);
+		config.setResizable(false);
+
+		new Lwjgl3Application(new OnEstDjbombGame(), config);
 	}
 }
