@@ -9,19 +9,21 @@ public class OnEstDjbombGame extends Game {
     public SpriteBatch batch;
 
     public void create() {
+        // Instanciation du batch
         batch = new SpriteBatch();
-
+        // Lancement du menu principal
         this.setScreen(new MainMenuScreen(this));
     }
 
     public void render() {
-        // "super" is important here
         super.render();
     }
 
     public void dispose() {
+        // Libère manuellement le batch
         batch.dispose();
 
+        // Libère l'écran actif
         this.getScreen().dispose();
     }
 }

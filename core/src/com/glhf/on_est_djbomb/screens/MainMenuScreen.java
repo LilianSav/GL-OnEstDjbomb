@@ -4,61 +4,89 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 
 public class MainMenuScreen implements Screen {
-    final OnEstDjbombGame game;
+    private final OnEstDjbombGame game;
     private final Skin skin;
     private final Stage stage;
 
     public MainMenuScreen(final OnEstDjbombGame game_) {
-        // Game
+        // On récupère la référence de notre objet OnEstDjbombGame
         game = game_;
 
-        // Skin
+        // Instanciation du skin
         skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
 
-        // Stage
+        // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
+        // Liaison des Inputs sur le stage
         Gdx.input.setInputProcessor(stage);
 
-        // Table
+        // Instanciation d'une table pour contenir nos acteurs
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
 
-        //Begin layout
+        // On organise le layout
+        // Affichage du titre
         root.add(new Label("Guzny", skin)).expandY();
         root.row();
 
-        // Boutons
-        root.add(new TextButton("Nouvelle partie", skin)).expandY();
-        root.row();
-        root.add(new TextButton("Options", skin)).expandY();
-        root.row();
-        root.add(new TextButton("Informations", skin)).expandY();
-
-        // Boutton "Quitter"
-        root.row();
+        // Création des boutons
+        TextButton newGameButton = new TextButton("Nouvelle partie", skin);
+        TextButton optionsButton = new TextButton("Options", skin);
+        TextButton informationsButton = new TextButton("Informations", skin);
         TextButton quitButton = new TextButton("Quitter", skin);
-        quitButton.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
 
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+        // Ajout des boutons à la Table
+        root.add(newGameButton).expandY();
+        root.row();
+        root.add(optionsButton).expandY();
+        root.row();
+        root.add(informationsButton).expandY();
+        root.row();
+        root.add(quitButton).expandY();
+
+        // Création des dialogues
+        final Dialog optionsDialog = newOptionsDialog();
+
+        // Gestionnaire d'évènements
+        newGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Screen nouvelle partie
+                new Dialog("Nouvelle partie", skin).button("Retour").show(stage);
+            }
+        });
+
+        optionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Affichage du dialogue d'options
+                optionsDialog.show(stage);
+            }
+        });
+
+        informationsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Affichage du dialogue d'informations
+                new Dialog("Informations", skin).button("Retour").show(stage);
+            }
+        });
+
+        quitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Quitte l'application
                 Gdx.app.exit();
             }
         });
-        root.add(quitButton).expandY();
-
     }
 
     @Override
@@ -70,6 +98,12 @@ public class MainMenuScreen implements Screen {
         // Stage - act and draw
         stage.act();
         stage.draw();
+    }
+
+    @Override
+    public void dispose() {
+        skin.dispose();
+        stage.dispose();
     }
 
     @Override
@@ -92,9 +126,30 @@ public class MainMenuScreen implements Screen {
     public void resume() {
     }
 
-    @Override
-    public void dispose() {
-        skin.dispose();
-        stage.dispose();
+    private Dialog newOptionsDialog() {
+        return new Dialog("Options", skin) {
+            {
+                // Section Content
+                text("Options");
+                getContentTable().row();
+                getContentTable().add(new Label("Musique : ", skin));
+                getContentTable().add(new Slider(0f, 100, 1f, false, skin));
+                getContentTable().row();
+                getContentTable().add(new Label("Effets sonores : ", skin));
+                getContentTable().add(new Slider(0f, 100, 1f, false, skin));
+                getContentTable().row();
+                getContentTable().add(new Label("Chat vocal : ", skin));
+                getContentTable().add(new Slider(0f, 100, 1f, false, skin));
+
+                // Section button
+                button("Cancel");
+                button("Apply");
+            }
+
+            @Override
+            protected void result(Object object) {
+                super.result(object);
+            }
+        };
     }
 }
