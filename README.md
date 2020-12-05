@@ -11,6 +11,12 @@ L'application On est Djbomb est un Escape Game coopératif
 * Gradle (6.7)
 * libGDX
 
-# Compilation
-
 # Exécution
+Pour compiler et exécuter le projet sous Windows, il faut réaliser la commande suivante à la racine du projet :
+```
+gradlew desktop:run
+```
+Ou la commande suivante sous Unix :
+```
+./gradlew desktop:run
+```

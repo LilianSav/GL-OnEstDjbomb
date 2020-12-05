@@ -9,22 +9,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
+import com.glhf.on_est_djbomb.dialogs.*;
 
 public class MainMenuScreen implements Screen {
-    private final OnEstDjbombGame game;
-    private final Skin skin;
     private final Stage stage;
 
-    public MainMenuScreen(final OnEstDjbombGame game_) {
-        // On récupère la référence de notre objet OnEstDjbombGame
-        game = game_;
-
-        // Instanciation du skin
-        skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
-
+    public MainMenuScreen(final OnEstDjbombGame game) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
-        // Liaison des Inputs sur le stage
+
+        // Liaison des Inputs au stage
         Gdx.input.setInputProcessor(stage);
 
         // Instanciation d'une table pour contenir nos acteurs
@@ -32,18 +26,18 @@ public class MainMenuScreen implements Screen {
         root.setFillParent(true);
         stage.addActor(root);
 
-        // On organise le layout
-        // Affichage du titre
-        root.add(new Label("Guzny", skin)).expandY();
-        root.row();
+        // Création des labels
+        Label labelTitre = new Label("Guzny", game.skin);
 
         // Création des boutons
-        TextButton newGameButton = new TextButton("Nouvelle partie", skin);
-        TextButton optionsButton = new TextButton("Options", skin);
-        TextButton informationsButton = new TextButton("Informations", skin);
-        TextButton quitButton = new TextButton("Quitter", skin);
+        TextButton newGameButton = new TextButton("Nouvelle partie", game.skin);
+        TextButton optionsButton = new TextButton("Options", game.skin);
+        TextButton informationsButton = new TextButton("Informations", game.skin);
+        TextButton quitButton = new TextButton("Quitter", game.skin);
 
-        // Ajout des boutons à la Table
+        // Ajout des acteurs à la Table
+        root.add(labelTitre).expandY();
+        root.row();
         root.add(newGameButton).expandY();
         root.row();
         root.add(optionsButton).expandY();
@@ -53,14 +47,19 @@ public class MainMenuScreen implements Screen {
         root.add(quitButton).expandY();
 
         // Création des dialogues
-        final Dialog optionsDialog = newOptionsDialog();
+        final OptionsDialog optionsDialog = new OptionsDialog("Options", game.skin);
+        optionsDialog.initContent();
+        final InformationsDialog informationsDialog = new InformationsDialog("Informations", game.skin);
+        informationsDialog.initContent();
+        final NewGameDialog newGameDialog = new NewGameDialog("Nouvelle partie", game);
+        newGameDialog.initContent();
 
-        // Gestionnaire d'évènements
+        // Gestionnaire d'évènements des bouttons
         newGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Screen nouvelle partie
-                new Dialog("Nouvelle partie", skin).button("Retour").show(stage);
+                // Affichage du dialogue pour une nouvelle partie
+                newGameDialog.show(stage);
             }
         });
 
@@ -76,7 +75,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Affichage du dialogue d'informations
-                new Dialog("Informations", skin).button("Retour").show(stage);
+                informationsDialog.show(stage);
             }
         });
 
@@ -95,14 +94,13 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
-        // Stage - act and draw
+        // Stage - act et draw
         stage.act();
         stage.draw();
     }
 
     @Override
     public void dispose() {
-        skin.dispose();
         stage.dispose();
     }
 
@@ -124,32 +122,5 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void resume() {
-    }
-
-    private Dialog newOptionsDialog() {
-        return new Dialog("Options", skin) {
-            {
-                // Section Content
-                text("Options");
-                getContentTable().row();
-                getContentTable().add(new Label("Musique : ", skin));
-                getContentTable().add(new Slider(0f, 100, 1f, false, skin));
-                getContentTable().row();
-                getContentTable().add(new Label("Effets sonores : ", skin));
-                getContentTable().add(new Slider(0f, 100, 1f, false, skin));
-                getContentTable().row();
-                getContentTable().add(new Label("Chat vocal : ", skin));
-                getContentTable().add(new Slider(0f, 100, 1f, false, skin));
-
-                // Section button
-                button("Cancel");
-                button("Apply");
-            }
-
-            @Override
-            protected void result(Object object) {
-                super.result(object);
-            }
-        };
     }
 }
