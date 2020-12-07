@@ -32,6 +32,6 @@ public class OptionsDialog extends Dialog {
 
     @Override
     protected void result(Object object) {
-        System.out.println(object);
+
     }
 }

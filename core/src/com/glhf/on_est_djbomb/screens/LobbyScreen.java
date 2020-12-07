@@ -16,7 +16,6 @@ public class LobbyScreen implements Screen {
     private final Stage stage;
 
     public LobbyScreen(final OnEstDjbombGame game) {
-        System.out.println("Loading ...");
         // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
 

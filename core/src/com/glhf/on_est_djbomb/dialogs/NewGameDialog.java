@@ -26,13 +26,9 @@ public class NewGameDialog extends Dialog {
     @Override
     protected void result(Object object) {
         if (object.equals(1L)) {
-            System.out.println("1");
-            System.out.println("Changing screen !");
             game.switchScreen(new LobbyScreen(game));
         } else if (object.equals(2L)) {
-            System.out.println("2");
+            new Dialog("Partie à rejoindre", game.skin);
         }
-
-        // game.switchScreen(new MainMenuScreen(game));
     }
 }
