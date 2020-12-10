@@ -9,6 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.glhf.on_est_djbomb.screens.MainMenuScreen;
 
 public class OnEstDjbombGame extends Game {
+    public static final int GAME_WIDTH = 960;
+    public static final int GAME_HEIGHT = 540;
+
     public SpriteBatch batch;
     public Skin skin;
 

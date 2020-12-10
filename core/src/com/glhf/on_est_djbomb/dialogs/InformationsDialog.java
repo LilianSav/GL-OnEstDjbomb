@@ -1,12 +1,9 @@
 package com.glhf.on_est_djbomb.dialogs;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 
 public class InformationsDialog extends Dialog {
-    private Skin skin;
+    private final Skin skin;
     public InformationsDialog(String title, Skin skin) {
         super(title, skin);
         this.skin = skin;
@@ -14,9 +11,10 @@ public class InformationsDialog extends Dialog {
 
     public void initContent(){
         // Section Content
-        text("Informations");
-        getContentTable().row();
-        getContentTable().add(new Label("Quelques Informations ...", skin));
+        Table informationsContentTable = getContentTable();
+
+        informationsContentTable.add(new Label("Informations sur l'application", skin));
+        informationsContentTable.row();
 
         // Section button
         button("Retour");

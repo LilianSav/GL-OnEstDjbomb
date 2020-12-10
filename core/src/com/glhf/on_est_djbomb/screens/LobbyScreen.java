@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
+import com.glhf.on_est_djbomb.networking.GameSocket;
 
 public class LobbyScreen implements Screen {
     private final Stage stage;
@@ -18,7 +19,6 @@ public class LobbyScreen implements Screen {
     public LobbyScreen(final OnEstDjbombGame game) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
-
         // Liaison des Inputs au stage
         Gdx.input.setInputProcessor(stage);
 
@@ -46,6 +46,9 @@ public class LobbyScreen implements Screen {
                 game.switchScreen(new MainMenuScreen(game));
             }
         });
+
+        // Gestion Socket
+
     }
 
     @Override
@@ -71,7 +74,6 @@ public class LobbyScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override

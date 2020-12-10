@@ -9,7 +9,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 
 		config.setTitle("On Est Djbomb");
-		config.setWindowedMode(960, 540);
+		config.setWindowedMode(OnEstDjbombGame.GAME_WIDTH, OnEstDjbombGame.GAME_HEIGHT);
 		config.setResizable(false);
 
 		new Lwjgl3Application(new OnEstDjbombGame(), config);

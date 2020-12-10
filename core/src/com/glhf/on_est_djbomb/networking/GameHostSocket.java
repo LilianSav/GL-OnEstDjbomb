@@ -24,8 +24,8 @@ public class GameHostSocket extends GameSocket {
         return server.getLocalPort();
     }
 
-    public void dispose() {
-        super.dispose();
+    public void close() {
+        super.close();
         try {
             server.close();
         } catch (IOException e) {

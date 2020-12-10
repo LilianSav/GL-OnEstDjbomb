@@ -11,7 +11,7 @@ public abstract class GameSocket {
     protected Socket connexion;
 
     // Reception d'une chaîne de caractères
-    public String receiveString() {
+    public String receiveMessage() {
         String message = "";
         try {
             message = (String) input.readObject();
@@ -22,7 +22,7 @@ public abstract class GameSocket {
     }
 
     // Envoie d'une chaîne de caractères
-    public void sendString(String message) {
+    public void sendMessage(String message) {
         try {
             output.writeObject(message);
             output.flush();
@@ -31,7 +31,7 @@ public abstract class GameSocket {
         }
     }
 
-    public void dispose() {
+    public void close() {
         try {
             output.close();
             input.close();

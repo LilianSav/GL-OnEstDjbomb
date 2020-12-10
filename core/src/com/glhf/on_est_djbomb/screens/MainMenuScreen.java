@@ -17,7 +17,6 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(final OnEstDjbombGame game) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
-
         // Liaison des Inputs au stage
         Gdx.input.setInputProcessor(stage);
 
@@ -51,7 +50,7 @@ public class MainMenuScreen implements Screen {
         optionsDialog.initContent();
         final InformationsDialog informationsDialog = new InformationsDialog("Informations", game.skin);
         informationsDialog.initContent();
-        final NewGameDialog newGameDialog = new NewGameDialog("Nouvelle partie", game);
+        final NewGameDialog newGameDialog = new NewGameDialog("Nouvelle partie", game, stage);
         newGameDialog.initContent();
 
         // Gestionnaire d'évènements des bouttons

@@ -1,12 +1,9 @@
 package com.glhf.on_est_djbomb.dialogs;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 
 public class OptionsDialog extends Dialog {
-    private Skin skin;
+    private final Skin skin;
     public OptionsDialog(String title, Skin skin) {
         super(title, skin);
         this.skin = skin;
@@ -14,16 +11,18 @@ public class OptionsDialog extends Dialog {
 
     public void initContent(){
         // Section Content
-        text("Options");
-        getContentTable().row();
-        getContentTable().add(new Label("Musique : ", skin));
-        getContentTable().add(new Slider(0f, 100, 1f, false, skin));
-        getContentTable().row();
-        getContentTable().add(new Label("Effets sonores : ", skin));
-        getContentTable().add(new Slider(0f, 100, 1f, false, skin));
-        getContentTable().row();
-        getContentTable().add(new Label("Chat vocal : ", skin));
-        getContentTable().add(new Slider(0f, 100, 1f, false, skin));
+        Table informationsContentTable = getContentTable();
+
+        informationsContentTable.add(new Label("Options", skin));
+        informationsContentTable.row();
+        informationsContentTable.add(new Label("Musique : ", skin));
+        informationsContentTable.add(new Slider(0f, 100, 1f, false, skin));
+        informationsContentTable.row();
+        informationsContentTable.add(new Label("Effets sonores : ", skin));
+        informationsContentTable.add(new Slider(0f, 100, 1f, false, skin));
+        informationsContentTable.row();
+        informationsContentTable.add(new Label("Chat vocal : ", skin));
+        informationsContentTable.add(new Slider(0f, 100, 1f, false, skin));
 
         // Section button
         button("Cancel");
