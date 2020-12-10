@@ -6,38 +6,62 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public abstract class GameSocket {
-    protected ObjectOutputStream output;
-    protected ObjectInputStream input;
-    protected Socket connexion;
+    protected ObjectOutputStream outputText;
+    protected ObjectInputStream inputText;
+    protected Socket connexionText;
+    protected boolean isInitialized;
+    protected String identifiant;
+    protected String remoteIdentidiant;
 
-    // Reception d'une chaîne de caractères
+    public GameSocket(String identifiant){
+        this.isInitialized = false;
+        this.identifiant = identifiant;
+    }
+
+    // Réception d'une chaîne de caractères
     public String receiveMessage() {
-        String message = "";
+        String textMessage = "";
         try {
-            message = (String) input.readObject();
+            textMessage = (String) inputText.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return message;
+        return textMessage;
     }
 
     // Envoie d'une chaîne de caractères
-    public void sendMessage(String message) {
+    public void sendMessage(String textMessage) {
         try {
-            output.writeObject(message);
-            output.flush();
+            outputText.writeObject(textMessage);
+            outputText.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    // Fermeture des flux (Socket, InputStream et OutputStream)
     public void close() {
         try {
-            output.close();
-            input.close();
-            connexion.close();
+            // Si le socket s'est correctement initialisé
+            if(isInitialized){
+                // Fermeture Socket et Stream pour l'échange textuelle
+                outputText.close();
+                inputText.close();
+                connexionText.close();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public abstract String getInfoSocket();
+
+    public String getIdentifiant(){
+        return identifiant;
+    }
+
+    public String getRemoteIdentifiant(){
+        return remoteIdentidiant;
     }
 }

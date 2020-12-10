@@ -3,27 +3,43 @@ package com.glhf.on_est_djbomb.networking;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
 public class GameHostSocket extends GameSocket {
-    ServerSocket server;
+    public ServerSocket server;
 
-    public void init() {
+    public GameHostSocket(String identifiant) {
+        super(identifiant);
+
         try {
-            server = new ServerSocket(0);
-            connexion = server.accept();
-            output = new ObjectOutputStream(connexion.getOutputStream());
-            output.flush();
-            input = new ObjectInputStream(connexion.getInputStream());
+            server = new ServerSocket(0, 50, InetAddress.getLocalHost());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public int getPort() {
-        return server.getLocalPort();
+    public void init() {
+        try {
+            // Socket Text
+            connexionText = server.accept();
+            outputText = new ObjectOutputStream(connexionText.getOutputStream());
+            outputText.flush();
+            inputText = new ObjectInputStream(connexionText.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        sendMessage(identifiant);
+        new Thread( () -> {
+            remoteIdentidiant = receiveMessage();
+        }).start();
+
+        isInitialized = true;
     }
 
+    // Fermeture des flux
     public void close() {
         super.close();
         try {
@@ -31,5 +47,10 @@ public class GameHostSocket extends GameSocket {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getInfoSocket() {
+        return server.getInetAddress().getHostAddress() + ":" + server.getLocalPort();
     }
 }

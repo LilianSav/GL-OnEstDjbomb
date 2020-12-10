@@ -46,11 +46,11 @@ public class MainMenuScreen implements Screen {
         root.add(quitButton).expandY();
 
         // Création des dialogues
-        final OptionsDialog optionsDialog = new OptionsDialog("Options", game.skin);
+        OptionsDialog optionsDialog = new OptionsDialog("Options", game.skin);
         optionsDialog.initContent();
-        final InformationsDialog informationsDialog = new InformationsDialog("Informations", game.skin);
+        InformationsDialog informationsDialog = new InformationsDialog("Informations", game.skin);
         informationsDialog.initContent();
-        final NewGameDialog newGameDialog = new NewGameDialog("Nouvelle partie", game, stage);
+        NewGameDialog newGameDialog = new NewGameDialog("Nouvelle partie", game, stage);
         newGameDialog.initContent();
 
         // Gestionnaire d'évènements des bouttons

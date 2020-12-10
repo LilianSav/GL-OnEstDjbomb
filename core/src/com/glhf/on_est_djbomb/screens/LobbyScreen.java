@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
-import com.glhf.on_est_djbomb.networking.GameSocket;
 
 public class LobbyScreen implements Screen {
     private final Stage stage;
@@ -28,27 +27,41 @@ public class LobbyScreen implements Screen {
         stage.addActor(root);
 
         // Création des labels
-        Label labelTitre = new Label("Nouvelle partie", game.skin);
+        Label titreLabel = new Label("Lancement d'une partie", game.skin);
+        Label infoSocketLabel = new Label(game.getGameSocket().getInfoSocket(), game.skin);
 
         // Création des boutons
-        final TextButton retourButton = new TextButton("Retour", game.skin);
+        TextButton retourButton = new TextButton("Retour", game.skin);
+        TextButton commencerButton = new TextButton("Commencer", game.skin);
+        commencerButton.setDisabled(true);
+        TextButton pretButton = new TextButton("Pret", game.skin);
 
         // Ajout des acteurs à la Table
-        root.add(labelTitre).expandY();
+        root.add(titreLabel).expandY().expandX();
         root.row();
-        root.add(retourButton).expandY();
+        root.add(infoSocketLabel).expandY().expandX();
+        root.row();
+        root.add(retourButton).expandY().expandX();
+        root.add(pretButton).expandY().expandX();
+        root.add(commencerButton).expandY().expandX();
 
         // Gestionnaire d'évènements des bouttons
         retourButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Affichage du dialogue pour une nouvelle partie
+                // Fermeture des flux
+                game.getGameSocket().close();
+                // Changement d'écran pour revenir au menu principal
                 game.switchScreen(new MainMenuScreen(game));
             }
         });
-
-        // Gestion Socket
-
+        commencerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Changement d'écran pour revenir au menu principal
+                game.switchScreen(new GameScreen(game));
+            }
+        });
     }
 
     @Override
