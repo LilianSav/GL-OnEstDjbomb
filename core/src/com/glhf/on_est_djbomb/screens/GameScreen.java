@@ -8,12 +8,16 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 
 public class GameScreen implements Screen {
     private final Stage stage;
     private Texture enigmeImageTexture;
+    
+    private Label timerLabel;
+    int tpsRestant;
 
     public GameScreen(OnEstDjbombGame game) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
@@ -25,7 +29,7 @@ public class GameScreen implements Screen {
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
-
+        
         // Ajout d'une table pour l'énigme
         Table enigmeTable;
         if ( game.getGameSocket().getIdentifiant().equals("Host") ) {
@@ -55,7 +59,9 @@ public class GameScreen implements Screen {
 
         // Création interface utilisateur
         TextButton quitterButton = new TextButton("Quitter", game.skin);
-        Label timerLabel = new Label("30:00", game.skin);
+        tpsRestant=30;
+        timerLabel = new Label(tpsRestant+" sec", game.skin);
+        startTimer();
         TextButton indiceButton = new TextButton("Indice", game.skin);
         TextButton solutionButton = new TextButton("Solution", game.skin);
         TextField verificationTextField = new TextField("", game.skin);
@@ -195,6 +201,21 @@ public class GameScreen implements Screen {
         enigmeTableHost.add(enigmeImageWidget);
 
         return enigmeTableHost;
+    }
+    
+    private Timer.Task myTimerTask = new Timer.Task() {
+        @Override
+        public void run() {
+          tpsRestant--;
+          timerLabel.setText(tpsRestant+" sec");
+          if(tpsRestant==0) {
+        	  myTimerTask.cancel();
+          }
+        }
+    };
+
+    public void startTimer(){
+        Timer.schedule(myTimerTask, 1f, 1f);
     }
 
     @Override
