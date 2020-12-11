@@ -1,12 +1,23 @@
 package com.glhf.on_est_djbomb.dialogs;
 
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.glhf.on_est_djbomb.OnEstDjbombGame;
 
 public class OptionsDialog extends Dialog {
     private final Skin skin;
-    public OptionsDialog(String title, Skin skin) {
-        super(title, skin);
-        this.skin = skin;
+    private Music music;
+    private Slider sliderVolumeMusique;
+    private Slider sliderVolumeEffetSonore;
+    private Slider sliderVolumeChatVocal;
+    private Preferences prefs;
+    
+    public OptionsDialog(String title, OnEstDjbombGame game) {
+        super(title, game.skin);
+        this.skin = game.skin;
+        this.music=game.music;
+        this.prefs=game.prefs;
     }
 
     public void initContent(){
@@ -16,21 +27,42 @@ public class OptionsDialog extends Dialog {
         informationsContentTable.add(new Label("Options", skin));
         informationsContentTable.row();
         informationsContentTable.add(new Label("Musique : ", skin));
-        informationsContentTable.add(new Slider(0f, 100, 1f, false, skin));
+        Slider sliderVolumeMusique = new Slider(0f, 100, 1f, false, skin);
+        sliderVolumeMusique.setValue(prefs.getFloat("volumeMusique"));
+        informationsContentTable.add(sliderVolumeMusique);
         informationsContentTable.row();
         informationsContentTable.add(new Label("Effets sonores : ", skin));
-        informationsContentTable.add(new Slider(0f, 100, 1f, false, skin));
+        Slider sliderVolumeEffetSonore = new Slider(0f, 100, 1f, false, skin);
+        sliderVolumeEffetSonore.setValue(prefs.getFloat("volumeEffetSonore"));
+        informationsContentTable.add(sliderVolumeEffetSonore);
         informationsContentTable.row();
         informationsContentTable.add(new Label("Chat vocal : ", skin));
-        informationsContentTable.add(new Slider(0f, 100, 1f, false, skin));
-
+        Slider sliderVolumeChatVocal = new Slider(0f, 100, 1f, false, skin);
+        sliderVolumeChatVocal.setValue(prefs.getFloat("volumeChatVocal"));
+        informationsContentTable.add(sliderVolumeChatVocal);
+        
+        this.sliderVolumeMusique=sliderVolumeMusique;
+        this.sliderVolumeEffetSonore=sliderVolumeEffetSonore;
+        this.sliderVolumeChatVocal=sliderVolumeChatVocal;
+        
         // Section button
-        button("Cancel");
-        button("Apply");
+        button("Cancel",1L);
+        button("Apply",2L);
     }
 
     @Override
     protected void result(Object object) {
-
+    	if (object.equals(1L)) {
+    		//todo remettre ancienne val
+    		sliderVolumeMusique.setValue(prefs.getFloat("volumeMusique"));
+    		sliderVolumeEffetSonore.setValue(prefs.getFloat("volumeEffetSonore"));
+    		sliderVolumeChatVocal.setValue(prefs.getFloat("volumeChatVocal"));
+    	}
+    	if (object.equals(2L)) {
+    		prefs.putFloat("volumeMusique", sliderVolumeMusique.getValue());
+    		prefs.putFloat("volumeEffetSonore", sliderVolumeEffetSonore.getValue());
+    		prefs.putFloat("volumeChatVocal", sliderVolumeChatVocal.getValue());
+    		music.setVolume(prefs.getFloat("volumeMusique")/100);
+    	}
     }
 }

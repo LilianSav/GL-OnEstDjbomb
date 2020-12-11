@@ -13,7 +13,7 @@ import com.glhf.on_est_djbomb.dialogs.*;
 
 public class MainMenuScreen implements Screen {
     private final Stage stage;
-
+    
     public MainMenuScreen(final OnEstDjbombGame game) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
@@ -46,7 +46,7 @@ public class MainMenuScreen implements Screen {
         root.add(quitButton).expandY();
 
         // Création des dialogues
-        OptionsDialog optionsDialog = new OptionsDialog("Options", game.skin);
+        OptionsDialog optionsDialog = new OptionsDialog("Options", game);
         optionsDialog.initContent();
         InformationsDialog informationsDialog = new InformationsDialog("Informations", game.skin);
         informationsDialog.initContent();
@@ -85,6 +85,7 @@ public class MainMenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+        
     }
 
     @Override

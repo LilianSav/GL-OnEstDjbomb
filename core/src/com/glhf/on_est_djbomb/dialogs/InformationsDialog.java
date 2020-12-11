@@ -18,9 +18,12 @@ public class InformationsDialog extends Dialog {
         		+ "deux salles.\r\n" + 
         		"Au cours de la partie, les equipes seront confrontees à diverses enigmes qui pourront necessiter des interactions avec les elements de leur decor.\r\n" + 
         		"La communication est essentielle, donc au cours de la partie, les deux equipes auront la possibilite d'interagir à l'aide d'un chat ecrit et \r\n"
-        		+ "d'un chat vocal.\r\n" + 
+        		+ "d'un chat vocal.\r\n"
+        		+ "\r\n" + 
         		"Enigmes :\r\n" + 
-        		"Pour desamorcer la bombe, vous devrez resoudre plusieurs enigmes\r\n", skin));
+        		"Pour desamorcer la bombe, vous devrez resoudre plusieurs enigmes\r\n"
+        		+ "\r\n"
+        		+ "Credit musique : Hicham Chahidi - Plongee nocturne\r\n", skin));
         informationsContentTable.row();
 
         // Section button

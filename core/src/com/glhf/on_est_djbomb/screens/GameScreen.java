@@ -2,6 +2,7 @@ package com.glhf.on_est_djbomb.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -24,6 +25,11 @@ public class GameScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         // Liaison des Inputs au stage
         Gdx.input.setInputProcessor(stage);
+        
+        //Instanciation son
+        Sound sound=Gdx.audio.newSound(Gdx.files.internal("audio/bomb_has_been_planted.mp3"));
+        sound.play(game.prefs.getFloat("volumeEffetSonore")/100);
+        sound.dispose();
 
         // Instanciation d'une table pour contenir nos Layouts (Énigmes, UI, Chat)
         Table root = new Table();
