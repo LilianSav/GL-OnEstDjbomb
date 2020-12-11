@@ -26,7 +26,7 @@ public class MainMenuScreen implements Screen {
         stage.addActor(root);
 
         // Création des labels
-        Label labelTitre = new Label("Guzny", game.skin);
+        Label labelTitre = new Label("On est djbomb", game.skin);
 
         // Création des boutons
         TextButton newGameButton = new TextButton("Nouvelle partie", game.skin);
