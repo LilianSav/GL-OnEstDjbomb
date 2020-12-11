@@ -25,7 +25,7 @@ public class NewGameDialog extends Dialog {
         text("Nouvelle partie :");
 
         // Section button
-        button("Hebergez", 1L);
+        button("Heberger", 1L);
         button("Rejoindre", 2L);
         button("Retour", 3L);
     }

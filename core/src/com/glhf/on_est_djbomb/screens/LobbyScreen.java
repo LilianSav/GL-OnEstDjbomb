@@ -7,7 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
@@ -28,7 +30,7 @@ public class LobbyScreen implements Screen {
 
         // Création des labels
         Label titreLabel = new Label("Lancement d'une partie", game.skin);
-        Label infoSocketLabel = new Label(game.getGameSocket().getInfoSocket(), game.skin);
+        TextField infoSocketLabel = new TextField(game.getGameSocket().getInfoSocket(), game.skin);
 
         // Création des boutons
         TextButton retourButton = new TextButton("Retour", game.skin);
@@ -42,7 +44,7 @@ public class LobbyScreen implements Screen {
         root.add(infoSocketLabel).expandY().expandX();
         root.row();
         root.add(retourButton).expandY().expandX();
-        root.add(pretButton).expandY().expandX();
+        //root.add(pretButton).expandY().expandX();
         root.add(commencerButton).expandY().expandX();
 
         // Gestionnaire d'évènements des bouttons
