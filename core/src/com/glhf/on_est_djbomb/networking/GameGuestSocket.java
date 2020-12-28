@@ -8,35 +8,55 @@ import java.net.Socket;
 
 public class GameGuestSocket extends GameSocket {
 
+    // Constructeur
     public GameGuestSocket(String identifiant) {
         super(identifiant);
     }
 
+    // Initialise la connexion avec Host
     public void init(String adresse, int port) {
+        // Initialisation de la connexion (Guest) et des Streams
         try {
-            // Socket Text
-            connexionText = new Socket(InetAddress.getByName(adresse), port);
-            outputText = new ObjectOutputStream(connexionText.getOutputStream());
-            outputText.flush();
-            inputText = new ObjectInputStream(connexionText.getInputStream());
+            connexion = new Socket(InetAddress.getByName(adresse), port);
+            outputStream = new ObjectOutputStream(connexion.getOutputStream());
+            outputStream.flush();
+            intputStream = new ObjectInputStream(connexion.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        sendMessage(identifiant);
-        new Thread( () -> {
-            remoteIdentidiant = receiveMessage();
-        }).start();
+        // On modifie l'état de la connexion
+        running = true;
+        socketType = GameSocketConstant.GUEST;
 
-        isInitialized = true;
+        // Premier contact pour récupérer les identifiants
+        sendMessage(identifiant);
+        remoteIdentidiant = receiveMessage();
+
+        // On délègue la lecture des flux entrants à un Thread appellant des listeners
+        new Thread(() -> {
+            // On observe les messages arrivant
+            String message = "";
+            while (getRunning()) {
+                try {
+                    message = (String) intputStream.readObject();
+                } catch (IOException | ClassNotFoundException e) {
+                    setRunning(false);
+                }
+                if(!message.equals("")){
+                    notifyListeners(message);
+                    message = "";
+                }
+            }
+        }).start();
     }
 
     @Override
     public String getInfoSocket() {
         String infoSocket = "";
         // Si le socket est connecté
-        if (connexionText.isConnected()) {
-            infoSocket = "Connected to " + connexionText.getRemoteSocketAddress();
+        if (connexion.isConnected()) {
+            infoSocket = "Connected to " + connexion.getRemoteSocketAddress();
         }
         // Si le socket n'est pas connecté
         else {

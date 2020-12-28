@@ -16,8 +16,9 @@ import com.glhf.on_est_djbomb.OnEstDjbombGame;
 public class GameScreen implements Screen {
     private final Stage stage;
     private Texture enigmeImageTexture;
-    
-    private Label timerLabel;
+    private final Sound sound;
+
+    private final Label timerLabel;
     int tpsRestant;
 
     public GameScreen(OnEstDjbombGame game) {
@@ -25,20 +26,19 @@ public class GameScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         // Liaison des Inputs au stage
         Gdx.input.setInputProcessor(stage);
-        
-        //Instanciation son
-        Sound sound=Gdx.audio.newSound(Gdx.files.internal("audio/bomb_has_been_planted.mp3"));
-        sound.play(game.prefs.getFloat("volumeEffetSonore")/100);
-        sound.dispose();
+
+        //Instanciation du son
+        sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_has_been_planted.mp3"));
+        sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
 
         // Instanciation d'une table pour contenir nos Layouts (Énigmes, UI, Chat)
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
-        
+
         // Ajout d'une table pour l'énigme
         Table enigmeTable;
-        if ( game.getGameSocket().getIdentifiant().equals("Host") ) {
+        if (game.getGameSocket().getIdentifiant().equals("Host")) {
             enigmeTable = getEnigmeTableHost();
         } else {
             enigmeTable = getEnigmeTableGuest();
@@ -63,10 +63,10 @@ public class GameScreen implements Screen {
         textChatTable.add(chatTextField).width(Value.percentWidth(0.80f, textChatTable)).height(Value.percentHeight(0.20f, textChatTable));
         textChatTable.add(sendButton).width(Value.percentWidth(0.20f, textChatTable)).height(Value.percentHeight(0.20f, textChatTable));
 
-        // Création interface utilisateur
+        // Création interface utilisateur latérale
         TextButton quitterButton = new TextButton("Quitter", game.skin);
-        tpsRestant=30;
-        timerLabel = new Label(tpsRestant+" sec", game.skin);
+        tpsRestant = 30;
+        timerLabel = new Label(tpsRestant + " sec", game.skin);
         startTimer();
         TextButton indiceButton = new TextButton("Indice", game.skin);
         TextButton solutionButton = new TextButton("Solution", game.skin);
@@ -83,6 +83,7 @@ public class GameScreen implements Screen {
         userInterfaceTable.add(verificationTextField).expand();
         userInterfaceTable.add(verificationbutton).expand();
 
+        // Gestion des événements
         sendButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -107,7 +108,7 @@ public class GameScreen implements Screen {
                 // Changement d'écran pour revenir au menu principal
                 if (verificationTextField.getText().equals("2865")) {
                     game.getGameSocket().sendMessage("STATE::GOODEND");
-                    new Dialog("Bonne reponse", game.skin){
+                    new Dialog("Bonne reponse", game.skin) {
                         {
                             text("Bonne reponse !");
                             button("Retour au menu principal");
@@ -122,7 +123,7 @@ public class GameScreen implements Screen {
                         }
                     }.show(stage);
                 } else {
-                    new Dialog("Mauvaise reponse", game.skin){
+                    new Dialog("Mauvaise reponse", game.skin) {
                         {
                             text("La reponse donnee n'est pas correcte");
                             button("Retour");
@@ -138,57 +139,43 @@ public class GameScreen implements Screen {
         });
 
         // Gestion Message et Game State
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean stop = false;
-                String message = "";
+        game.getGameSocket().addListener(eventMessage -> {
+            // Parse
+            String[] tokens = eventMessage.split("::");
 
-                while(!stop){
-                    message = game.getGameSocket().receiveMessage();
-                    String[] tokens = message.split("::");
-
-                    // Message destiné au chat textuel
-                    if(tokens[0].equals("TEXT")){
-                        Gdx.app.postRunnable(new Runnable() {
-                            @Override
-                            public void run() {
-                                chatTextLabel.setText(chatTextLabel.getText() + "\n" + game.getGameSocket().getRemoteIdentifiant() + " - " + tokens[1]);
-                            }
-                        });
-                    }
-                    // Message destiné à l'état de jeu
-                    else if(tokens[0].equals("STATE")){
-                        if(tokens[1].equals("GOODEND")){
-                            Gdx.app.postRunnable(new Runnable() {
-                                @Override
-                                public void run() {
-                                    new Dialog("Bonne reponse", game.skin){
-                                        {
-                                            text("Vos coequipiers ont trouves la bonne reponse !");
-                                            button("Retour au menu principal");
-                                        }
-
-                                        @Override
-                                        protected void result(Object object) {
-                                            // Fermeture des flux
-                                            game.getGameSocket().close();
-                                            // Changement d'écran pour revenir au menu principal
-                                            game.switchScreen(new MainMenuScreen(game));
-                                        }
-                                    }.show(stage);
+            // FLAG TEXT : On modifie le contenu du chat textuel
+            if (tokens[0].equals("TEXT")) {
+                Gdx.app.postRunnable(() -> chatTextLabel.setText(chatTextLabel.getText() + "\n" + game.getGameSocket().getRemoteIdentifiant() + " - " + tokens[1]));
+            }
+            // FLAG STATE : On modifie l'état du jeu
+            else if (tokens[0].equals("STATE")) {
+                if (tokens[1].equals("GOODEND")) {
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            new Dialog("Bonne reponse", game.skin) {
+                                {
+                                    text("Vos coequipiers ont trouves la bonne reponse !");
+                                    button("Retour au menu principal");
                                 }
-                            });
+
+                                @Override
+                                protected void result(Object object) {
+                                    // Fermeture des flux
+                                    game.getGameSocket().close();
+                                    // Changement d'écran pour revenir au menu principal
+                                    game.switchScreen(new MainMenuScreen(game));
+                                }
+                            }.show(stage);
                         }
-                    }
-                    // Message indéfini, on arrête la boucle
-                    else {
-                        stop = true;
-                    }
+                    });
                 }
             }
-        }).start();
-
+            // Flag non reconnu
+            else {
+                Gdx.app.log("SocketFlagError", "Le flag envoyé par le socket distant n'est pas reconnu");
+            }
+        });
     }
 
     private Table getEnigmeTableHost() {
@@ -208,19 +195,19 @@ public class GameScreen implements Screen {
 
         return enigmeTableHost;
     }
-    
-    private Timer.Task myTimerTask = new Timer.Task() {
+
+    private final Timer.Task myTimerTask = new Timer.Task() {
         @Override
         public void run() {
-          tpsRestant--;
-          timerLabel.setText(tpsRestant+" sec");
-          if(tpsRestant==0) {
-        	  myTimerTask.cancel();
-          }
+            tpsRestant--;
+            timerLabel.setText(tpsRestant + " sec");
+            if (tpsRestant == 0) {
+                myTimerTask.cancel();
+            }
         }
     };
 
-    public void startTimer(){
+    public void startTimer() {
         Timer.schedule(myTimerTask, 1f, 1f);
     }
 
@@ -239,6 +226,7 @@ public class GameScreen implements Screen {
     public void dispose() {
         stage.dispose();
         enigmeImageTexture.dispose();
+        sound.dispose();
     }
 
     @Override

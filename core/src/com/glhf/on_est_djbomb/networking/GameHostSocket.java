@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
 public class GameHostSocket extends GameSocket {
+    // ServerSocket pour héberger la partie
     public ServerSocket server;
 
+    // Constructeur
     public GameHostSocket(String identifiant) {
         super(identifiant);
 
@@ -20,23 +21,42 @@ public class GameHostSocket extends GameSocket {
         }
     }
 
+    // Initialise la connexion avec Guest
     public void init() {
+        // Initialisation de la connexion (Host) et des Streams
         try {
-            // Socket Text
-            connexionText = server.accept();
-            outputText = new ObjectOutputStream(connexionText.getOutputStream());
-            outputText.flush();
-            inputText = new ObjectInputStream(connexionText.getInputStream());
+            connexion = server.accept();
+            outputStream = new ObjectOutputStream(connexion.getOutputStream());
+            outputStream.flush();
+            intputStream = new ObjectInputStream(connexion.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        sendMessage(identifiant);
-        new Thread( () -> {
-            remoteIdentidiant = receiveMessage();
-        }).start();
+        // On modifie l'état de la connexion
+        running = true;
+        socketType = GameSocketConstant.HOST;
 
-        isInitialized = true;
+        // Premier contact pour récupérer les identifiants
+        sendMessage(identifiant);
+        remoteIdentidiant = receiveMessage();
+
+        // On délègue la lecture des flux entrants à un Thread appellant des listeners
+        new Thread(() -> {
+            // On observe les messages arrivant
+            String message = "";
+            while (getRunning()) {
+                try {
+                    message = (String) intputStream.readObject();
+                } catch (IOException | ClassNotFoundException e) {
+                    setRunning(false);
+                }
+                if(!message.equals("")){
+                    notifyListeners(message);
+                    message = "";
+                }
+            }
+        }).start();
     }
 
     // Fermeture des flux
