@@ -13,9 +13,9 @@ public abstract class EnigmaSkeleton {
 		setHost(isHost);
 	}
 	
-	public abstract Texture getEnigmeTableHost();
+	public abstract Texture getTextureTableHost();
 
-	public abstract Texture getEnigmeTableGuest();
+	public abstract Texture getTextureTableGuest();
 	
 	public int getSolution() {
 		return solution;

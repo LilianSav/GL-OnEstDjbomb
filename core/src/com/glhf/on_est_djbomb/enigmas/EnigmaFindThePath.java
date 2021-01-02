@@ -11,11 +11,11 @@ public class EnigmaFindThePath extends EnigmaSkeleton{
 		setIndice("Suivez les fleches");
 	}
 
-	public Texture getEnigmeTableHost() {
+	public Texture getTextureTableHost() {
 	    return new Texture(Gdx.files.internal("assetEnigme/trajet/trajetHost.png"));
 	}
 
-	public Texture getEnigmeTableGuest() {
+	public Texture getTextureTableGuest() {
 	    return new Texture(Gdx.files.internal("assetEnigme/trajet/trajetGuest.png"));
 	}
 }
