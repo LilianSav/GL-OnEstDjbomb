@@ -12,14 +12,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
+import com.glhf.on_est_djbomb.dialogs.ClueDialog;
+import com.glhf.on_est_djbomb.enigmas.EnigmaManager;
 
 public class GameScreen implements Screen {
     private final Stage stage;
-    private Texture enigmeImageTexture;
     private final Sound sound;
-
     private final Label timerLabel;
-    int tpsRestant;
+    private int tpsRestant;
+    private EnigmaManager enigmeManager;
 
     public GameScreen(OnEstDjbombGame game) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
@@ -27,23 +28,20 @@ public class GameScreen implements Screen {
         // Liaison des Inputs au stage
         Gdx.input.setInputProcessor(stage);
 
-        //Instanciation du son
+        // Instanciation d'un effet sonore
         sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_has_been_planted.mp3"));
         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
 
+        // Instanciation du gestionnaire d'énigmes (qui est un Table)
+        enigmeManager = new EnigmaManager(game.getGameSocket().getIdentifiant().equals("Host"), game , stage);
+        
         // Instanciation d'une table pour contenir nos Layouts (Énigmes, UI, Chat)
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
 
         // Ajout d'une table pour l'énigme
-        Table enigmeTable;
-        if (game.getGameSocket().getIdentifiant().equals("Host")) {
-            enigmeTable = getEnigmeTableHost();
-        } else {
-            enigmeTable = getEnigmeTableGuest();
-        }
-        root.add(enigmeTable).width(Value.percentWidth(0.70f, root)).height(Value.percentHeight(0.70f, root));
+        root.add(enigmeManager).width(Value.percentWidth(0.70f, root)).height(Value.percentHeight(0.70f, root));
         // Ajout d'une table pour l'interface utilisateur
         Table userInterfaceTable = new Table();
         root.add(userInterfaceTable).width(Value.percentWidth(0.20f, root)).height(Value.percentHeight(0.70f, root));
@@ -51,7 +49,7 @@ public class GameScreen implements Screen {
         Table textChatTable = new Table();
         root.row();
         root.add(textChatTable).colspan(2).width(Value.percentWidth(0.9f, root)).height(Value.percentHeight(0.20f, root));
-
+        
         // Création chat textuel
         TextField chatTextField = new TextField("", game.skin);
         TextButton sendButton = new TextButton("Send", game.skin);
@@ -106,7 +104,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Changement d'écran pour revenir au menu principal
-                if (verificationTextField.getText().equals("2865")) {
+                if (verificationTextField.getText().equals(String.valueOf(enigmeManager.getSolution()))) {
                     game.getGameSocket().sendMessage("STATE::GOODEND");
                     new Dialog("Bonne reponse", game.skin) {
                         {
@@ -116,10 +114,14 @@ public class GameScreen implements Screen {
 
                         @Override
                         protected void result(Object object) {
-                            // Fermeture des flux
-                            game.getGameSocket().close();
-                            // Changement d'écran pour revenir au menu principal
-                            game.switchScreen(new MainMenuScreen(game));
+                        	if(enigmeManager.isOver()) {
+                        		// Fermeture des flux
+                                game.getGameSocket().close();
+                                // Changement d'écran pour revenir au menu principal
+                                game.switchScreen(new MainMenuScreen(game));
+                        	}else {
+                        		enigmeManager.nextEnigme();
+                        	}
                         }
                     }.show(stage);
                 } else {
@@ -135,6 +137,12 @@ public class GameScreen implements Screen {
                         }
                     }.show(stage);
                 }
+            }
+        });
+        indiceButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	enigmeManager.getIndice();
             }
         });
 
@@ -161,10 +169,14 @@ public class GameScreen implements Screen {
 
                                 @Override
                                 protected void result(Object object) {
-                                    // Fermeture des flux
-                                    game.getGameSocket().close();
-                                    // Changement d'écran pour revenir au menu principal
-                                    game.switchScreen(new MainMenuScreen(game));
+                                	if(enigmeManager.isOver()) {
+                                		// Fermeture des flux
+                                        game.getGameSocket().close();
+                                        // Changement d'écran pour revenir au menu principal
+                                        game.switchScreen(new MainMenuScreen(game));
+                                	}else {
+                                		enigmeManager.nextEnigme();
+                                	}
                                 }
                             }.show(stage);
                         }
@@ -177,25 +189,7 @@ public class GameScreen implements Screen {
             }
         });
     }
-
-    private Table getEnigmeTableHost() {
-        enigmeImageTexture = new Texture(Gdx.files.internal("assetEnigme/trajet/trajetHost.png"));
-        Image enigmeImageWidget = new Image(enigmeImageTexture);
-        Table enigmeTableHost = new Table();
-        enigmeTableHost.add(enigmeImageWidget);
-
-        return enigmeTableHost;
-    }
-
-    private Table getEnigmeTableGuest() {
-        enigmeImageTexture = new Texture(Gdx.files.internal("assetEnigme/trajet/trajetGuest.png"));
-        Image enigmeImageWidget = new Image(enigmeImageTexture);
-        Table enigmeTableHost = new Table();
-        enigmeTableHost.add(enigmeImageWidget);
-
-        return enigmeTableHost;
-    }
-
+    
     private final Timer.Task myTimerTask = new Timer.Task() {
         @Override
         public void run() {
@@ -225,7 +219,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        enigmeImageTexture.dispose();
         sound.dispose();
     }
 
