@@ -9,6 +9,7 @@ public class EnigmaFindThePath extends EnigmaSkeleton {
         super(isHost);
         setSolution(2865);
         setIndice("Suivez les fleches");
+        setNom("Retrouver le chemin");
     }
 
     public Texture getTextureTableHost() {

@@ -9,6 +9,7 @@ public class EnigmaFindTheImage extends EnigmaSkeleton{
 		super(isHost);
 		setSolution(3);
 		setIndice("Observez les contours");
+		setNom("Retrouver la bonne image");
 	}
 
 	@Override

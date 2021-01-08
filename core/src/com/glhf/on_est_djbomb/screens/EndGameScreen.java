@@ -1,5 +1,7 @@
 package com.glhf.on_est_djbomb.screens;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
@@ -12,18 +14,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
+import com.glhf.on_est_djbomb.enigmas.EnigmaSkeleton;
 
 public class EndGameScreen implements Screen{
 	private OnEstDjbombGame game;
 	private int tpsLeft;
 	private int tpsInit;
 	private final Stage stage;
+	private ArrayList<EnigmaSkeleton> enigmes;
 
-	public EndGameScreen(OnEstDjbombGame game, int tpsLeft, int tpsInit) {
+	public EndGameScreen(OnEstDjbombGame game, int tpsLeft, int tpsInit, ArrayList<EnigmaSkeleton> enigmes) {
 		super();
 		this.game = game;
 		this.tpsLeft = tpsLeft;
 		this.tpsInit = tpsInit;
+		this.enigmes=enigmes;
 		
 		// Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
@@ -45,29 +50,31 @@ public class EndGameScreen implements Screen{
         	meilleurScore = "Meilleur temps utilise : "+game.prefs.getInteger("meilleurTpsUtilise")+" s";
         }
         
-        // Création des labels
+        // Création des labels et ajout des acteurs à la table
         Label labelTitre = new Label("Fin de partie", game.skin);
-        Label tpsInitial = new Label("Temps initial : "+tpsInit+" s", game.skin);
-        Label tpsUtilise = new Label("Temps utilise : "+(tpsInit-tpsLeft)+" s", game.skin);
-        Label meilleurTpsUtilise = new Label(meilleurScore, game.skin);
-        Label tpsRestant = new Label("Temps restant : "+tpsLeft+" s", game.skin);
-        
-        //afficher tps pour chaque enigmes
-
-        // Création des boutons
-        TextButton menuPrincipalButton = new TextButton("Menu principal", game.skin);
-
-        // Ajout des acteurs à la Table
         root.add(labelTitre).expandY();
         root.row();
+        Label tpsInitial = new Label("Temps initial : "+tpsInit+" s", game.skin);
         root.add(tpsInitial).expandY();
         root.row();
+        Label tpsUtilise = new Label("Temps utilise : "+(tpsInit-tpsLeft)+" s", game.skin);
         root.add(tpsUtilise).expandY();
         root.row();
+        Label meilleurTpsUtilise = new Label(meilleurScore, game.skin);
         root.add(meilleurTpsUtilise).expandY();
         root.row();
+        Label tpsRestant = new Label("Temps restant : "+tpsLeft+" s", game.skin);
         root.add(tpsRestant).expandY();
         root.row();
+        Label labelEnigmes = new Label("Temps utilise par enigmes :", game.skin);
+    	root.add(labelEnigmes).expandY();        
+        //afficher tps pour chaque enigmes
+        for(EnigmaSkeleton enigme : enigmes) {
+        	Label labelEnigme = new Label(enigme.getNom()+" : "+enigme.getTpsUtilise()+" s", game.skin);
+        	root.add(labelEnigme).expandY();
+            root.row();
+        }
+        TextButton menuPrincipalButton = new TextButton("Menu principal", game.skin);
         root.add(menuPrincipalButton).expandY();
         
         // Gestionnaire d'évènements des bouttons

@@ -7,6 +7,8 @@ public abstract class EnigmaSkeleton {
 	private int solution;
 	private String indice;
 	private boolean isHost;
+	private int tpsUtilise;
+	private String nom;
 	
 	public EnigmaSkeleton(boolean isHost) {
 		super();
@@ -35,5 +37,23 @@ public abstract class EnigmaSkeleton {
 	public void setHost(boolean isHost) {
 		this.isHost = isHost;
 	}
+
+	public int getTpsUtilise() {
+		return tpsUtilise;
+	}
+
+	public void setTpsUtilise(int tpsUtilise) {
+		this.tpsUtilise = tpsUtilise;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+	
+	
 	
 }

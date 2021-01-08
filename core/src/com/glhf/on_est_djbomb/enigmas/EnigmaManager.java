@@ -76,4 +76,12 @@ public class EnigmaManager extends Table{
 			return false;
 		}
 	}
+
+	public ArrayList<EnigmaSkeleton> getEnigmes() {
+		return enigmes;
+	}
+	
+	public void setTpsUtilise(int tps) {
+		enigmeCourante.setTpsUtilise(tps);
+	}
 }

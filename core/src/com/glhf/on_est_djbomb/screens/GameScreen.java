@@ -21,6 +21,7 @@ public class GameScreen implements Screen {
     private final Label timerLabel;
     private int tpsRestant;
     private int tpsInitial;
+    private int tpsInitialEnigme;
     private final EnigmaManager enigmeManager;
     private OnEstDjbombGame game;
 
@@ -75,8 +76,9 @@ public class GameScreen implements Screen {
         OptionsDialog optionsDialog = new OptionsDialog("Options", game);
         optionsDialog.initContent();
         TextButton quitterButton = new TextButton("Quitter", game.skin);
-        tpsInitial = 3;//5min
+        tpsInitial = 300;//5min
         tpsRestant = tpsInitial;
+        tpsInitialEnigme=tpsInitial;
         timerLabel = new Label(tpsRestant + " sec", game.skin);
         startTimer();
         TextButton indiceButton = new TextButton("Indice", game.skin);
@@ -158,6 +160,9 @@ public class GameScreen implements Screen {
                                     //effet sonore
                                 	sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
                                     sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
+                                    //mise à jour tps utilisé
+                                    tpsInitialEnigme=tpsInitialEnigme-tpsRestant;
+                                    enigmeManager.setTpsUtilise(tpsInitialEnigme);
                                     if (enigmeManager.isOver()) {
                                         button("Menu fin de partie", 1L);
                                     } else {
@@ -170,7 +175,7 @@ public class GameScreen implements Screen {
                                 protected void result(Object object) {
                                 	if (object.equals(1L)) {//fin de partie
                                         // Changement d'écran pour revenir au menu principal
-                                        game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial));
+                                        game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial,enigmeManager.getEnigmes()));
                                     } else if (object.equals(2L)) {//enigme suivante
                                         enigmeManager.nextEnigme();
                                     }
@@ -196,11 +201,15 @@ public class GameScreen implements Screen {
         	}
             new Dialog(dialogTitle, game.skin) {
                 {
+                	//mise à jour tps utilisé
+                	tpsInitialEnigme=tpsInitialEnigme-tpsRestant;
+                    enigmeManager.setTpsUtilise(tpsInitialEnigme);
                     if (timer) {
                     	text("Vous n'avez pas termine a temps, la bombe a explose !");
                     	//effet sonore
                     	sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_exploding_sound_effect.mp3"));
                         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
+						enigmeManager.setTpsUtilise(tpsInitialEnigme-tpsRestant);
                     	button("Menu de fin de partie", 1L);
                     }else {
                     	text("Vous avez trouve la solution !");
@@ -220,7 +229,7 @@ public class GameScreen implements Screen {
                 protected void result(Object object) {
                     if (object.equals(1L)) {//fin de partie
                         // Changement d'écran pour revenir au menu principal
-                        game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial));
+                        game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial,enigmeManager.getEnigmes()));
                     } else if (object.equals(2L)) {//enigme suivante
                         enigmeManager.nextEnigme();
                     }

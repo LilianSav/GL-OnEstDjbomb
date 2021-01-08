@@ -9,6 +9,7 @@ public class EnigmaPyramid extends EnigmaSkeleton {
         super(isHost);
         setSolution(144);
         setIndice("C'est une question de produit...");
+        setNom("Le mystère de la pyramide");
     }
 
     @Override
