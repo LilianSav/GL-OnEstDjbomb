@@ -49,8 +49,10 @@ public class NewGameDialog extends Dialog {
                     if (object.equals(2L)) {
                         // On observe si pseudoTextField n'est pas vide
                         if (!pseudoTextField.getText().isEmpty()) {
-                            // Initialisation GameSocket
+                        	// Initialisation GameSocket
                             GameHostSocket gameSocket = new GameHostSocket(pseudoTextField.getText());
+                            
+                            //preference utilisateur pseudo
                             game.prefs.putString("pseudo", pseudoTextField.getText());
 
                             // Attente de connexion d'un client

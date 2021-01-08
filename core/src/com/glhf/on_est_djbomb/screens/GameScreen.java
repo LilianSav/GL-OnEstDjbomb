@@ -20,6 +20,7 @@ public class GameScreen implements Screen {
     private Sound sound;
     private final Label timerLabel;
     private int tpsRestant;
+    private int tpsInitial;
     private final EnigmaManager enigmeManager;
     private OnEstDjbombGame game;
 
@@ -74,7 +75,8 @@ public class GameScreen implements Screen {
         OptionsDialog optionsDialog = new OptionsDialog("Options", game);
         optionsDialog.initContent();
         TextButton quitterButton = new TextButton("Quitter", game.skin);
-        tpsRestant = 300;//5min
+        tpsInitial = 3;//5min
+        tpsRestant = tpsInitial;
         timerLabel = new Label(tpsRestant + " sec", game.skin);
         startTimer();
         TextButton indiceButton = new TextButton("Indice", game.skin);
@@ -157,7 +159,7 @@ public class GameScreen implements Screen {
                                 	sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
                                     sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
                                     if (enigmeManager.isOver()) {
-                                        button("Retour au menu principal", 1L);
+                                        button("Menu fin de partie", 1L);
                                     } else {
                                         button("Enigme suivante", 2L);
                                     }
@@ -166,14 +168,10 @@ public class GameScreen implements Screen {
 
                                 @Override
                                 protected void result(Object object) {
-                                    if (object.equals(1L)) {
-                                        // On vide le gestionnaire de listeners
-                                        game.getGameSocket().clearListeners();
-                                        // Fermeture des flux
-                                        game.getGameSocket().close();
+                                	if (object.equals(1L)) {//fin de partie
                                         // Changement d'écran pour revenir au menu principal
-                                        game.switchScreen(new MainMenuScreen(game));
-                                    } else if (object.equals(2L)) {
+                                        game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial));
+                                    } else if (object.equals(2L)) {//enigme suivante
                                         enigmeManager.nextEnigme();
                                     }
                                 }
@@ -199,11 +197,11 @@ public class GameScreen implements Screen {
             new Dialog(dialogTitle, game.skin) {
                 {
                     if (timer) {
-                    	text("Vous n'avez pas termine à temps, la bombe a explose !");
+                    	text("Vous n'avez pas termine a temps, la bombe a explose !");
                     	//effet sonore
                     	sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_exploding_sound_effect.mp3"));
                         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
-                    	button("Retour au menu principal", 1L);
+                    	button("Menu de fin de partie", 1L);
                     }else {
                     	text("Vous avez trouve la solution !");
                     	game.getGameSocket().sendMessage("STATE::GOODEND");
@@ -211,7 +209,7 @@ public class GameScreen implements Screen {
                     	sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
                         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
                     	if (enigmeManager.isOver()) {
-                            button("Retour au menu principal", 1L);
+                            button("Menu de fin de partie", 1L);
                         } else {
                             button("Enigme suivante", 2L);
                         }
@@ -220,14 +218,10 @@ public class GameScreen implements Screen {
 
                 @Override
                 protected void result(Object object) {
-                    if (object.equals(1L)) {
-                        // On vide le gestionnaire de listeners
-                        game.getGameSocket().clearListeners();
-                        // Fermeture des flux
-                        game.getGameSocket().close();
+                    if (object.equals(1L)) {//fin de partie
                         // Changement d'écran pour revenir au menu principal
-                        game.switchScreen(new MainMenuScreen(game));
-                    } else if (object.equals(2L)) {
+                        game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial));
+                    } else if (object.equals(2L)) {//enigme suivante
                         enigmeManager.nextEnigme();
                     }
                 }
