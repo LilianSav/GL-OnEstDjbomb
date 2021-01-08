@@ -16,6 +16,8 @@ import com.glhf.on_est_djbomb.OnEstDjbombGame;
 
 public class LobbyScreen implements Screen {
     private final Stage stage;
+    private boolean localReady = false;
+    private boolean teammateReady = false;
 
     public LobbyScreen(final OnEstDjbombGame game) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
@@ -28,6 +30,10 @@ public class LobbyScreen implements Screen {
         root.setFillParent(true);
         stage.addActor(root);
 
+        // Booléen indiquant si les joueurs sont prêts
+        localReady = false;
+        teammateReady = false;
+
         // Création des labels
         Label titreLabel = new Label("Lancement d'une partie", game.skin);
         TextField infoSocketLabel = new TextField(game.getGameSocket().getInfoSocket(), game.skin);
@@ -35,35 +41,99 @@ public class LobbyScreen implements Screen {
         // Création des boutons
         TextButton retourButton = new TextButton("Retour", game.skin);
         TextButton commencerButton = new TextButton("Commencer", game.skin);
-        commencerButton.setDisabled(true);
+//        commencerButton.setDisabled(true);
         TextButton pretButton = new TextButton("Pret", game.skin);
 
         // Ajout des acteurs à la Table
-        root.add(titreLabel).expandY().expandX();
+        root.add(titreLabel).colspan(3).expandY().expandX();
         root.row();
         root.add(infoSocketLabel).expandY().expandX();
         root.row();
         root.add(retourButton).expandY().expandX();
-        //root.add(pretButton).expandY().expandX();
+        root.add(pretButton).expandY().expandX();
         root.add(commencerButton).expandY().expandX();
 
         // Gestionnaire d'évènements des bouttons
         retourButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // On vide le gestionnaire de listeners
+                game.getGameSocket().clearListeners();
                 // Fermeture des flux
                 game.getGameSocket().close();
                 // Changement d'écran pour revenir au menu principal
                 game.switchScreen(new MainMenuScreen(game));
             }
         });
+        pretButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+//                // On inverse le statut du joueur local
+//                localReady = !localReady;
+//                // On indique le nouveau statut au joueur distant
+//                if (localReady) {
+//                    game.getGameSocket().sendMessage("STATE::READY");
+//                } else {
+//                    game.getGameSocket().sendMessage("STATE::NOTREADY");
+//                }
+//                // Si les deux joueurs sont prêts, on débloque le bouton "commencer"
+//                if (localReady && teammateReady) {
+//                    commencerButton.setDisabled(true);
+//                } else {
+//                    commencerButton.setDisabled(false);
+//                }
+//
+//                System.out.println("Type : " + game.getGameSocket().getSocketType() + "\nlocalReady : " + localReady + "\nteammateReady : " + teammateReady + "\nRes : " + (localReady && teammateReady) + "\nisDisabled : " + commencerButton.isDisabled());
+
+            }
+        });
         commencerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // On vide le gestionnaire de listeners
+                game.getGameSocket().clearListeners();
                 // Changement d'écran pour revenir au menu principal
                 game.switchScreen(new GameScreen(game));
             }
         });
+
+//        // Gestion Game State
+//        game.getGameSocket().addListener(eventMessage -> {
+//            // Parse
+//            String[] tokens = eventMessage.split("::");
+//
+//            if (tokens[0].equals("STATE")) {
+//                Gdx.app.postRunnable(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (tokens[1].equals("READY")) {
+//                            // On mémorise le statut du joueur distant
+//                            teammateReady = true;
+//                            // Si les deux joueurs sont prêts, on débloque le bouton "commencer"
+//                            if (localReady && teammateReady) {
+//                                commencerButton.setDisabled(true);
+//                            } else {
+//                                commencerButton.setDisabled(false);
+//                            }
+//                        } else if (tokens[1].equals("NOTREADY")) {
+//                            teammateReady = false;
+//                            // Si les deux joueurs sont prêts, on débloque le bouton "commencer"
+//                            if (localReady && teammateReady) {
+//                                commencerButton.setDisabled(true);
+//                            } else {
+//                                commencerButton.setDisabled(false);
+//                            }
+//                        }
+//                        System.out.println("Type : " + game.getGameSocket().getSocketType() + "\nlocalReady : " + localReady + "\nteammateReady : " + teammateReady + "\nRes : " + (localReady && teammateReady) + "\nisDisabled : " + commencerButton.isDisabled());
+//
+//                    }
+//                });
+//            }
+//            // Flag non reconnu
+//            else {
+//                Gdx.app.log("SocketFlagError", "Le flag envoyé par le socket distant n'est pas reconnu");
+//            }
+//        });
     }
 
     @Override

@@ -11,12 +11,12 @@ import com.glhf.on_est_djbomb.dialogs.ClueDialog;
 
 public class EnigmaManager extends Table{
 
-	private ArrayList<EnigmaSkeleton> enigmes;
+	private final ArrayList<EnigmaSkeleton> enigmes;
 	private EnigmaSkeleton enigmeCourante;
-	private boolean isHost;
+	private final boolean isHost;
 	private ClueDialog clueDialog;
-	private OnEstDjbombGame game;
-	private Stage stage;
+	private final OnEstDjbombGame game;
+	private final Stage stage;
 	private Texture enigmeImageTexture;
 	
 	public EnigmaManager(boolean isHost , OnEstDjbombGame game , Stage stage) {
@@ -28,6 +28,8 @@ public class EnigmaManager extends Table{
 		enigmes.add(enigme1);
 		EnigmaFindTheImage enigme2 = new EnigmaFindTheImage(isHost);
 		enigmes.add(enigme2);
+		EnigmaPyramid enigme3 = new EnigmaPyramid(isHost);
+		enigmes.add(enigme3);
 		enigmeCourante=enigme1;
 		this.game=game;
 		this.stage = stage;
