@@ -37,7 +37,7 @@ public class NewGameDialog extends Dialog {
         if (object.equals(1L)) {
             new Dialog("Heberger une partie", game.skin) {
                 {
-                    pseudoTextField = new TextField("Pseudo", game.skin);
+                    pseudoTextField = new TextField(game.prefs.getString("pseudo"), game.skin);
                     getContentTable().add(pseudoTextField);
 
                     button("Retour", 1L);
@@ -51,6 +51,7 @@ public class NewGameDialog extends Dialog {
                         if (!pseudoTextField.getText().isEmpty()) {
                             // Initialisation GameSocket
                             GameHostSocket gameSocket = new GameHostSocket(pseudoTextField.getText());
+                            game.prefs.putString("pseudo", pseudoTextField.getText());
 
                             // Attente de connexion d'un client
                             new Thread(gameSocket::init).start();
@@ -75,7 +76,7 @@ public class NewGameDialog extends Dialog {
         else if (object.equals(2L)) {
             new Dialog("Partie à rejoindre", game.skin) {
                 {
-                    pseudoTextField = new TextField("Pseudo", game.skin);
+                    pseudoTextField = new TextField(game.prefs.getString("pseudo"), game.skin);
                     adresseTextField = new TextField("IP:Port", game.skin);
                     getContentTable().add(pseudoTextField);
                     getContentTable().add(adresseTextField);
@@ -94,6 +95,7 @@ public class NewGameDialog extends Dialog {
 
                             // Initialisation GameSocket
                             GameGuestSocket gameSocket = new GameGuestSocket(pseudoTextField.getText());
+                            game.prefs.putString("pseudo", pseudoTextField.getText());
 
                             // Connexion à l'host
                             gameSocket.init(tokens[0], Integer.parseInt(tokens[1]));

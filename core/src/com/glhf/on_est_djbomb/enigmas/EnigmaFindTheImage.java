@@ -8,7 +8,7 @@ public class EnigmaFindTheImage extends EnigmaSkeleton{
 	public EnigmaFindTheImage(boolean isHost) {
 		super(isHost);
 		setSolution(3);
-		setIndice("Obvervez les contours");
+		setIndice("Observez les contours");
 	}
 
 	@Override
