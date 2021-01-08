@@ -17,7 +17,7 @@ import com.glhf.on_est_djbomb.networking.GameSocket;
 
 public class GameScreen implements Screen {
     private final Stage stage;
-    private final Sound sound;
+    private Sound sound;
     private final Label timerLabel;
     private int tpsRestant;
     private final EnigmaManager enigmeManager;
@@ -197,8 +197,8 @@ public class GameScreen implements Screen {
                     	button("Retour au menu principal", 1L);
                     }else {
                     	text("Bonne reponse !");
+                    	game.getGameSocket().sendMessage("STATE::GOODEND");
                     	if (enigmeManager.isOver()) {
-                    		game.getGameSocket().sendMessage("STATE::GOODEND");
                             button("Retour au menu principal", 1L);
                         } else {
                             button("Enigme suivante", 2L);
