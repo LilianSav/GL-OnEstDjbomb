@@ -21,8 +21,11 @@ public class GameScreen implements Screen {
     private final Label timerLabel;
     private int tpsRestant;
     private final EnigmaManager enigmeManager;
+    private OnEstDjbombGame game;
 
     public GameScreen(OnEstDjbombGame game) {
+    	this.game=game;
+    	
         // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
         // Liaison des Inputs au stage
@@ -71,7 +74,7 @@ public class GameScreen implements Screen {
         OptionsDialog optionsDialog = new OptionsDialog("Options", game);
         optionsDialog.initContent();
         TextButton quitterButton = new TextButton("Quitter", game.skin);
-        tpsRestant = 30;
+        tpsRestant = 3;
         timerLabel = new Label(tpsRestant + " sec", game.skin);
         startTimer();
         TextButton indiceButton = new TextButton("Indice", game.skin);
@@ -121,42 +124,8 @@ public class GameScreen implements Screen {
         verificationbutton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Changement d'écran pour revenir au menu principal
-                if (verificationTextField.getText().equals(String.valueOf(enigmeManager.getSolution()))) {
-                    game.getGameSocket().sendMessage("STATE::GOODEND");
-                    new Dialog("Bonne reponse", game.skin) {
-                        {
-                            text("Bonne reponse !");
-                            if (enigmeManager.isOver()) {
-                                button("Retour au menu principal", 1L);
-                            } else {
-                                button("Enigme suivante", 2L);
-                            }
-
-                        }
-
-                        @Override
-                        protected void result(Object object) {
-                            if (object.equals(1L)) {
-                                // On vide le gestionnaire de listeners
-                                game.getGameSocket().clearListeners();
-                                // Fermeture des flux
-                                game.getGameSocket().close();
-                                // Changement d'écran pour revenir au menu principal
-                                game.switchScreen(new MainMenuScreen(game));
-                            } else if (object.equals(2L)) {
-                                enigmeManager.nextEnigme();
-                            }
-                        }
-                    }.show(stage);
-                } else {
-                    new Dialog("Mauvaise reponse", game.skin) {
-                        {
-                            text("La reponse donnee n'est pas correcte");
-                            button("Retour");
-                        }
-                    }.show(stage);
-                }
+            	boolean repTrouve = verificationTextField.getText().equals(String.valueOf(enigmeManager.getSolution()));
+                finDePartie(repTrouve,false);
             }
         });
         indiceButton.addListener(new ClickListener() {
@@ -217,13 +186,57 @@ public class GameScreen implements Screen {
         });
     }
 
-    private final Timer.Task myTimerTask = new Timer.Task() {
+    protected void finDePartie(boolean repTrouve, boolean timer) {
+    	// Changement d'écran pour revenir au menu principal
+        if (repTrouve || timer) {
+            game.getGameSocket().sendMessage("STATE::GOODEND");
+            new Dialog("Bonne reponse", game.skin) {
+                {
+                    if (timer) {
+                    	text("Timer fini");
+                    	button("Retour au menu principal", 1L);
+                    }else {
+                    	text("Bonne reponse !");
+                    	if (enigmeManager.isOver()) {
+                            button("Retour au menu principal", 1L);
+                        } else {
+                            button("Enigme suivante", 2L);
+                        }
+                    }
+                }
+
+                @Override
+                protected void result(Object object) {
+                    if (object.equals(1L)) {
+                        // On vide le gestionnaire de listeners
+                        game.getGameSocket().clearListeners();
+                        // Fermeture des flux
+                        game.getGameSocket().close();
+                        // Changement d'écran pour revenir au menu principal
+                        game.switchScreen(new MainMenuScreen(game));
+                    } else if (object.equals(2L)) {
+                        enigmeManager.nextEnigme();
+                    }
+                }
+            }.show(stage);
+        } else {
+            new Dialog("Mauvaise reponse", game.skin) {
+                {
+                    text("La reponse donnee n'est pas correcte");
+                    button("Retour");
+                }
+            }.show(stage);
+        }
+	}
+
+	private final Timer.Task myTimerTask = new Timer.Task() {
         @Override
         public void run() {
             tpsRestant--;
             timerLabel.setText(tpsRestant + " sec");
             if (tpsRestant == 0) {
                 myTimerTask.cancel();
+                finDePartie(false,true);
             }
         }
     };
