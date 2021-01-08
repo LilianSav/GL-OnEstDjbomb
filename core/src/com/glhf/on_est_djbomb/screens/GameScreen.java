@@ -153,6 +153,9 @@ public class GameScreen implements Screen {
                             new Dialog("Bonne reponse", game.skin) {
                                 {
                                     text("Vos coequipiers ont trouves la bonne reponse !");
+                                    //effet sonore
+                                	sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
+                                    sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
                                     if (enigmeManager.isOver()) {
                                         button("Retour au menu principal", 1L);
                                     } else {
@@ -189,15 +192,24 @@ public class GameScreen implements Screen {
     protected void finDePartie(boolean repTrouve, boolean timer) {//suivant
     	// Changement d'écran pour revenir au menu principal
         if (repTrouve || timer) {
-            
-            new Dialog("Bonne reponse", game.skin) {
+        	String dialogTitle="Bonne reponse";
+        	if(timer) {
+        		dialogTitle="Timer fini";
+        	}
+            new Dialog(dialogTitle, game.skin) {
                 {
                     if (timer) {
-                    	text("Timer fini");
+                    	text("Vous n'avez pas termine à temps, la bombe a explose !");
+                    	//effet sonore
+                    	sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_exploding_sound_effect.mp3"));
+                        sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
                     	button("Retour au menu principal", 1L);
                     }else {
-                    	text("Bonne reponse !");
+                    	text("Vous avez trouve la solution !");
                     	game.getGameSocket().sendMessage("STATE::GOODEND");
+                    	//effet sonore
+                    	sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
+                        sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
                     	if (enigmeManager.isOver()) {
                             button("Retour au menu principal", 1L);
                         } else {
@@ -224,6 +236,9 @@ public class GameScreen implements Screen {
             new Dialog("Mauvaise reponse", game.skin) {
                 {
                     text("La reponse donnee n'est pas correcte");
+                    //effet sonore
+                	sound = Gdx.audio.newSound(Gdx.files.internal("audio/wrong_sound_effect.mp3"));
+                    sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
                     button("Retour");
                 }
             }.show(stage);
