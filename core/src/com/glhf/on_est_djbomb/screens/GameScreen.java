@@ -74,7 +74,7 @@ public class GameScreen implements Screen {
         OptionsDialog optionsDialog = new OptionsDialog("Options", game);
         optionsDialog.initContent();
         TextButton quitterButton = new TextButton("Quitter", game.skin);
-        tpsRestant = 3;
+        tpsRestant = 300;//5min
         timerLabel = new Label(tpsRestant + " sec", game.skin);
         startTimer();
         TextButton indiceButton = new TextButton("Indice", game.skin);
@@ -186,10 +186,10 @@ public class GameScreen implements Screen {
         });
     }
 
-    protected void finDePartie(boolean repTrouve, boolean timer) {
+    protected void finDePartie(boolean repTrouve, boolean timer) {//suivant
     	// Changement d'écran pour revenir au menu principal
         if (repTrouve || timer) {
-            game.getGameSocket().sendMessage("STATE::GOODEND");
+            
             new Dialog("Bonne reponse", game.skin) {
                 {
                     if (timer) {
@@ -198,6 +198,7 @@ public class GameScreen implements Screen {
                     }else {
                     	text("Bonne reponse !");
                     	if (enigmeManager.isOver()) {
+                    		game.getGameSocket().sendMessage("STATE::GOODEND");
                             button("Retour au menu principal", 1L);
                         } else {
                             button("Enigme suivante", 2L);
