@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL30;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -12,15 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
-import com.glhf.on_est_djbomb.dialogs.ClueDialog;
+import com.glhf.on_est_djbomb.dialogs.OptionsDialog;
 import com.glhf.on_est_djbomb.enigmas.EnigmaManager;
+import com.glhf.on_est_djbomb.networking.GameSocket;
 
 public class GameScreen implements Screen {
     private final Stage stage;
     private final Sound sound;
     private final Label timerLabel;
     private int tpsRestant;
-    private EnigmaManager enigmeManager;
+    private final EnigmaManager enigmeManager;
 
     public GameScreen(OnEstDjbombGame game) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
@@ -32,9 +32,14 @@ public class GameScreen implements Screen {
         sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_has_been_planted.mp3"));
         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
 
-        // Instanciation du gestionnaire d'énigmes (qui est un Table)
-        enigmeManager = new EnigmaManager(game.getGameSocket().getIdentifiant().equals("Host"), game , stage);
-        
+        // Instanciation du gestionnaire d'énigmes
+        if (game.getGameSocket().getSocketType() == GameSocket.GameSocketConstant.HOST) {
+            enigmeManager = new EnigmaManager(true, game, stage);
+        } else {
+            enigmeManager = new EnigmaManager(false, game, stage);
+        }
+
+
         // Instanciation d'une table pour contenir nos Layouts (Énigmes, UI, Chat)
         Table root = new Table();
         root.setFillParent(true);
@@ -49,7 +54,7 @@ public class GameScreen implements Screen {
         Table textChatTable = new Table();
         root.row();
         root.add(textChatTable).colspan(2).width(Value.percentWidth(0.9f, root)).height(Value.percentHeight(0.20f, root));
-        
+
         // Création chat textuel
         TextField chatTextField = new TextField("", game.skin);
         TextButton sendButton = new TextButton("Send", game.skin);
@@ -62,6 +67,9 @@ public class GameScreen implements Screen {
         textChatTable.add(sendButton).width(Value.percentWidth(0.20f, textChatTable)).height(Value.percentHeight(0.20f, textChatTable));
 
         // Création interface utilisateur latérale
+        TextButton optionsButton = new TextButton("Options", game.skin);
+        OptionsDialog optionsDialog = new OptionsDialog("Options", game);
+        optionsDialog.initContent();
         TextButton quitterButton = new TextButton("Quitter", game.skin);
         tpsRestant = 30;
         timerLabel = new Label(tpsRestant + " sec", game.skin);
@@ -71,7 +79,8 @@ public class GameScreen implements Screen {
         TextField verificationTextField = new TextField("", game.skin);
         TextButton verificationbutton = new TextButton("Ok", game.skin);
 
-        userInterfaceTable.add(quitterButton).expand().colspan(2);
+        userInterfaceTable.add(optionsButton).expand();
+        userInterfaceTable.add(quitterButton).expand();
         userInterfaceTable.row();
         userInterfaceTable.add(timerLabel).expand().colspan(2);
         userInterfaceTable.row();
@@ -91,9 +100,18 @@ public class GameScreen implements Screen {
                 chatTextField.setText("");
             }
         });
+        optionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Affichage du dialogue d'options
+                optionsDialog.show(stage);
+            }
+        });
         quitterButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // On vide le gestionnaire de listeners
+                game.getGameSocket().clearListeners();
                 // Fermeture des flux
                 game.getGameSocket().close();
                 // Changement d'écran pour revenir au menu principal
@@ -109,19 +127,26 @@ public class GameScreen implements Screen {
                     new Dialog("Bonne reponse", game.skin) {
                         {
                             text("Bonne reponse !");
-                            button("Retour au menu principal");
+                            if (enigmeManager.isOver()) {
+                                button("Retour au menu principal", 1L);
+                            } else {
+                                button("Enigme suivante", 2L);
+                            }
+
                         }
 
                         @Override
                         protected void result(Object object) {
-                        	if(enigmeManager.isOver()) {
-                        		// Fermeture des flux
+                            if (object.equals(1L)) {
+                                // On vide le gestionnaire de listeners
+                                game.getGameSocket().clearListeners();
+                                // Fermeture des flux
                                 game.getGameSocket().close();
                                 // Changement d'écran pour revenir au menu principal
                                 game.switchScreen(new MainMenuScreen(game));
-                        	}else {
-                        		enigmeManager.nextEnigme();
-                        	}
+                            } else if (object.equals(2L)) {
+                                enigmeManager.nextEnigme();
+                            }
                         }
                     }.show(stage);
                 } else {
@@ -130,11 +155,6 @@ public class GameScreen implements Screen {
                             text("La reponse donnee n'est pas correcte");
                             button("Retour");
                         }
-
-                        @Override
-                        protected void result(Object object) {
-
-                        }
                     }.show(stage);
                 }
             }
@@ -142,7 +162,7 @@ public class GameScreen implements Screen {
         indiceButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	enigmeManager.getIndice();
+                enigmeManager.getIndice();
             }
         });
 
@@ -164,19 +184,26 @@ public class GameScreen implements Screen {
                             new Dialog("Bonne reponse", game.skin) {
                                 {
                                     text("Vos coequipiers ont trouves la bonne reponse !");
-                                    button("Retour au menu principal");
+                                    if (enigmeManager.isOver()) {
+                                        button("Retour au menu principal", 1L);
+                                    } else {
+                                        button("Enigme suivante", 2L);
+                                    }
+
                                 }
 
                                 @Override
                                 protected void result(Object object) {
-                                	if(enigmeManager.isOver()) {
-                                		// Fermeture des flux
+                                    if (object.equals(1L)) {
+                                        // On vide le gestionnaire de listeners
+                                        game.getGameSocket().clearListeners();
+                                        // Fermeture des flux
                                         game.getGameSocket().close();
                                         // Changement d'écran pour revenir au menu principal
                                         game.switchScreen(new MainMenuScreen(game));
-                                	}else {
-                                		enigmeManager.nextEnigme();
-                                	}
+                                    } else if (object.equals(2L)) {
+                                        enigmeManager.nextEnigme();
+                                    }
                                 }
                             }.show(stage);
                         }
@@ -189,7 +216,7 @@ public class GameScreen implements Screen {
             }
         });
     }
-    
+
     private final Timer.Task myTimerTask = new Timer.Task() {
         @Override
         public void run() {

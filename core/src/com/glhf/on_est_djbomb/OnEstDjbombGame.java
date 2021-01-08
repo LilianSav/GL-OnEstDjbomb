@@ -25,7 +25,7 @@ public class OnEstDjbombGame extends Game {
         // Instanciation du batch
         batch = new SpriteBatch();
         // Instanciation du skin
-        skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
+        skin = new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json"));
     	//instanciation préférences utilisateur
     	prefs = Gdx.app.getPreferences("My Preferences");
     	if(!prefs.contains("volumeMusique")) {//premier lancement

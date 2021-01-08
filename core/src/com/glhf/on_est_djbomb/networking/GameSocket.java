@@ -19,7 +19,7 @@ public abstract class GameSocket {
     protected boolean running;
     protected GameSocketConstant socketType;
 
-    enum GameSocketConstant {
+    public enum GameSocketConstant {
         HOST,
         GUEST
     }
@@ -60,12 +60,13 @@ public abstract class GameSocket {
 
     // Fermeture des flux (Socket, InputStream et OutputStream)
     public void close() {
-        setRunning(false);
         clearListeners();
         try {
             // Si le socket s'est connecté à un hôte distant, on ferme les flux
             // Sinon l'initialisation ne s'est pas réalisée et il ne faut pas appeler les fonctions de fermeture
-            if (connexion.isBound()) {
+            if (getRunning()) {
+                // On met fin à la boucle d'échanges
+                setRunning(false);
                 // Fermeture du Socket et des Stream
                 outputStream.close();
                 intputStream.close();
@@ -74,27 +75,6 @@ public abstract class GameSocket {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    // Getters et Setters
-    public String getIdentifiant() {
-        return identifiant;
-    }
-
-    public String getRemoteIdentifiant() {
-        return remoteIdentidiant;
-    }
-
-    public boolean getRunning() {
-        synchronized (lockRunning) {
-            return running;
-        }
-    }
-
-    public void setRunning(boolean running) {
-        synchronized (lockRunning) {
-            this.running = running;
         }
     }
 
@@ -122,5 +102,30 @@ public abstract class GameSocket {
             listenersCopy = new ArrayList<>(listeners);
         }
         listenersCopy.forEach(listener -> listener.update(eventMessage));
+    }
+
+    // Getters et Setters
+    public String getIdentifiant() {
+        return identifiant;
+    }
+
+    public String getRemoteIdentifiant() {
+        return remoteIdentidiant;
+    }
+
+    public boolean getRunning() {
+        synchronized (lockRunning) {
+            return running;
+        }
+    }
+
+    public void setRunning(boolean running) {
+        synchronized (lockRunning) {
+            this.running = running;
+        }
+    }
+
+    public GameSocketConstant getSocketType(){
+        return this.socketType;
     }
 }
