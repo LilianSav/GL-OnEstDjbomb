@@ -42,7 +42,7 @@ public class LobbyScreen implements Screen {
         TextButton retourButton = new TextButton("Retour", game.skin);
         TextButton commencerButton = new TextButton("Commencer", game.skin);
 //        commencerButton.setDisabled(true);
-        TextButton pretButton = new TextButton("Pret", game.skin);
+        TextButton pretButton = new TextButton("Prêt", game.skin);
 
         // Ajout des acteurs à la Table
         root.add(titreLabel).colspan(3).expandY().expandX();

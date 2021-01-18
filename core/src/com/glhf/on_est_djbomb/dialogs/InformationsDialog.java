@@ -1,6 +1,5 @@
 package com.glhf.on_est_djbomb.dialogs;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 
@@ -16,15 +15,13 @@ public class InformationsDialog extends Dialog {
         // Section Content
         Table informationsContentTable = getContentTable();
 
-        Label label = new Label("On est Djbomb est un escape game dans lequel la cooperation est l'element central du gameplay.\r\n" +
-                "Dans ce jeu, une equipe separee en deux groupe doit travailler de concert pour desamorcer une bombe qui menace une des equipes dans une des \r\n"
-                + "deux salles.\r\n" +
-                "Au cours de la partie, les equipes seront confrontees à diverses enigmes qui pourront necessiter des interactions avec les elements de leur decor.\r\n" +
-                "La communication est essentielle, donc au cours de la partie, les deux equipes auront la possibilite d'interagir à l'aide d'un chat ecrit.\r\n" +
-                "Enigmes :\r\n" +
-                "Pour desamorcer la bombe, vous devrez resoudre plusieurs enigmes\r\n"
-                + "\r\n"
-                + "Credit musique : Hicham Chahidi - Plongee nocturne\r\n", skin);
+        Label label = new Label("On est Djbomb est un escape game dans lequel la coopération est l'élément central du gameplay.\r\n" +
+                "Dans ce jeu, une équipe separée en deux groupes doit travailler de concert pour désamorcer une bombe qui menace de détruire le batîment \r\n"+
+        		"où ils se trouvent ! \r\n"+    
+                "Au cours de la partie, les équipes seront confrontées à diverses énigmes qui leur permettront de sauver leur vie.\r\n" +
+                "La communication est essentielle, donc au cours de la partie, les deux équipes auront la possibilité d'interagir à l'aide d'un chat écrit.\r\n" +
+                "\r\n" +
+                "Crédit musique : Hicham Chahidi - Plongée nocturne\r\n", skin);
 
         label.setAlignment(Align.center);
         informationsContentTable.add(label);

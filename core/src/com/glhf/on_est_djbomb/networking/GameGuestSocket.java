@@ -56,11 +56,11 @@ public class GameGuestSocket extends GameSocket {
         String infoSocket = "";
         // Si le socket est connecté
         if (connexion.isConnected()) {
-            infoSocket = "Connected to " + connexion.getRemoteSocketAddress();
+            infoSocket = "Connecté à " + connexion.getRemoteSocketAddress();
         }
         // Si le socket n'est pas connecté
         else {
-            infoSocket = "Disconnected";
+            infoSocket = "Déconnecté";
         }
         return infoSocket;
     }

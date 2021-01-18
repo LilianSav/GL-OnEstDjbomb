@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
 
         // Création chat textuel
         TextField chatTextField = new TextField("", game.skin);
-        TextButton sendButton = new TextButton("Send", game.skin);
+        TextButton sendButton = new TextButton("Envoyer", game.skin);
         Label chatTextLabel = new Label("En attente de message ...", game.skin);
         ScrollPane scrollPaneText = new ScrollPane(chatTextLabel, game.skin);
 
@@ -156,7 +156,7 @@ public class GameScreen implements Screen {
                         public void run() {
                             new Dialog("Bonne reponse", game.skin) {
                                 {
-                                    text("Vos coequipiers ont trouves la bonne reponse !");
+                                    text("Vos coéquipiers ont trouvés la bonne réponse !");
                                     //effet sonore
                                 	sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
                                     sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
@@ -195,7 +195,7 @@ public class GameScreen implements Screen {
     protected void finDePartie(boolean repTrouve, boolean timer) {//suivant
     	// Changement d'écran pour revenir au menu principal
         if (repTrouve || timer) {
-        	String dialogTitle="Bonne reponse";
+        	String dialogTitle="Bonne réponse";
         	if(timer) {
         		dialogTitle="Timer fini";
         	}
@@ -205,14 +205,14 @@ public class GameScreen implements Screen {
                 	tpsInitialEnigme=tpsInitialEnigme-tpsRestant;
                     enigmeManager.setTpsUtilise(tpsInitialEnigme);
                     if (timer) {
-                    	text("Vous n'avez pas termine a temps, la bombe a explose !");
+                    	text("Vous n'avez pas terminé à temps, la bombe a explosé !");
                     	//effet sonore
                     	sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_exploding_sound_effect.mp3"));
                         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
 						enigmeManager.setTpsUtilise(tpsInitialEnigme-tpsRestant);
                     	button("Menu de fin de partie", 1L);
                     }else {
-                    	text("Vous avez trouve la solution !");
+                    	text("Vous avez trouvé la solution !");
                     	game.getGameSocket().sendMessage("STATE::GOODEND");
                     	//effet sonore
                     	sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
@@ -236,9 +236,9 @@ public class GameScreen implements Screen {
                 }
             }.show(stage);
         } else {
-            new Dialog("Mauvaise reponse", game.skin) {
+            new Dialog("Mauvaise réponse", game.skin) {
                 {
-                    text("La reponse donnee n'est pas correcte");
+                    text("La réponse donnée n'est pas correcte");
                     //effet sonore
                 	sound = Gdx.audio.newSound(Gdx.files.internal("audio/wrong_sound_effect.mp3"));
                     sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);

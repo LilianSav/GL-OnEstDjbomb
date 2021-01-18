@@ -26,7 +26,7 @@ public class NewGameDialog extends Dialog {
         text("Nouvelle partie :");
 
         // Section button
-        button("Heberger", 1L);
+        button("Héberger", 1L);
         button("Rejoindre", 2L);
         button("Retour", 3L);
     }
@@ -35,7 +35,7 @@ public class NewGameDialog extends Dialog {
     protected void result(Object object) {
         // Option "Hébergez"
         if (object.equals(1L)) {
-            new Dialog("Heberger une partie", game.skin) {
+            new Dialog("Héberger une partie", game.skin) {
                 {
                     pseudoTextField = new TextField(game.prefs.getString("pseudo"), game.skin);
                     getContentTable().add(pseudoTextField);
@@ -80,6 +80,7 @@ public class NewGameDialog extends Dialog {
                 {
                     pseudoTextField = new TextField(game.prefs.getString("pseudo"), game.skin);
                     adresseTextField = new TextField("IP:Port", game.skin);
+                    
                     getContentTable().add(pseudoTextField);
                     getContentTable().add(adresseTextField);
 
@@ -108,7 +109,7 @@ public class NewGameDialog extends Dialog {
                         } else {
                             new Dialog("Paramètres invalides", game.skin) {
                                 {
-                                    getContentTable().add(new Label("Le pseudo et/ou l'adresse ne sont pas renseignes", game.skin));
+                                    getContentTable().add(new Label("Le pseudo et/ou l'adresse ne sont pas renseignés", game.skin));
                                     button("Retour", 1L);
                                 }
                             }.show(gameStage);

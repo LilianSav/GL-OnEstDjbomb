@@ -36,14 +36,16 @@ public class OptionsDialog extends Dialog {
         sliderVolumeEffetSonore.setValue(prefs.getFloat("volumeEffetSonore"));
         informationsContentTable.add(sliderVolumeEffetSonore);
         informationsContentTable.row();
+        /* futur implémentation
         informationsContentTable.add(new Label("Chat vocal : ", skin));
         Slider sliderVolumeChatVocal = new Slider(0f, 100, 1f, false, skin);
         sliderVolumeChatVocal.setValue(prefs.getFloat("volumeChatVocal"));
         informationsContentTable.add(sliderVolumeChatVocal);
+        */
         
         this.sliderVolumeMusique=sliderVolumeMusique;
         this.sliderVolumeEffetSonore=sliderVolumeEffetSonore;
-        this.sliderVolumeChatVocal=sliderVolumeChatVocal;
+        //this.sliderVolumeChatVocal=sliderVolumeChatVocal;
         
         // Section button
         button("Cancel",1L);
@@ -56,12 +58,12 @@ public class OptionsDialog extends Dialog {
     		//todo remettre ancienne val
     		sliderVolumeMusique.setValue(prefs.getFloat("volumeMusique"));
     		sliderVolumeEffetSonore.setValue(prefs.getFloat("volumeEffetSonore"));
-    		sliderVolumeChatVocal.setValue(prefs.getFloat("volumeChatVocal"));
+    		//sliderVolumeChatVocal.setValue(prefs.getFloat("volumeChatVocal"));
     	}
     	if (object.equals(2L)) {
     		prefs.putFloat("volumeMusique", sliderVolumeMusique.getValue());
     		prefs.putFloat("volumeEffetSonore", sliderVolumeEffetSonore.getValue());
-    		prefs.putFloat("volumeChatVocal", sliderVolumeChatVocal.getValue());
+    		//prefs.putFloat("volumeChatVocal", sliderVolumeChatVocal.getValue());
     		music.setVolume(prefs.getFloat("volumeMusique")/100);
     	}
     }

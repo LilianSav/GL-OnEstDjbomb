@@ -47,7 +47,7 @@ public class EndGameScreen implements Screen{
         	game.prefs.putInteger("meilleurTpsUtilise", tpsInit-tpsLeft);
         	meilleurScore="Nouveau meilleur temps !";
         }else {
-        	meilleurScore = "Meilleur temps utilise : "+game.prefs.getInteger("meilleurTpsUtilise")+" s";
+        	meilleurScore = "Meilleur temps utilisé : "+game.prefs.getInteger("meilleurTpsUtilise")+" s";
         }
         
         // Création des labels et ajout des acteurs à la table
@@ -57,7 +57,7 @@ public class EndGameScreen implements Screen{
         Label tpsInitial = new Label("Temps initial : "+tpsInit+" s", game.skin);
         root.add(tpsInitial).expandY();
         root.row();
-        Label tpsUtilise = new Label("Temps utilise : "+(tpsInit-tpsLeft)+" s", game.skin);
+        Label tpsUtilise = new Label("Temps utilisé : "+(tpsInit-tpsLeft)+" s", game.skin);
         root.add(tpsUtilise).expandY();
         root.row();
         Label meilleurTpsUtilise = new Label(meilleurScore, game.skin);
@@ -66,7 +66,7 @@ public class EndGameScreen implements Screen{
         Label tpsRestant = new Label("Temps restant : "+tpsLeft+" s", game.skin);
         root.add(tpsRestant).expandY();
         root.row();
-        Label labelEnigmes = new Label("Temps utilise par enigmes :", game.skin);
+        Label labelEnigmes = new Label("Temps utilisé par énigmes :", game.skin);
     	root.add(labelEnigmes).expandY();        
         //afficher tps pour chaque enigmes
         for(EnigmaSkeleton enigme : enigmes) {
@@ -86,7 +86,6 @@ public class EndGameScreen implements Screen{
                 // Fermeture des flux
                 game.getGameSocket().close();
                 // Changement d'écran pour revenir au menu principal
-            	System.out.println("a");
             	game.switchScreen(new MainMenuScreen(game));
             }
         });

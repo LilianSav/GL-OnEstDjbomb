@@ -8,7 +8,7 @@ public class EnigmaFindThePath extends EnigmaSkeleton {
     public EnigmaFindThePath(boolean isHost) {
         super(isHost);
         setSolution(2865);
-        setIndice("Suivez les fleches");
+        setIndice("Suivez les flèches");
         setNom("Retrouver le chemin");
     }
 
