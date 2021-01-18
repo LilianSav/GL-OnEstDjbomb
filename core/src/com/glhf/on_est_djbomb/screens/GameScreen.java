@@ -24,9 +24,11 @@ public class GameScreen implements Screen {
     private int tpsInitialEnigme;
     private final EnigmaManager enigmeManager;
     private OnEstDjbombGame game;
+    private boolean isOver;
 
     public GameScreen(OnEstDjbombGame game) {
     	this.game=game;
+    	isOver=false;
     	
         // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
@@ -76,7 +78,7 @@ public class GameScreen implements Screen {
         OptionsDialog optionsDialog = new OptionsDialog("Options", game);
         optionsDialog.initContent();
         TextButton quitterButton = new TextButton("Quitter", game.skin);
-        tpsInitial = 300;//5min
+        tpsInitial = 20;//5min
         tpsRestant = tpsInitial;
         tpsInitialEnigme=tpsInitial;
         timerLabel = new Label(tpsRestant + " sec", game.skin);
@@ -195,6 +197,7 @@ public class GameScreen implements Screen {
     protected void finDePartie(boolean repTrouve, boolean timer) {//suivant
     	// Changement d'écran pour revenir au menu principal
         if (repTrouve || timer) {
+        	isOver=true;
         	String dialogTitle="Bonne réponse";
         	if(timer) {
         		dialogTitle="Timer fini";
@@ -212,6 +215,7 @@ public class GameScreen implements Screen {
 						enigmeManager.setTpsUtilise(tpsInitialEnigme-tpsRestant);
                     	button("Menu de fin de partie", 1L);
                     }else {
+                    	isOver=true;
                     	text("Vous avez trouvé la solution !");
                     	game.getGameSocket().sendMessage("STATE::GOODEND");
                     	//effet sonore
@@ -253,7 +257,7 @@ public class GameScreen implements Screen {
         public void run() {
             tpsRestant--;
             timerLabel.setText(tpsRestant + " sec");
-            if (tpsRestant == 0) {
+            if (tpsRestant == 0 && isOver==false) {
                 myTimerTask.cancel();
                 finDePartie(false,true);
             }
