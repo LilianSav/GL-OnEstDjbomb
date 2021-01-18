@@ -66,14 +66,17 @@ public class EndGameScreen implements Screen{
         Label tpsRestant = new Label("Temps restant : "+tpsLeft+" s", game.skin);
         root.add(tpsRestant).expandY();
         root.row();
+        // todo fix
+        //afficher tps pour chaque enigmes
+        /*
         Label labelEnigmes = new Label("Temps utilisé par énigmes :", game.skin);
     	root.add(labelEnigmes).expandY();        
-        //afficher tps pour chaque enigmes
         for(EnigmaSkeleton enigme : enigmes) {
         	Label labelEnigme = new Label(enigme.getNom()+" : "+enigme.getTpsUtilise()+" s", game.skin);
         	root.add(labelEnigme).expandY();
             root.row();
         }
+        */
         TextButton menuPrincipalButton = new TextButton("Menu principal", game.skin);
         root.add(menuPrincipalButton).expandY();
         
