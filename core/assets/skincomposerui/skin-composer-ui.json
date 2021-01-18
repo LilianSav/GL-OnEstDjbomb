@@ -1,10 +1,10 @@
 {
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
-	font: {
-		file: font-export.fnt
+	font-32: {
+		file: arial-32px.fnt
 	}
-	title: {
-		file: font-title-export.fnt
+	font-16: {
+		file: arial-16px.fnt
 	}
 }
 com.badlogic.gdx.graphics.Color: {
@@ -45,6 +45,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	button-color: {
 		name: white
 		color: button
+	}
+	selection: {
+		name: white
+		color: black
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
@@ -143,14 +147,8 @@ com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 		checkboxOn: checkbox-on
 		checkboxOff: checkbox-off
 		checkboxOver: checkbox-off-over
-		font: font
+		font: font-16
 		fontColor: white
-	}
-	switch: {
-		checkboxOn: toggle-on
-		checkboxOff: toggle-off
-		checkboxOver: toggle-off-over
-		font: font
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
@@ -183,60 +181,46 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 	default: {
-		font: font
+		font: font-16
 		fontColor: white
 		up: button
 		down: button-pressed
 		over: button-over
 	}
-	checkbox: {
-		imageUp: checkbox-off
-		imageDown: checkbox-on-pressed
-		imageOver: checkbox-off-over
-		imageChecked: checkbox-on
-		imageCheckedOver: checkbox-on-over
-		font: font
-	}
-	switch: {
-		imageUp: toggle-off
-		imageDown: toggle-on-pressed
-		imageOver: toggle-off-over
-		imageChecked: toggle-on
-		imageCheckedOver: toggle-on-over
-		font: font
-		fontColor: white
-	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {
-		font: font
+		font: font-16
 		fontColor: button
 	}
 	title: {
-		font: title
+		font: font-32
 		fontColor: button
-		background: class-bar
-	}
-	white: {
-		font: font
-		fontColor: white
 	}
 	title-white: {
-		font: title
+		font: font-32
 		fontColor: white
-	}
-	required: {
-		font: font
-		fontColor: black
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {
-		font: font
+		font: font-16
 		fontColorSelected: white
 		fontColorUnselected: white
 		selection: pressed
 		background: list
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
+	default-horizontal: {
+		background: slider-horizontal
+		knobBefore: button-file-pressed
+		disabledKnobBefore: button-file
+	}
+	default-vertical: {
+		background: slider-vertical
+		knobBefore: button-file-pressed
+		disabledKnobBefore: button-file
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
@@ -249,7 +233,7 @@ com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
-		font: font
+		font: font-16
 		fontColor: button
 		background: selectbox
 		scrollStyle: default
@@ -282,34 +266,34 @@ com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
-		font: font
+		font: font-16
 		fontColor: white
 		up: button
 		down: button-pressed
 		over: button-over
 	}
-	new: {
-		font: font
+	title: {
+		font: font-32
 		fontColor: white
-		up: button-plus
-		down: button-plus-pressed
-		over: button-plus-over
-	}
-	file: {
-		font: font
-		up: button-file
-		down: button-file-pressed
-		over: button-file-over
-		checked: button-file-pressed
+		up: button
+		down: button-pressed
+		over: button-over
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: {
-		font: font
+		font: font-16
 		fontColor: pressed
 		background: textfield
 		cursor: black
-		selection: button-color
+		selection: button-file
+	}
+	title: {
+		font: font-32
+		fontColor: pressed
+		background: textfield
+		cursor: black
+		selection: button-file
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
@@ -317,20 +301,22 @@ com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 		label: default
 	}
 }
+com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
+	default: {
+		background: window2
+		knob: button-settings-small-pressed
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
+	default: {
+		plus: button-new
+		minus: button-minimize
+	}
+}
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {
 		background: window
-		titleFont: font
-		titleFontColor: white
-	}
-	dialog: {
-		background: window2
-		titleFont: font
-		titleFontColor: white
-	}
-	main: {
-		background: window-main
-		titleFont: font
+		titleFont: font-32
 		titleFontColor: white
 	}
 }

@@ -6,12 +6,15 @@ import com.glhf.on_est_djbomb.OnEstDjbombGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
+		// Instanciation de la configuration Lwjgl3
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 
+		// Modification de la configuration
 		config.setTitle("On Est Djbomb");
 		config.setWindowedMode(OnEstDjbombGame.GAME_WIDTH, OnEstDjbombGame.GAME_HEIGHT);
 		config.setResizable(false);
 
+		// Lancement de l'application OnEstDjbombGame
 		new Lwjgl3Application(new OnEstDjbombGame(), config);
 	}
 }
