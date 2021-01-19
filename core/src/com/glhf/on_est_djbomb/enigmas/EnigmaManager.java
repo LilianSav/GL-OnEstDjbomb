@@ -11,18 +11,23 @@ import com.glhf.on_est_djbomb.dialogs.ClueDialog;
 
 public class EnigmaManager extends Table{
 
-	private final ArrayList<EnigmaSkeleton> enigmes;
-	private EnigmaSkeleton enigmeCourante;
+	private final ArrayList<EnigmaSkeleton> enigmes;// liste des énigmes
+	private EnigmaSkeleton enigmeCourante;// classe de l'énigme en cours d'utilisation
 	private final boolean isHost;
-	private ClueDialog clueDialog;
+	private ClueDialog clueDialog;// dialogue d'information affichant l'indice de l'énigme courante
 	private final OnEstDjbombGame game;
 	private final Stage stage;
-	private Texture enigmeImageTexture;
-	
+	private Texture enigmeImageTexture;// image affichée sur le Table
+
 	public EnigmaManager(boolean isHost , OnEstDjbombGame game , Stage stage) {
+		// initialisation
 		super();
 		enigmes = new ArrayList<EnigmaSkeleton>();
 		this.isHost=isHost;
+		this.game=game;
+		this.stage = stage;
+		chargerImage();
+		chargerIndice();
 		//ajout des enigmes
 		EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
 		enigmes.add(enigme1);
@@ -31,13 +36,10 @@ public class EnigmaManager extends Table{
 		EnigmaPyramid enigme3 = new EnigmaPyramid(isHost);
 		enigmes.add(enigme3);
 		enigmeCourante=enigme1;
-		this.game=game;
-		this.stage = stage;
-		chargerImageEtIndice();
 	}
-
-	private void chargerImageEtIndice() {
-		// Images du table
+	
+	// Récupération de l'images du table depuis la classe d'énigme
+	private void chargerImage() {
 		if(isHost) {
 			enigmeImageTexture = enigmeCourante.getTextureTableHost();
 		}else {
@@ -45,27 +47,32 @@ public class EnigmaManager extends Table{
 		}
 		Image enigmeImageWidget = new Image(enigmeImageTexture);
         this.add(enigmeImageWidget);
-        
-        // Intanciation du dialogue d'indice
+	}
+	
+	// Intanciation du dialogue d'indice
+	private void chargerIndice() {
         clueDialog = new ClueDialog("Indice", game.skin);
         clueDialog.initContent();
 	}
 
+	// passer à l'énigme suivante
 	public void nextEnigme() {
 		enigmeCourante=enigmes.get(enigmes.indexOf(enigmeCourante)+1);
-		chargerImageEtIndice();
+		chargerImage();
+		chargerIndice();
 	}
 	
 	public int getSolution() {
-		return enigmeCourante.getSolution();
+		return enigmeCourante.getSolution();//todo implémenter
 	}
 	
+	// Affichage du dialogue d'informations
 	public void getIndice() {
-		// Affichage du dialogue d'informations
-    	clueDialog.setClue(enigmeCourante.getIndice());
+    	clueDialog.setClue(enigmeCourante.getIndice());// récupération du texte d'indice de l'éngime courante
         clueDialog.show(stage);
 	}
 	
+	// est-ce qu'il reste des énigmes dans la liste d'énigme ?
 	public boolean isOver() {
 		// Suppression de l'ancienne image
 		enigmeImageTexture.dispose();
@@ -81,6 +88,7 @@ public class EnigmaManager extends Table{
 		return enigmes;
 	}
 	
+	// sauvegarde du tps pour le menu de fin de partie
 	public void setTpsUtilise(int tps) {
 		enigmeCourante.setTpsUtilise(tps);
 	}

@@ -5,18 +5,18 @@ import com.badlogic.gdx.graphics.Texture;
 public abstract class EnigmaSkeleton {
 
 	private int solution;
-	private String indice;
+	private String indice;// texte d'indice
 	private boolean isHost;
 	private int tpsUtilise;
-	private String nom;
+	private String nom;// nom de l'énigme
 	
 	public EnigmaSkeleton(boolean isHost) {
 		super();
 		setHost(isHost);
 	}
 	
+	// path de l'image à afficher
 	public abstract Texture getTextureTableHost();
-
 	public abstract Texture getTextureTableGuest();
 	
 	public int getSolution() {
@@ -37,23 +37,16 @@ public abstract class EnigmaSkeleton {
 	public void setHost(boolean isHost) {
 		this.isHost = isHost;
 	}
-
 	public int getTpsUtilise() {
 		return tpsUtilise;
 	}
-
 	public void setTpsUtilise(int tpsUtilise) {
 		this.tpsUtilise = tpsUtilise;
 	}
-
 	public String getNom() {
 		return nom;
 	}
-
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
-	
-	
-	
 }
