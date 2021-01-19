@@ -11,6 +11,7 @@ public abstract class EnigmaSkeleton {
 	private String nom;// nom de l'énigme
 	private int tpsBeforeIndice;// nombre de secondes minimum avant d'autoriser l'utilisateur à afficher l'indice
 	private int tpsBeforeSolution;// nombre de secondes minimum avant d'autoriser l'utilisateur à afficher la solution
+	private String titreTable;// phrase composée du nom de l'énigme et d'une explication lorsque nécessaire, elle est affiché en haut du table
 	
 	public EnigmaSkeleton(boolean isHost) {
 		super();
@@ -62,5 +63,11 @@ public abstract class EnigmaSkeleton {
 	}
 	public void setTpsBeforeSolution(int tpsBeforeSolution) {
 		this.tpsBeforeSolution = tpsBeforeSolution;
+	}
+	public String getTitreTable() {
+		return titreTable;
+	}
+	public void setTitreTable(String titreTable) {
+		this.titreTable = titreTable;
 	}
 }

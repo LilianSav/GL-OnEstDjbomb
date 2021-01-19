@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 import com.glhf.on_est_djbomb.dialogs.ClueDialog;
@@ -20,6 +21,7 @@ public class EnigmaManager extends Table{
 	private final OnEstDjbombGame game;
 	private final Stage stage;
 	private Texture enigmeImageTexture;// image affichée sur le Table
+	private Label titreLabel;
 
 	public EnigmaManager(boolean isHost , OnEstDjbombGame game , Stage stage) {
 		// initialisation
@@ -37,6 +39,7 @@ public class EnigmaManager extends Table{
 		enigmes.add(enigme3);
 		enigmeCourante=enigme1;
 		// charger data des enigmes
+		chargerTitre();
 		chargerImage();
 		chargerIndice();
 		chargerSolution();
@@ -64,10 +67,18 @@ public class EnigmaManager extends Table{
         solutionDialog = new SolutionDialog("Solution", game.skin);
         solutionDialog.initContent();
 	}
+	
+	// Intanciation du titre du table (composé du nom de l'énigme et d'une explication lorsque nécessaire)
+	private void chargerTitre() {
+		titreLabel = new Label(enigmeCourante.getTitreTable(),game.skin);
+		this.add(titreLabel);
+		this.row();
+	}
 
 	// passer à l'énigme suivante
 	public void nextEnigme() {
 		enigmeCourante=enigmes.get(enigmes.indexOf(enigmeCourante)+1);
+		chargerTitre();
 		chargerImage();
 		chargerIndice();
 		chargerSolution();

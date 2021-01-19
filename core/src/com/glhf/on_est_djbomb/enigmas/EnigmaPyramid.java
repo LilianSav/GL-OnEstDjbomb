@@ -10,6 +10,7 @@ public class EnigmaPyramid extends EnigmaSkeleton {
         setSolution(144);
         setIndice("C'est une question de produit...");
         setNom("Le mystère de la pyramide");
+        setTitreTable(getNom()+"\n");
         setTpsBeforeIndice(40);
         setTpsBeforeSolution(120);
     }

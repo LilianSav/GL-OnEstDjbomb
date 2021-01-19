@@ -10,6 +10,7 @@ public class EnigmaFindThePath extends EnigmaSkeleton {
         setSolution(2865);
         setIndice("Suivez les flèches");
         setNom("Retrouver le chemin");
+        setTitreTable(getNom()+"\n");
         setTpsBeforeIndice(20);
         setTpsBeforeSolution(50);
     }
