@@ -78,7 +78,7 @@ public class GameScreen implements Screen {
         OptionsDialog optionsDialog = new OptionsDialog("Options", game);
         optionsDialog.initContent();
         TextButton quitterButton = new TextButton("Quitter", game.skin);
-        tpsInitial = 20;//5min
+        tpsInitial = 300;//5min
         tpsRestant = tpsInitial;
         tpsInitialEnigme=tpsInitial;
         timerLabel = new Label(tpsRestant + " sec", game.skin);
