@@ -26,8 +26,6 @@ public class EnigmaManager extends Table{
 		this.isHost=isHost;
 		this.game=game;
 		this.stage = stage;
-		chargerImage();
-		chargerIndice();
 		//ajout des enigmes
 		EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
 		enigmes.add(enigme1);
@@ -36,9 +34,12 @@ public class EnigmaManager extends Table{
 		EnigmaPyramid enigme3 = new EnigmaPyramid(isHost);
 		enigmes.add(enigme3);
 		enigmeCourante=enigme1;
+		// charger data des enigmes
+		chargerImage();
+		chargerIndice();
 	}
 	
-	// Récupération de l'images du table depuis la classe d'énigme
+	// Récupération et affichage de l'images du table depuis la classe d'énigme
 	private void chargerImage() {
 		if(isHost) {
 			enigmeImageTexture = enigmeCourante.getTextureTableHost();
