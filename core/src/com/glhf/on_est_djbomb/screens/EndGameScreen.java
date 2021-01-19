@@ -43,7 +43,7 @@ public class EndGameScreen implements Screen{
         
         // Gestion meilleur temps
         String meilleurScore;
-        if(game.prefs.getInteger("meilleurTpsUtilise") > tpsLeft){//new best score
+        if(game.prefs.getInteger("meilleurTpsUtilise") > tpsInit-tpsLeft){//new best score
         	game.prefs.putInteger("meilleurTpsUtilise", tpsInit-tpsLeft);
         	meilleurScore="Nouveau meilleur temps !";
         }else {
