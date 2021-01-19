@@ -9,6 +9,8 @@ public abstract class EnigmaSkeleton {
 	private boolean isHost;
 	private int tpsUtilise;
 	private String nom;// nom de l'énigme
+	private int tpsBeforeIndice;// nombre de secondes minimum avant d'autoriser l'utilisateur à afficher l'indice
+	private int tpsBeforeSolution;// nombre de secondes minimum avant d'autoriser l'utilisateur à afficher la solution
 	
 	public EnigmaSkeleton(boolean isHost) {
 		super();
@@ -48,5 +50,17 @@ public abstract class EnigmaSkeleton {
 	}
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+	public int getTpsBeforeIndice() {
+		return tpsBeforeIndice;
+	}
+	public void setTpsBeforeIndice(int tpsBeforeIndice) {
+		this.tpsBeforeIndice = tpsBeforeIndice;
+	}
+	public int getTpsBeforeSolution() {
+		return tpsBeforeSolution;
+	}
+	public void setTpsBeforeSolution(int tpsBeforeSolution) {
+		this.tpsBeforeSolution = tpsBeforeSolution;
 	}
 }

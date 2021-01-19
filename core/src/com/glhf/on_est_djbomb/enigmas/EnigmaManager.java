@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 import com.glhf.on_est_djbomb.dialogs.ClueDialog;
+import com.glhf.on_est_djbomb.dialogs.SolutionDialog;
 
 public class EnigmaManager extends Table{
 
@@ -15,6 +16,7 @@ public class EnigmaManager extends Table{
 	private EnigmaSkeleton enigmeCourante;// classe de l'énigme en cours d'utilisation
 	private final boolean isHost;
 	private ClueDialog clueDialog;// dialogue d'information affichant l'indice de l'énigme courante
+	private SolutionDialog solutionDialog;// dialogue d'information affichant la solution de l'énigme courante
 	private final OnEstDjbombGame game;
 	private final Stage stage;
 	private Texture enigmeImageTexture;// image affichée sur le Table
@@ -37,6 +39,7 @@ public class EnigmaManager extends Table{
 		// charger data des enigmes
 		chargerImage();
 		chargerIndice();
+		chargerSolution();
 	}
 	
 	// Récupération et affichage de l'images du table depuis la classe d'énigme
@@ -55,22 +58,35 @@ public class EnigmaManager extends Table{
         clueDialog = new ClueDialog("Indice", game.skin);
         clueDialog.initContent();
 	}
+	
+	// Intanciation du dialogue d'indice
+	private void chargerSolution() {
+        solutionDialog = new SolutionDialog("Solution", game.skin);
+        solutionDialog.initContent();
+	}
 
 	// passer à l'énigme suivante
 	public void nextEnigme() {
 		enigmeCourante=enigmes.get(enigmes.indexOf(enigmeCourante)+1);
 		chargerImage();
 		chargerIndice();
+		chargerSolution();
 	}
 	
 	public int getSolution() {
-		return enigmeCourante.getSolution();//todo implémenter
+		return enigmeCourante.getSolution();
 	}
 	
 	// Affichage du dialogue d'informations
-	public void getIndice() {
+	public void getIndiceDialog() {
     	clueDialog.setClue(enigmeCourante.getIndice());// récupération du texte d'indice de l'éngime courante
         clueDialog.show(stage);
+	}
+	
+	// Affichage du dialogue d'informations
+	public void getSolutionDialog() {
+    	solutionDialog.setSolution(enigmeCourante.getSolution()+"");// récupération du texte d'indice de l'éngime courante
+    	solutionDialog.show(stage);
 	}
 	
 	// est-ce qu'il reste des énigmes dans la liste d'énigme ?
@@ -92,5 +108,27 @@ public class EnigmaManager extends Table{
 	// sauvegarde du tps pour le menu de fin de partie
 	public void setTpsUtilise(int tps) {
 		enigmeCourante.setTpsUtilise(tps);
+	}
+
+	// nombre de secondes minimum de l'énigme avant d'autoriser l'utilisateur à afficher l'indice
+	public int getTpsBeforeIndice() {
+		return enigmeCourante.getTpsBeforeIndice();
+	}
+	
+	// nombre de secondes minimum de l'énigme avant d'autoriser l'utilisateur à afficher la solution
+	public int getTpsBeforeSolution() {
+		return enigmeCourante.getTpsBeforeSolution();
+	}
+
+	// informer l'utilisateur qu'il clique sur le bouton d'indice trop tôt
+	public void getInstructionIndice() {
+		clueDialog.setClue("Cherchez encore un peu !\nL'indice sera disponible plus tard si vous ne trouvez pas.");// récupération du texte d'indice de l'éngime courante
+        clueDialog.show(stage);
+	}
+	
+	// informer l'utilisateur qu'il clique sur le bouton d'indice trop tôt
+	public void getInstructionSolution() {
+		solutionDialog.setSolution("Cherchez encore un peu !\nLa solution sera disponible plus tard si vous ne trouvez pas.");// récupération du texte d'indice de l'éngime courante
+		solutionDialog.show(stage);
 	}
 }

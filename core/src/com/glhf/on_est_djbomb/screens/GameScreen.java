@@ -3,6 +3,7 @@ package com.glhf.on_est_djbomb.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,6 +26,8 @@ public class GameScreen implements Screen {
     private final EnigmaManager enigmeManager;
     private OnEstDjbombGame game;
     private boolean isOver;
+    private TextButton solutionButton;
+    private TextButton indiceButton;
 
     public GameScreen(OnEstDjbombGame game) {
     	this.game=game;
@@ -45,7 +48,6 @@ public class GameScreen implements Screen {
         } else {
             enigmeManager = new EnigmaManager(false, game, stage);
         }
-
 
         // Instanciation d'une table pour contenir nos Layouts (Énigmes, UI, Chat)
         Table root = new Table();
@@ -83,8 +85,10 @@ public class GameScreen implements Screen {
         tpsInitialEnigme=tpsInitial;
         timerLabel = new Label(tpsRestant + " sec", game.skin);
         startTimer();
-        TextButton indiceButton = new TextButton("Indice", game.skin);
-        TextButton solutionButton = new TextButton("Solution", game.skin);
+        indiceButton = new TextButton("Indice", game.skin);
+        indiceButton.setColor(Color.BLACK);
+        solutionButton = new TextButton("Solution", game.skin);
+        solutionButton.setColor(Color.BLACK);
         TextField verificationTextField = new TextField("", game.skin);
         TextButton verificationbutton = new TextButton("Ok", game.skin);
 
@@ -137,9 +141,24 @@ public class GameScreen implements Screen {
         indiceButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                enigmeManager.getIndice();
+            	if(tpsRestant<=tpsInitialEnigme-enigmeManager.getTpsBeforeIndice()) {
+            		enigmeManager.getIndiceDialog();
+            	}else {
+            		enigmeManager.getInstructionIndice();
+            	}
             }
         });
+        solutionButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	if(tpsRestant<=tpsInitialEnigme-enigmeManager.getTpsBeforeSolution()) {
+            		enigmeManager.getSolutionDialog();
+            	}else {
+            		enigmeManager.getInstructionSolution();
+            	}
+            }
+        });
+
 
         // Gestion Message et Game State
         game.getGameSocket().addListener(eventMessage -> {
@@ -163,7 +182,8 @@ public class GameScreen implements Screen {
                                 	sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
                                     sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
                                     //mise à jour tps utilisé
-                                    tpsInitialEnigme=tpsInitialEnigme-tpsRestant;
+                                    tpsInitialEnigme=tpsRestant;
+                                    System.out.println("tpsinienigme"+tpsInitialEnigme);
                                     enigmeManager.setTpsUtilise(tpsInitialEnigme);
                                     if (enigmeManager.isOver()) {
                                         button("Menu fin de partie", 1L);
@@ -180,6 +200,9 @@ public class GameScreen implements Screen {
                                         game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial,enigmeManager.getEnigmes()));
                                     } else if (object.equals(2L)) {//enigme suivante
                                         enigmeManager.nextEnigme();
+                                        //gère la couleur des boutons
+                                        indiceButton.setColor(Color.BLACK);
+                                        solutionButton.setColor(Color.BLACK);
                                     }
                                 }
                             }.show(stage);
@@ -205,7 +228,7 @@ public class GameScreen implements Screen {
             new Dialog(dialogTitle, game.skin) {
                 {
                 	//mise à jour tps utilisé
-                	tpsInitialEnigme=tpsInitialEnigme-tpsRestant;
+                	tpsInitialEnigme=tpsRestant;
                     enigmeManager.setTpsUtilise(tpsInitialEnigme);
                     if (timer) {
                     	text("Vous n'avez pas terminé à temps, la bombe a explosé !");
@@ -236,6 +259,9 @@ public class GameScreen implements Screen {
                         game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial,enigmeManager.getEnigmes()));
                     } else if (object.equals(2L)) {//enigme suivante
                         enigmeManager.nextEnigme();
+                        //gère la couleur des boutons
+                        indiceButton.setColor(Color.BLACK);
+                        solutionButton.setColor(Color.BLACK);
                     }
                 }
             }.show(stage);
@@ -257,6 +283,16 @@ public class GameScreen implements Screen {
         public void run() {
             tpsRestant--;
             timerLabel.setText(tpsRestant + " sec");
+            //gère la couleur des boutons
+            System.out.println(game.getGameSocket().getSocketType() == GameSocket.GameSocketConstant.HOST);
+            System.out.println("affiche indice a "+(tpsInitialEnigme-enigmeManager.getTpsBeforeIndice()));
+            if(tpsRestant==tpsInitialEnigme-enigmeManager.getTpsBeforeIndice()) {
+            	indiceButton.setColor(Color.WHITE);
+            }
+            if(tpsRestant==tpsInitialEnigme-enigmeManager.getTpsBeforeSolution()) {
+            	solutionButton.setColor(Color.WHITE);
+            }
+            //temps écoulé
             if (tpsRestant == 0 && isOver==false) {
                 myTimerTask.cancel();
                 finDePartie(false,true);

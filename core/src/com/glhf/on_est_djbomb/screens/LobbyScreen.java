@@ -2,6 +2,7 @@ package com.glhf.on_est_djbomb.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -41,7 +42,7 @@ public class LobbyScreen implements Screen {
         // Création des boutons
         TextButton retourButton = new TextButton("Retour", game.skin);
         TextButton commencerButton = new TextButton("Commencer", game.skin);
-//        commencerButton.setDisabled(true);
+        // commencerButton.setDisabled(true);
         TextButton pretButton = new TextButton("Prêt", game.skin);
 
         // Ajout des acteurs à la Table
