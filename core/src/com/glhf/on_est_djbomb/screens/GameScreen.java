@@ -183,7 +183,6 @@ public class GameScreen implements Screen {
                                     sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
                                     //mise à jour tps utilisé
                                     tpsInitialEnigme=tpsRestant;
-                                    System.out.println("tpsinienigme"+tpsInitialEnigme);
                                     enigmeManager.setTpsUtilise(tpsInitialEnigme);
                                     if (enigmeManager.isOver()) {
                                         button("Menu fin de partie", 1L);
@@ -284,8 +283,6 @@ public class GameScreen implements Screen {
             tpsRestant--;
             timerLabel.setText(tpsRestant + " sec");
             //gère la couleur des boutons
-            System.out.println(game.getGameSocket().getSocketType() == GameSocket.GameSocketConstant.HOST);
-            System.out.println("affiche indice a "+(tpsInitialEnigme-enigmeManager.getTpsBeforeIndice()));
             if(tpsRestant==tpsInitialEnigme-enigmeManager.getTpsBeforeIndice()) {
             	indiceButton.setColor(Color.WHITE);
             }
