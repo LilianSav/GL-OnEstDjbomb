@@ -9,10 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
 
@@ -42,6 +39,8 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
     HashMap<String, Integer> spriteIndexMap;
     Array<Sprite> sprites;
 
+    Table fillTable;
+
 
     public EnigmaLabyrinth(boolean isHost, String nameLabyrinth) throws FileNotFoundException {
         super(isHost);
@@ -50,12 +49,14 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
 
         setNom("Échappez-vous du labyrinthe!");
         if(isHost){
-            setIndice("L'autre équipe est bloquée dans un labyrinthe, vous seul en possédez la carte, " +
-                    "guidez-le vers les différents indices pour trouver le code secret permettant de s'enfuir!\n");
+            setTitreTable("");/*
+            setTitreTable("L'autre équipe est bloquée dans un labyrinthe, vous seul en possédez la carte, " +
+                    "guidez-le vers les différents indices pour trouver le code secret permettant de s'enfuir!\n");*/
         }
         else {
+            setTitreTable("");/*
             setTitreTable("Vous êtes bloqué dans un labyrinthe, cliquez sur les cases adjacentes à " +
-                    "votre personnage pour vous déplacer et laissez vous guider par votre partenaire pour trouver le code!\n");
+                    "votre personnage pour vous déplacer et laissez vous guider par votre partenaire pour trouver le code!\n");*/
         }
 
         setTpsBeforeIndice(60);
@@ -99,7 +100,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
 
             for (char elem : word.toCharArray()) {
 
-                tabLabyrinth[i][j] = elem;
+                tabLabyrinth[j][i] = elem;
                 switch (elem){
                     case WALL: //if the read character corresponds to a wall
                         break;
@@ -125,6 +126,54 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
 
     public void load(boolean isHost, EnigmaManager enigmaManager){
 
+        fillTable=new Table();
+
+        enigmaManager.add(fillTable);
+        fillTable.setFillParent(true);
+
+        textureAtlas = new TextureAtlas(pathLabyrinth+"labyrinthSprites.txt");
+
+        sprites = textureAtlas.createSprites();
+
+        int squareSize = (int)(fillTable.getHeight()/ tabLabyrinth.length);
+
+        int cpt=1;
+        for (char[] row: tabLabyrinth) {
+            for(char elem : row){
+                System.out.print(elem);
+                Skin skin = new Skin(textureAtlas);
+
+                ImageButton.ImageButtonStyle button = new ImageButton.ImageButtonStyle();
+
+                switch (elem) {
+                    case WALL: //if the read character corresponds to a wall
+                        button.up = skin.getDrawable("LabyrinthWall");
+                        break;
+                    case PATH: //if the read character corresponds to an available path
+                        button.up = skin.getDrawable("LabyrinthPath");
+                        break;
+                    case START: //if the read character corresponds to the starting place
+                        button.up = skin.getDrawable("LabyrinthStart");
+                        break;
+                    default: //Otherwise, the character corresponds to an element of the password
+                        String clue = "LabyrinthClue" + String.valueOf(cpt);
+                        button.up = skin.getDrawable(clue);
+                        cpt++;
+                        break;
+                }
+
+                ImageButton real = new ImageButton(button);
+                TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+
+                fillTable.add(real).grow();
+            }
+            System.out.println();
+            fillTable.row();
+        }
+    }
+/*
+    public void loadClient(boolean isHost, EnigmaManager enigmaManager){
+
         textureAtlas = new TextureAtlas(pathLabyrinth+"labyrinthSprites.txt");
 
         sprites = textureAtlas.createSprites();
@@ -133,33 +182,43 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
 
         BitmapFont font = new BitmapFont();
 
+        int cpt=1;
         for (char[] row: tabLabyrinth) {
             for(char elem : row){
                 Skin skin = new Skin(textureAtlas);
-                skin.getDrawable("LabyrinthStart");
 
                 ImageButton.ImageButtonStyle button = new ImageButton.ImageButtonStyle();
-                button.up=skin.getDrawable("LabyrinthWall");
+
+                switch (elem){
+                    case WALL: //if the read character corresponds to a wall
+                        button.up=skin.getDrawable("LabyrinthWall");
+                        break;
+                    case PATH: //if the read character corresponds to an available path
+                        button.up=skin.getDrawable("LabyrinthPath");
+                        break;
+                    case START: //if the read character corresponds to the starting place
+                        button.up=skin.getDrawable("LabyrinthStart");
+                        break;
+                    default: //Otherwise, the character corresponds to an element of the password
+                        String clue = "LabyrinthClue"+String.valueOf(cpt);
+                        System.out.println(clue);
+                        button.up=skin.getDrawable(clue);
+                        cpt++;
+                        break;
+                }
 
                 ImageButton real = new ImageButton(button);
                 TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
 
-                enigmaManager.add(real).fill();
+                enigmaManager.add(real);
             }
             enigmaManager.row();
         }
-
-        /*if(isHost) {
-            enigmeImageTexture = enigmeCourante.getTextureTableHost();
-        }else {
-            enigmeImageTexture = enigmeCourante.getTextureTableGuest();
-        }
-        Image enigmeImageWidget = new Image(enigmeImageTexture);
-        this.add(enigmeImageWidget);*/
-    }
+    }*/
 
     public void dispose(){
         textureAtlas.dispose();
+
     }
 
 }

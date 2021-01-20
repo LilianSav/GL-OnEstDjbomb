@@ -32,7 +32,7 @@ public class EnigmaManager extends Table{
 		this.game=game;
 		this.stage = stage;
 		//ajout des enigmes
-		EnigmaLabyrinth l1 = new EnigmaLabyrinth(isHost, "labyrinthe.txt");
+		EnigmaLabyrinth l1 = new EnigmaLabyrinth(isHost, "labyrinthe2.txt");
 		enigmes.add(l1);
 		EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
 		enigmes.add(enigme1);/*
@@ -114,6 +114,7 @@ public class EnigmaManager extends Table{
 	
 	// est-ce qu'il reste des énigmes dans la liste d'énigme ?
 	public boolean isOver() {
+
 		// Suppression de l'ancienne image
 		enigmeImageTexture.dispose();
 		this.clearChildren();

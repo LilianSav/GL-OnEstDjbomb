@@ -57,14 +57,14 @@ public class GameScreen implements Screen {
         stage.addActor(root);
 
         // Ajout d'une table pour l'énigme
-        root.add(enigmeManager).width(Value.percentWidth(0.70f, root)).height(Value.percentHeight(0.70f, root));
+        root.add(enigmeManager).width(Value.percentWidth(0.70f, root)).height(Value.percentHeight(0.70f, root)).grow();
         // Ajout d'une table pour l'interface utilisateur
         Table userInterfaceTable = new Table();
-        root.add(userInterfaceTable).width(Value.percentWidth(0.20f, root)).height(Value.percentHeight(0.70f, root));
+        root.add(userInterfaceTable).width(Value.percentWidth(0.20f, root)).height(Value.percentHeight(0.70f, root)).grow();
         // Ajout d'une table pour le chat textuel
         Table textChatTable = new Table();
         root.row();
-        root.add(textChatTable).colspan(2).width(Value.percentWidth(0.9f, root)).height(Value.percentHeight(0.20f, root));
+        root.add(textChatTable).colspan(2).width(Value.percentWidth(0.9f, root)).height(Value.percentHeight(0.20f, root)).grow();
 
         // Création chat textuel
         TextField chatTextField = new TextField("", game.skin);
