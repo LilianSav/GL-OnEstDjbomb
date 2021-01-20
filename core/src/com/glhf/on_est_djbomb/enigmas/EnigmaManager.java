@@ -1,5 +1,6 @@
 package com.glhf.on_est_djbomb.enigmas;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -23,7 +24,7 @@ public class EnigmaManager extends Table{
 	private Texture enigmeImageTexture;// image affichée sur le Table
 	private Label titreLabel;
 
-	public EnigmaManager(boolean isHost , OnEstDjbombGame game , Stage stage) {
+	public EnigmaManager(boolean isHost , OnEstDjbombGame game , Stage stage) throws FileNotFoundException {
 		// initialisation
 		super();
 		enigmes = new ArrayList<EnigmaSkeleton>();
@@ -31,13 +32,17 @@ public class EnigmaManager extends Table{
 		this.game=game;
 		this.stage = stage;
 		//ajout des enigmes
+		EnigmaLabyrinth l1 = new EnigmaLabyrinth(isHost, "labyrinthe.txt");
+		enigmes.add(l1);
 		EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
-		enigmes.add(enigme1);
+		enigmes.add(enigme1);/*
 		EnigmaFindTheImage enigme2 = new EnigmaFindTheImage(isHost);
 		enigmes.add(enigme2);
 		EnigmaPyramid enigme3 = new EnigmaPyramid(isHost);
 		enigmes.add(enigme3);
-		enigmeCourante=enigme1;
+		*/
+		enigmeCourante=l1;
+
 		// charger data des enigmes
 		chargerTitre();
 		chargerImage();
@@ -47,13 +52,20 @@ public class EnigmaManager extends Table{
 	
 	// Récupération et affichage de l'images du table depuis la classe d'énigme
 	private void chargerImage() {
-		if(isHost) {
-			enigmeImageTexture = enigmeCourante.getTextureTableHost();
-		}else {
-			enigmeImageTexture = enigmeCourante.getTextureTableGuest();
+		if(enigmeCourante instanceof EnigmaLabyrinth){
+			((EnigmaLabyrinth)enigmeCourante).load(isHost, this);
 		}
-		Image enigmeImageWidget = new Image(enigmeImageTexture);
-        this.add(enigmeImageWidget);
+		else
+			{
+			if(isHost) {
+				enigmeImageTexture = enigmeCourante.getTextureTableHost();
+			}else {
+				enigmeImageTexture = enigmeCourante.getTextureTableGuest();
+			}
+			Image enigmeImageWidget = new Image(enigmeImageTexture);
+			this.add(enigmeImageWidget);
+		}
+
 	}
 	
 	// Intanciation du dialogue d'indice

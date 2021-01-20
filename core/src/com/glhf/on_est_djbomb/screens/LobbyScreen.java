@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 
+import java.io.FileNotFoundException;
+
 public class LobbyScreen implements Screen {
     private final Stage stage;
     private boolean localReady = false;
@@ -94,7 +96,11 @@ public class LobbyScreen implements Screen {
                 // On vide le gestionnaire de listeners
                 game.getGameSocket().clearListeners();
                 // Changement d'écran pour revenir au menu principal
-                game.switchScreen(new GameScreen(game));
+                try {
+                    game.switchScreen(new GameScreen(game));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

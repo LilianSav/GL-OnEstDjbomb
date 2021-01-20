@@ -16,6 +16,8 @@ import com.glhf.on_est_djbomb.dialogs.OptionsDialog;
 import com.glhf.on_est_djbomb.enigmas.EnigmaManager;
 import com.glhf.on_est_djbomb.networking.GameSocket;
 
+import java.io.FileNotFoundException;
+
 public class GameScreen implements Screen {
     private final Stage stage;
     private Sound sound;
@@ -29,7 +31,7 @@ public class GameScreen implements Screen {
     private TextButton solutionButton;
     private TextButton indiceButton;
 
-    public GameScreen(OnEstDjbombGame game) {
+    public GameScreen(OnEstDjbombGame game) throws FileNotFoundException {
     	this.game=game;
     	isOver=false;
     	

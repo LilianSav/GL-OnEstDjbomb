@@ -1,0 +1,68 @@
+labyrinthSprites.png
+size: 63, 63
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+LabyrinthClue1
+  rotate: false
+  xy: 0, 0
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
+LabyrinthClue2
+  rotate: false
+  xy: 21, 0
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
+LabyrinthClue3
+  rotate: false
+  xy: 42, 0
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
+LabyrinthClue4
+  rotate: false
+  xy: 0, 21
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
+LabyrinthMask
+  rotate: false
+  xy: 21, 21
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
+LabyrinthPath
+  rotate: false
+  xy: 42, 21
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
+LabyrinthPlayer
+  rotate: false
+  xy: 0, 42
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
+LabyrinthStart
+  rotate: false
+  xy: 21, 42
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
+LabyrinthWall
+  rotate: false
+  xy: 42, 42
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
