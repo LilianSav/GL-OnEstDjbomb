@@ -32,7 +32,7 @@ public class EnigmaManager extends Table{
 		this.game=game;
 		this.stage = stage;
 		//ajout des enigmes
-		EnigmaLabyrinth l1 = new EnigmaLabyrinth(isHost, "labyrinthe2.txt");
+		EnigmaLabyrinth l1 = new EnigmaLabyrinth(isHost, "labyrinthe.txt");
 		enigmes.add(l1);
 		EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
 		enigmes.add(enigme1);/*

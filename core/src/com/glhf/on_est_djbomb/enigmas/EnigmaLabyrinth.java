@@ -30,13 +30,16 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
     //2D array, corresponds to the given text file
     private char[][] tabLabyrinth;
 
+    //2D array of Buttons, corresponds to tabLabyrinth
+    private Button[][] tabButton;
+
     //Player coordinates
     private int coordXPlayer;
     private int coordYPlayer;
 
     //To read the sprites of the game
     TextureAtlas textureAtlas;
-    HashMap<String, Integer> spriteIndexMap;
+
     Array<Sprite> sprites;
 
     Table fillTable;
