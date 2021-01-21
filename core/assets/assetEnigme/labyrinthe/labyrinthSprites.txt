@@ -1,0 +1,117 @@
+labyrinthSprites.png
+size: 1680, 105
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+LabyrinthClue0
+  rotate: false
+  xy: 0, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue1
+  rotate: false
+  xy: 105, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue2
+  rotate: false
+  xy: 210, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue3
+  rotate: false
+  xy: 315, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue4
+  rotate: false
+  xy: 420, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue5
+  rotate: false
+  xy: 525, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue6
+  rotate: false
+  xy: 630, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue7
+  rotate: false
+  xy: 735, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue8
+  rotate: false
+  xy: 840, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue9
+  rotate: false
+  xy: 945, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthMask
+  rotate: false
+  xy: 1050, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthPath
+  rotate: false
+  xy: 1155, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthPlayerPath
+  rotate: false
+  xy: 1260, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthPlayerStart
+  rotate: false
+  xy: 1365, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthStart
+  rotate: false
+  xy: 1470, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthWall
+  rotate: false
+  xy: 1575, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1

@@ -33,6 +33,7 @@ public abstract class GameSocket {
     // Constructeur
     public GameSocket(String identifiant) {
         this.identifiant = identifiant;
+        this.remoteIdentidiant = "Connexion en attente...";
         lockRunning = new Object();
         lockListeners = new Object();
     }
@@ -51,8 +52,11 @@ public abstract class GameSocket {
     // Envoie d'une chaîne de caractères
     public void sendMessage(String textMessage) {
         try {
-            outputStream.writeObject(textMessage);
-            outputStream.flush();
+            // On vérifie que l'hôte distant est bien connecté
+            if(getRunning()){
+                outputStream.writeObject(textMessage);
+                outputStream.flush();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

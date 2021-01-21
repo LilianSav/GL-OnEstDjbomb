@@ -12,8 +12,8 @@ import com.glhf.on_est_djbomb.screens.MainMenuScreen;
 
 
 public class OnEstDjbombGame extends Game {
-    public static final int GAME_WIDTH = 960;
-    public static final int GAME_HEIGHT = 540;
+    public static final int GAME_WIDTH = 1440;
+    public static final int GAME_HEIGHT = 810;
 
     public SpriteBatch batch;
     public Skin skin;
