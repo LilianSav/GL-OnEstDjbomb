@@ -46,6 +46,7 @@ public class LobbyScreen implements Screen {
         game.getGameSocket().sendMessage("STATE::NOTREADY");
 
         // Création des champs de texte
+        Label motDePasseLabel = new Label("Mot de passe : ", game.skin);
         TextField infoSocketLabel = new TextField(game.getGameSocket().getInfoSocket(), game.skin);
 
         // Création des boutons
@@ -57,6 +58,7 @@ public class LobbyScreen implements Screen {
         // Ajout des acteurs à la Table
         root.add(titreLabel).colspan(3).expand();
         root.row();
+        root.add(motDePasseLabel).expand();
         root.add(infoSocketLabel).expand();
         root.add(readyLabel).expand();
         root.row();
