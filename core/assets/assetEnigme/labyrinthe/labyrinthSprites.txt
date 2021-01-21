@@ -1,68 +1,117 @@
 labyrinthSprites.png
-size: 63, 63
+size: 1680, 105
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-LabyrinthClue1
+LabyrinthClue0
   rotate: false
   xy: 0, 0
-  size: 21, 21
-  orig: 21, 21
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue1
+  rotate: false
+  xy: 105, 0
+  size: 105, 105
+  orig: 105, 105
   offset: 0, 0
   index: -1
 LabyrinthClue2
   rotate: false
-  xy: 21, 0
-  size: 21, 21
-  orig: 21, 21
+  xy: 210, 0
+  size: 105, 105
+  orig: 105, 105
   offset: 0, 0
   index: -1
 LabyrinthClue3
   rotate: false
-  xy: 42, 0
-  size: 21, 21
-  orig: 21, 21
+  xy: 315, 0
+  size: 105, 105
+  orig: 105, 105
   offset: 0, 0
   index: -1
 LabyrinthClue4
   rotate: false
-  xy: 0, 21
-  size: 21, 21
-  orig: 21, 21
+  xy: 420, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue5
+  rotate: false
+  xy: 525, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue6
+  rotate: false
+  xy: 630, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue7
+  rotate: false
+  xy: 735, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue8
+  rotate: false
+  xy: 840, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthClue9
+  rotate: false
+  xy: 945, 0
+  size: 105, 105
+  orig: 105, 105
   offset: 0, 0
   index: -1
 LabyrinthMask
   rotate: false
-  xy: 21, 21
-  size: 21, 21
-  orig: 21, 21
+  xy: 1050, 0
+  size: 105, 105
+  orig: 105, 105
   offset: 0, 0
   index: -1
 LabyrinthPath
   rotate: false
-  xy: 42, 21
-  size: 21, 21
-  orig: 21, 21
+  xy: 1155, 0
+  size: 105, 105
+  orig: 105, 105
   offset: 0, 0
   index: -1
-LabyrinthPlayer
+LabyrinthPlayerPath
   rotate: false
-  xy: 0, 42
-  size: 21, 21
-  orig: 21, 21
+  xy: 1260, 0
+  size: 105, 105
+  orig: 105, 105
+  offset: 0, 0
+  index: -1
+LabyrinthPlayerStart
+  rotate: false
+  xy: 1365, 0
+  size: 105, 105
+  orig: 105, 105
   offset: 0, 0
   index: -1
 LabyrinthStart
   rotate: false
-  xy: 21, 42
-  size: 21, 21
-  orig: 21, 21
+  xy: 1470, 0
+  size: 105, 105
+  orig: 105, 105
   offset: 0, 0
   index: -1
 LabyrinthWall
   rotate: false
-  xy: 42, 42
-  size: 21, 21
-  orig: 21, 21
+  xy: 1575, 0
+  size: 105, 105
+  orig: 105, 105
   offset: 0, 0
   index: -1

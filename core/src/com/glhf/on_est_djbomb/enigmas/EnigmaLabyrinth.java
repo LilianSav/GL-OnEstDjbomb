@@ -126,17 +126,19 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
 
     public void load(boolean isHost, EnigmaManager enigmaManager){
 
-        //Place title
+
+
+        /*//Place title
         Label titreLabel = new Label(this.getTitreTable(),new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json")));
-        enigmaManager.add(titreLabel).growX().padBottom(100f);
-        enigmaManager.row();
+        enigmaManager.add(titreLabel).growX().pad(50f);
+        enigmaManager.row();*/
 
         fillTable=new Table();
         fillTable.setFillParent(true);
+
         //enigmaManager.add(fillTable).width(Value.percentHeight(0.100f, enigmaManager)).height(Value.percentHeight(0.100f, enigmaManager)).grow();
 
         enigmaManager.add(fillTable).grow();
-
 
 
         //Creating a square
