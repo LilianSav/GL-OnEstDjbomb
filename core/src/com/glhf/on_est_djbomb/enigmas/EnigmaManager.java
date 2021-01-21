@@ -33,16 +33,22 @@ public class EnigmaManager extends Table{
 		//ajout des enigmes
 		EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
 		enigmes.add(enigme1);
-		EnigmaLabyrinth enigme2 = new EnigmaLabyrinth(isHost,"labyrintheTuto.txt");
+		EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
 		enigmes.add(enigme2);
-		EnigmaFindTheImage enigme3 = new EnigmaFindTheImage(isHost);
+		EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost,"labyrintheTuto.txt");
 		enigmes.add(enigme3);
-		EnigmaLabyrinth enigme4 = new EnigmaLabyrinth(isHost,"labyrintheIntermédiaire.txt");
+		EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
 		enigmes.add(enigme4);
-		EnigmaPyramid enigme5 = new EnigmaPyramid(isHost);
+		EnigmaSum enigme5 = new EnigmaSum(isHost);
 		enigmes.add(enigme5);
-		EnigmaLabyrinth enigme6 = new EnigmaLabyrinth(isHost,"labyrintheHard.txt");
+		EnigmaLabyrinth enigme6 = new EnigmaLabyrinth(isHost,"labyrintheIntermédiaire.txt");
 		enigmes.add(enigme6);
+		EnigmaPyramid enigme7 = new EnigmaPyramid(isHost);
+		enigmes.add(enigme7);
+		EnigmaCount enigme8 = new EnigmaCount(isHost);
+		enigmes.add(enigme8);
+		EnigmaLabyrinth enigme9 = new EnigmaLabyrinth(isHost,"labyrintheHard.txt");
+		enigmes.add(enigme9);
 
 		enigmeCourante=enigme1;
 		// charger data des enigmes
