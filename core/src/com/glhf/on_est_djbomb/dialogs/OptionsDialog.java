@@ -48,8 +48,8 @@ public class OptionsDialog extends Dialog {
         //this.sliderVolumeChatVocal=sliderVolumeChatVocal;
         
         // Section button
-        button("Cancel",1L);
-        button("Apply",2L);
+        button("Retour",1L);
+        button("Appliquer",2L);
     }
 
     @Override

@@ -6,11 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
@@ -19,6 +15,10 @@ public class LobbyScreen implements Screen {
     private final Stage stage;
     private boolean localReady = false;
     private boolean teammateReady = false;
+
+    String statutReadyString;
+    String localReadyString;
+    String remoteReadyString;
 
     public LobbyScreen(final OnEstDjbombGame game) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
@@ -36,23 +36,33 @@ public class LobbyScreen implements Screen {
         teammateReady = false;
 
         // Création des labels
-        Label titreLabel = new Label("Lancement d'une partie", game.skin);
+        Label titreLabel = new Label("Lancement d'une partie", game.skin, "title");
+        statutReadyString = "Statut : \n";
+        localReadyString = game.getGameSocket().getIdentifiant() + " - Pas prêt\n";
+        remoteReadyString = game.getGameSocket().getRemoteIdentifiant() + " - Pas prêt";
+        Label readyLabel = new Label(statutReadyString + localReadyString + remoteReadyString, game.skin);
+
+        // Avertissement de la connexion à l'hôte distant
+        game.getGameSocket().sendMessage("STATE::NOTREADY");
+
+        // Création des champs de texte
         TextField infoSocketLabel = new TextField(game.getGameSocket().getInfoSocket(), game.skin);
 
         // Création des boutons
         TextButton retourButton = new TextButton("Retour", game.skin);
         TextButton commencerButton = new TextButton("Commencer", game.skin);
-        // commencerButton.setDisabled(true);
+        commencerButton.setColor(Color.BLACK);
         TextButton pretButton = new TextButton("Prêt", game.skin);
 
         // Ajout des acteurs à la Table
-        root.add(titreLabel).colspan(3).expandY().expandX();
+        root.add(titreLabel).colspan(3).expand();
         root.row();
-        root.add(infoSocketLabel).expandY().expandX();
+        root.add(infoSocketLabel).expand();
+        root.add(readyLabel).expand();
         root.row();
-        root.add(retourButton).expandY().expandX();
-        root.add(pretButton).expandY().expandX();
-        root.add(commencerButton).expandY().expandX();
+        root.add(retourButton).expand();
+        root.add(pretButton).expand();
+        root.add(commencerButton).expand();
 
         // Gestionnaire d'évènements des bouttons
         retourButton.addListener(new ClickListener() {
@@ -69,72 +79,91 @@ public class LobbyScreen implements Screen {
         pretButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                // On inverse le statut du joueur local
-//                localReady = !localReady;
-//                // On indique le nouveau statut au joueur distant
-//                if (localReady) {
-//                    game.getGameSocket().sendMessage("STATE::READY");
-//                } else {
-//                    game.getGameSocket().sendMessage("STATE::NOTREADY");
-//                }
-//                // Si les deux joueurs sont prêts, on débloque le bouton "commencer"
-//                if (localReady && teammateReady) {
-//                    commencerButton.setDisabled(true);
-//                } else {
-//                    commencerButton.setDisabled(false);
-//                }
-//
-//                System.out.println("Type : " + game.getGameSocket().getSocketType() + "\nlocalReady : " + localReady + "\nteammateReady : " + teammateReady + "\nRes : " + (localReady && teammateReady) + "\nisDisabled : " + commencerButton.isDisabled());
-
+                // On inverse le statut du joueur local
+                localReady = !localReady;
+                // On indique le nouveau statut au joueur distant
+                if (localReady) {
+                    game.getGameSocket().sendMessage("STATE::READY");
+                    localReadyString = game.getGameSocket().getIdentifiant() + " - Prêt\n";
+                } else {
+                    game.getGameSocket().sendMessage("STATE::NOTREADY");
+                    localReadyString = game.getGameSocket().getIdentifiant() + " - Pas prêt\n";
+                }
+                // Si les deux joueurs sont prêts, on débloque le bouton "commencer"
+                if (localReady && teammateReady) {
+                    commencerButton.setColor(Color.WHITE);
+                } else {
+                    commencerButton.setColor(Color.BLACK);
+                }
+                // On modifie le statut prêt de l'équipe locale
+                readyLabel.setText(statutReadyString + localReadyString + remoteReadyString);
             }
         });
         commencerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // On vide le gestionnaire de listeners
-                game.getGameSocket().clearListeners();
-                // Changement d'écran pour revenir au menu principal
-                game.switchScreen(new GameScreen(game));
+                // Si les deux joueurs sont prêts à commencer, on démarre la partie
+                if(localReady && teammateReady){
+                    // On indique le début de la partie à l'autre équipe
+                    game.getGameSocket().sendMessage("STATE::START");
+                    // On vide le gestionnaire de listeners
+                    game.getGameSocket().clearListeners();
+                    // Changement d'écran pour revenir au menu principal
+                    game.switchScreen(new GameScreen(game));
+                }
+                // Sinon on indique à l'utilisateur que les deux équipes ne sont pas prêtes
+                else {
+                    new Dialog("Pseudo invalide", game.skin) {
+                        {
+                            getContentTable().add(new Label("L'une des deux équipes n'est pas prête", game.skin));
+                            button("Ok", 1L);
+                        }
+                    }.show(stage);
+                }
             }
         });
 
-//        // Gestion Game State
-//        game.getGameSocket().addListener(eventMessage -> {
-//            // Parse
-//            String[] tokens = eventMessage.split("::");
-//
-//            if (tokens[0].equals("STATE")) {
-//                Gdx.app.postRunnable(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (tokens[1].equals("READY")) {
-//                            // On mémorise le statut du joueur distant
-//                            teammateReady = true;
-//                            // Si les deux joueurs sont prêts, on débloque le bouton "commencer"
-//                            if (localReady && teammateReady) {
-//                                commencerButton.setDisabled(true);
-//                            } else {
-//                                commencerButton.setDisabled(false);
-//                            }
-//                        } else if (tokens[1].equals("NOTREADY")) {
-//                            teammateReady = false;
-//                            // Si les deux joueurs sont prêts, on débloque le bouton "commencer"
-//                            if (localReady && teammateReady) {
-//                                commencerButton.setDisabled(true);
-//                            } else {
-//                                commencerButton.setDisabled(false);
-//                            }
-//                        }
-//                        System.out.println("Type : " + game.getGameSocket().getSocketType() + "\nlocalReady : " + localReady + "\nteammateReady : " + teammateReady + "\nRes : " + (localReady && teammateReady) + "\nisDisabled : " + commencerButton.isDisabled());
-//
-//                    }
-//                });
-//            }
-//            // Flag non reconnu
-//            else {
-//                Gdx.app.log("SocketFlagError", "Le flag envoyé par le socket distant n'est pas reconnu");
-//            }
-//        });
+        // Gestion Game State
+        game.getGameSocket().addListener(eventMessage -> {
+            // Parse
+            String[] tokens = eventMessage.split("::");
+
+            if (tokens[0].equals("STATE")) {
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (tokens[1].equals("READY")) {
+                            // On mémorise le statut du joueur distant
+                            teammateReady = true;
+                            // Si les deux joueurs sont prêts, on débloque le bouton "commencer"
+                            if (localReady) {
+                                commencerButton.setColor(Color.WHITE);
+                            }
+                            remoteReadyString = game.getGameSocket().getRemoteIdentifiant() + " - Prêt";
+                            readyLabel.setText(statutReadyString + localReadyString + remoteReadyString);
+
+                        } else if (tokens[1].equals("NOTREADY")) {
+                            // On mémorise le statut du joueur distant
+                            teammateReady = false;
+                            // On bloque le bouton "commencer"
+                            commencerButton.setColor(Color.BLACK);
+                            // On modifie le statut de la partie
+                            remoteReadyString = game.getGameSocket().getRemoteIdentifiant() + " - Pas prêt";
+                            readyLabel.setText(statutReadyString + localReadyString + remoteReadyString);
+                        } else if (tokens[1].equals("START")) {
+                            // On vide le gestionnaire de listeners
+                            game.getGameSocket().clearListeners();
+                            // Changement d'écran pour revenir au menu principal
+                            game.switchScreen(new GameScreen(game));
+                        }
+                    }
+                });
+            }
+            // Flag non reconnu
+            else {
+                Gdx.app.log("SocketFlagError", "Le flag envoyé par le socket distant n'est pas reconnu");
+            }
+        });
     }
 
     @Override
