@@ -50,7 +50,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
     Table fillTable;
 
 
-    public EnigmaLabyrinth(boolean isHost, String nameLabyrinth) throws FileNotFoundException {
+    public EnigmaLabyrinth(boolean isHost, String nameLabyrinth) {
         super(isHost);
 
         this.nameLabyrinth=nameLabyrinth;
@@ -61,7 +61,11 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         setTpsBeforeSolution(100);
 
         //Read the labyrinth text file to extract information
-        this.readTextFile(isHost);
+        try {
+            this.readTextFile(isHost);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         if(isHost){
             setTitreTable("L'autre équipe est bloquée dans un labyrinthe, vous seul en possédez la carte, guidez-le vers les\n" +

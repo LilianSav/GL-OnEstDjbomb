@@ -33,10 +33,17 @@ public class EnigmaManager extends Table{
 		//ajout des enigmes
 		EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
 		enigmes.add(enigme1);
-		EnigmaFindTheImage enigme2 = new EnigmaFindTheImage(isHost);
+		EnigmaLabyrinth enigme2 = new EnigmaLabyrinth(isHost,"labyrintheTuto.txt");
 		enigmes.add(enigme2);
-		EnigmaPyramid enigme3 = new EnigmaPyramid(isHost);
+		EnigmaFindTheImage enigme3 = new EnigmaFindTheImage(isHost);
 		enigmes.add(enigme3);
+		EnigmaLabyrinth enigme4 = new EnigmaLabyrinth(isHost,"labyrintheIntermédiaire.txt");
+		enigmes.add(enigme4);
+		EnigmaPyramid enigme5 = new EnigmaPyramid(isHost);
+		enigmes.add(enigme5);
+		EnigmaLabyrinth enigme6 = new EnigmaLabyrinth(isHost,"labyrintheHard.txt");
+		enigmes.add(enigme6);
+
 		enigmeCourante=enigme1;
 		// charger data des enigmes
 		chargerTitre();
@@ -47,13 +54,18 @@ public class EnigmaManager extends Table{
 	
 	// Récupération et affichage de l'images du table depuis la classe d'énigme
 	private void chargerImage() {
-		if(isHost) {
-			enigmeImageTexture = enigmeCourante.getTextureTableHost();
-		}else {
-			enigmeImageTexture = enigmeCourante.getTextureTableGuest();
+		if(enigmeCourante instanceof EnigmaLabyrinth){
+			((EnigmaLabyrinth) enigmeCourante).load(isHost, this);
+		}else{
+			if(isHost) {
+				enigmeImageTexture = enigmeCourante.getTextureTableHost();
+			}else {
+				enigmeImageTexture = enigmeCourante.getTextureTableGuest();
+			}
+			Image enigmeImageWidget = new Image(enigmeImageTexture);
+			this.add(enigmeImageWidget);
 		}
-		Image enigmeImageWidget = new Image(enigmeImageTexture);
-        this.add(enigmeImageWidget);
+
 	}
 	
 	// Intanciation du dialogue d'indice
@@ -90,6 +102,9 @@ public class EnigmaManager extends Table{
 	
 	// Affichage du dialogue d'informations
 	public void getIndiceDialog() {
+		if(enigmeCourante instanceof EnigmaLabyrinth){
+			((EnigmaLabyrinth) enigmeCourante).chargerIndice();
+		}
     	clueDialog.setClue(enigmeCourante.getIndice());// récupération du texte d'indice de l'éngime courante
         clueDialog.show(stage);
 	}
@@ -102,8 +117,13 @@ public class EnigmaManager extends Table{
 	
 	// est-ce qu'il reste des énigmes dans la liste d'énigme ?
 	public boolean isOver() {
-		// Suppression de l'ancienne image
-		enigmeImageTexture.dispose();
+		if(enigmeCourante instanceof EnigmaLabyrinth){
+			((EnigmaLabyrinth) enigmeCourante).unload(this);
+		}
+		else{
+			// Suppression de l'ancienne image
+			enigmeImageTexture.dispose();
+		}
 		this.clearChildren();
 		if(enigmes.size()-(enigmes.indexOf(enigmeCourante)) == 1) {
 			return true;
