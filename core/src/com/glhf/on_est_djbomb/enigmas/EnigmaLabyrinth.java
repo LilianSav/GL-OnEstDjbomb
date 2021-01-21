@@ -233,7 +233,8 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
                 }
             }
         }
-
+        //Display player on start cell
+        updateDisplayCell(coordXPlayer, coordYPlayer);
     }
 
     boolean playerAdjacentButton(ImageButton btn){
@@ -250,8 +251,6 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
                     int newX = relativeX+coordXPlayer;
                     int newY = relativeY+coordYPlayer;
                     updateDisplay(coordXPlayer,coordYPlayer, newX, newY);
-                    coordXPlayer=newX;
-                    coordYPlayer=newY;
                 }
             }
         }
@@ -259,6 +258,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
     }
 
     void updateDisplay(int prevCoordX, int prevCoordY, int newCoordX, int newCoordY){
+        coordXPlayer=newCoordX;
+        coordYPlayer=newCoordY;
+
         //Mask old coord maze surroundings
         tabButton[prevCoordX+1][prevCoordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthMask"),null,null,null,null,null));
         tabButton[prevCoordX-1][prevCoordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthMask"),null,null,null,null,null));
@@ -266,28 +268,42 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         tabButton[prevCoordX][prevCoordY-1].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthMask"),null,null,null,null,null));
 
         //Display new coord maze surroundings
-        updateDisplayCell(newCoordX, newCoordY);
         updateDisplayCell(newCoordX+1, newCoordY);
         updateDisplayCell(newCoordX-1, newCoordY);
         updateDisplayCell(newCoordX, newCoordY+1);
         updateDisplayCell(newCoordX, newCoordY-1);
+        updateDisplayCell(coordXPlayer, coordYPlayer);
     }
 
     public void updateDisplayCell(int coordX, int coordY){
-        switch(tabLabyrinth[coordX][coordY]){
-            case WALL: //if the read character corresponds to a wall
-                tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthWall"),null,null,null,null,null));
-                break;
-            case PATH: //if the read character corresponds to an available path
-                tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthPath"),null,null,null,null,null));
-                break;
-            case START: //if the read character corresponds to the starting place
-                tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthStart"),null,null,null,null,null));
-                break;
-            default: //Otherwise, the character corresponds to an element of the password
-                tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthClue"+tabLabyrinth[coordX][coordY]),null,null,null,null,null));
-                break;
+        char cellChar = tabLabyrinth[coordX][coordY];
+        if(coordX==coordXPlayer&&coordY==coordYPlayer){
+            switch (cellChar){
+                case START: //if the read character corresponds to the starting place
+                    tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthPlayerStart"),null,null,null,null,null));
+                    break;
+                default: //Otherwise, the character corresponds to a random path
+                    tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthPlayerPath"),null,null,null,null,null));
+                    break;
+            }
         }
+        else{
+            switch(cellChar){
+                case WALL: //if the read character corresponds to a wall
+                    tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthWall"),null,null,null,null,null));
+                    break;
+                case PATH: //if the read character corresponds to an available path
+                    tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthPath"),null,null,null,null,null));
+                    break;
+                case START: //if the read character corresponds to the starting place
+                    tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthStart"),null,null,null,null,null));
+                    break;
+                default: //Otherwise, the character corresponds to an element of the password
+                    tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthClue"+tabLabyrinth[coordX][coordY]),null,null,null,null,null));
+                    break;
+            }
+        }
+
     }
 
     public void dispose(){
