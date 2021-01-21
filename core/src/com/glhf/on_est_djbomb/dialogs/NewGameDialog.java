@@ -22,11 +22,8 @@ public class NewGameDialog extends Dialog {
     }
 
     public void initContent() {
-        // Section Content
-        text("Nouvelle partie :");
-
         // Section button
-        button("Héberger", 1L);
+        button("Créer", 1L);
         button("Rejoindre", 2L);
         button("Retour", 3L);
     }
@@ -35,8 +32,9 @@ public class NewGameDialog extends Dialog {
     protected void result(Object object) {
         // Option "Hébergez"
         if (object.equals(1L)) {
-            new Dialog("Héberger une partie", game.skin) {
+            new Dialog("Créer une partie", game.skin) {
                 {
+                	getContentTable().add(new Label("Pseudo : ", game.skin));
                     pseudoTextField = new TextField(game.prefs.getString("pseudo"), game.skin);
                     getContentTable().add(pseudoTextField);
 
@@ -76,12 +74,15 @@ public class NewGameDialog extends Dialog {
 
         // Option "Rejoindre"
         else if (object.equals(2L)) {
-            new Dialog("Partie à rejoindre", game.skin) {
+            new Dialog("Rejoindre une partie", game.skin) {
                 {
                     pseudoTextField = new TextField(game.prefs.getString("pseudo"), game.skin);
                     adresseTextField = new TextField("IP:Port", game.skin);
                     
+                    getContentTable().add(new Label("Pseudo : ", game.skin));
                     getContentTable().add(pseudoTextField);
+                    getContentTable().row();
+                    getContentTable().add(new Label("Mot de passe : ", game.skin));
                     getContentTable().add(adresseTextField);
 
                     button("Retour", 1L);

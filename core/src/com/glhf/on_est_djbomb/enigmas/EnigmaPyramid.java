@@ -8,9 +8,10 @@ public class EnigmaPyramid extends EnigmaSkeleton {
     public EnigmaPyramid(boolean isHost) {
         super(isHost);
         setSolution(144);
-        setIndice("C'est une question de produit...");
+        setIndice("C'est une question de produit.\n"
+        		+ "223=12");
         setNom("Le mystère de la pyramide");
-        setTitreTable(getNom()+"\n");
+        //setTitreTable(getNom()+"\n");
         setTpsBeforeIndice(40);
         setTpsBeforeSolution(120);
     }

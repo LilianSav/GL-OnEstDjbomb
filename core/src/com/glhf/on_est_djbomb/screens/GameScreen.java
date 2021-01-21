@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -28,6 +29,7 @@ public class GameScreen implements Screen {
     private boolean isOver;
     private TextButton solutionButton;
     private TextButton indiceButton;
+    private boolean isUnder30s;
 
     public GameScreen(OnEstDjbombGame game) {
     	this.game=game;
@@ -84,6 +86,7 @@ public class GameScreen implements Screen {
         tpsRestant = tpsInitial;
         tpsInitialEnigme=tpsInitial;
         timerLabel = new Label(tpsRestant + " sec", game.skin);
+        isUnder30s=false;
         startTimer();
         indiceButton = new TextButton("Indice", game.skin);
         indiceButton.setColor(Color.BLACK);
@@ -95,6 +98,8 @@ public class GameScreen implements Screen {
         userInterfaceTable.add(optionsButton).expand();
         userInterfaceTable.add(quitterButton).expand();
         userInterfaceTable.row();
+		Image imgBombe = new Image(new Texture(Gdx.files.internal("images/bombe.png")));
+		userInterfaceTable.add(imgBombe);
         userInterfaceTable.add(timerLabel).expand().colspan(2);
         userInterfaceTable.row();
         userInterfaceTable.add(indiceButton).expand();
@@ -123,6 +128,7 @@ public class GameScreen implements Screen {
         quitterButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+            	stopTimer();
                 // On vide le gestionnaire de listeners
                 game.getGameSocket().clearListeners();
                 // Fermeture des flux
@@ -185,6 +191,7 @@ public class GameScreen implements Screen {
                                     tpsInitialEnigme=tpsRestant;
                                     enigmeManager.setTpsUtilise(tpsInitialEnigme);
                                     if (enigmeManager.isOver()) {
+                                    	stopTimer();
                                         button("Menu fin de partie", 1L);
                                     } else {
                                         button("Enigme suivante", 2L);
@@ -196,7 +203,7 @@ public class GameScreen implements Screen {
                                 protected void result(Object object) {
                                 	if (object.equals(1L)) {//fin de partie
                                         // Changement d'écran pour revenir au menu principal
-                                        game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial,enigmeManager.getEnigmes()));
+                                        game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial,enigmeManager.getEnigmes(),game.getGameSocket().getSocketType() == GameSocket.GameSocketConstant.HOST));
                                     } else if (object.equals(2L)) {//enigme suivante
                                         enigmeManager.nextEnigme();
                                         //gère la couleur des boutons
@@ -229,22 +236,24 @@ public class GameScreen implements Screen {
                 	//mise à jour tps utilisé
                 	tpsInitialEnigme=tpsRestant;
                     enigmeManager.setTpsUtilise(tpsInitialEnigme);
-                    if (timer) {
+                    if (timer) {//tps écoulé
                     	text("Vous n'avez pas terminé à temps, la bombe a explosé !");
                     	//effet sonore
                     	sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_exploding_sound_effect.mp3"));
                         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
 						enigmeManager.setTpsUtilise(tpsInitialEnigme-tpsRestant);
+						stopTimer();
                     	button("Menu de fin de partie", 1L);
-                    }else {
+                    }else {//énigme suivante
                     	isOver=true;
                     	text("Vous avez trouvé la solution !");
                     	game.getGameSocket().sendMessage("STATE::GOODEND");
                     	//effet sonore
                     	sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
                         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
-                    	if (enigmeManager.isOver()) {
+                    	if (enigmeManager.isOver()) {//plus d'énigmes suivantes
                             button("Menu de fin de partie", 1L);
+                            stopTimer();
                         } else {
                             button("Enigme suivante", 2L);
                         }
@@ -255,7 +264,7 @@ public class GameScreen implements Screen {
                 protected void result(Object object) {
                     if (object.equals(1L)) {//fin de partie
                         // Changement d'écran pour revenir au menu principal
-                        game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial,enigmeManager.getEnigmes()));
+                        game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial,enigmeManager.getEnigmes(), game.getGameSocket().getSocketType() == GameSocket.GameSocketConstant.HOST));
                     } else if (object.equals(2L)) {//enigme suivante
                         enigmeManager.nextEnigme();
                         //gère la couleur des boutons
@@ -281,13 +290,23 @@ public class GameScreen implements Screen {
         @Override
         public void run() {
             tpsRestant--;
-            timerLabel.setText(tpsRestant + " sec");
             //gère la couleur des boutons
             if(tpsRestant==tpsInitialEnigme-enigmeManager.getTpsBeforeIndice()) {
             	indiceButton.setColor(Color.WHITE);
             }
             if(tpsRestant==tpsInitialEnigme-enigmeManager.getTpsBeforeSolution()) {
             	solutionButton.setColor(Color.WHITE);
+            }
+            if(tpsRestant==30){
+            	clignoteTimer();
+            	isUnder30s=true;
+            }
+            if(tpsRestant==10){
+            	stopClignoteTimer();
+            	clignoteRapideTimer();
+            }
+            if(!isUnder30s) {
+            	timerLabel.setText(tpsRestant + " sec");
             }
             //temps écoulé
             if (tpsRestant == 0 && isOver==false) {
@@ -296,9 +315,58 @@ public class GameScreen implements Screen {
             }
         }
     };
+    
+    private final Timer.Task myTimerTask2 = new Timer.Task() {
+        @Override
+        public void run() {
+        	timerLabel.setText("");
+        	//temps écoulé
+            if (tpsRestant == 0 && isOver==false) {
+                myTimerTask2.cancel();
+            }
+        }
+    };
+    
+    private final Timer.Task myTimerTask3 = new Timer.Task() {
+        @Override
+        public void run() {
+        	timerLabel.setText(tpsRestant + " sec");
+        	//temps écoulé
+            if (tpsRestant == 0 && isOver==false) {
+                myTimerTask3.cancel();
+            }
+        }
+    };
 
     public void startTimer() {
         Timer.schedule(myTimerTask, 1f, 1f);
+    }
+    
+    public void clignoteTimer() {
+        Timer.schedule(myTimerTask2, 0f, 1f);
+        Timer.schedule(myTimerTask3, 0.1f, 1f);
+        // Instanciation d'un effet sonore
+        sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb timer.mp3"));
+        sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
+    }
+    
+    public void stopClignoteTimer() {
+    	myTimerTask2.cancel();
+    	myTimerTask3.cancel();
+    }
+    
+    public void clignoteRapideTimer() {
+        Timer.schedule(myTimerTask2, 0f, 0.5f);
+        Timer.schedule(myTimerTask3, 0.1f, 0.5f);
+        // Instanciation d'un effet sonore
+        sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb timer.mp3"));
+        sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
+    }
+    
+    public void stopTimer() {
+    	myTimerTask.cancel();
+    	myTimerTask2.cancel();
+    	myTimerTask3.cancel();
     }
 
     @Override
@@ -314,6 +382,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+    	stopTimer();
         stage.dispose();
         sound.dispose();
     }

@@ -21,7 +21,12 @@ public class InformationsDialog extends Dialog {
                 "Au cours de la partie, les équipes seront confrontées à diverses énigmes qui leur permettront de sauver leur vie.\r\n" +
                 "La communication est essentielle, donc au cours de la partie, les deux équipes auront la possibilité d'interagir à l'aide d'un chat écrit.\r\n" +
                 "\r\n" +
-                "Crédit musique : Hicham Chahidi - Plongée nocturne\r\n", skin);
+                "Crédit musique : Hicham Chahidi - Plongée nocturne\r\n"
+                + "\r\n"
+                + "Ce logiciel est réalisé dans un but pédagogique dans le cadre du module génie logiciel enseigné à l'ENSSAT.\r\n"
+                + "Développeurs : SAVONA Lilian, GARREAU Erwan, SERENA Jérémy, SEREE Valentin, MARTIN Baptiste\r\n"
+                + "MOA : GUZZO Nicolas, TRAN Sovanny\r\n"
+                + "Enseignants : MOREAU Aurélien, PICOGNA Alexandre", skin);
 
         label.setAlignment(Align.center);
         informationsContentTable.add(label);

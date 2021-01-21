@@ -23,7 +23,7 @@ public class EndGameScreen implements Screen{
 	private final Stage stage;
 	private ArrayList<EnigmaSkeleton> enigmes;
 
-	public EndGameScreen(OnEstDjbombGame game, int tpsLeft, int tpsInit, ArrayList<EnigmaSkeleton> enigmes) {
+	public EndGameScreen(OnEstDjbombGame game, int tpsLeft, int tpsInit, ArrayList<EnigmaSkeleton> enigmes, boolean isHost) {
 		super();
 		this.game = game;
 		this.tpsLeft = tpsLeft;
@@ -41,27 +41,54 @@ public class EndGameScreen implements Screen{
         root.setFillParent(true);
         stage.addActor(root);
         
-        // Gestion meilleur temps
-        String meilleurScore;
-        if(game.prefs.getInteger("meilleurTpsUtilise") > tpsInit-tpsLeft){//new best score
-        	game.prefs.putInteger("meilleurTpsUtilise", tpsInit-tpsLeft);
-        	meilleurScore="Nouveau meilleur temps !";
-        }else {
-        	meilleurScore = "Meilleur temps utilisé : "+game.prefs.getInteger("meilleurTpsUtilise")+" s";
-        }
         
         // Création des labels et ajout des acteurs à la table
-        Label labelTitre = new Label("Fin de partie", game.skin);
-        root.add(labelTitre).expandY();
+        if((tpsInit-tpsLeft)==0) {
+        	Label labelTitre = new Label("Game over !", game.skin);
+            root.add(labelTitre).expandY();
+            root.row();
+        	Label tpsUtilise = new Label("Temps écoulé : la bombe a explosé !", game.skin);
+            root.add(tpsUtilise).expandY();
+            root.row();
+        }else {
+        	Label labelTitre = new Label("Félicitation !", game.skin);
+            root.add(labelTitre).expandY();
+            root.row();
+        	Label congrat = new Label("En complétant la dernière énigme, vous avez désamorcé la bombe.", game.skin);
+            root.add(congrat).expandY();
+            root.row();
+        	Label tpsUtilise = new Label("Temps utilisé : "+(tpsInit-tpsLeft)+" s", game.skin);
+            root.add(tpsUtilise).expandY();
+            root.row();
+        }
+        // Gestion meilleur temps
+        String ancienMeilleurScore=game.prefs.getInteger("meilleurTpsUtilise")+" s";
+        String ancienMeilleurScoreAuteurs = "Joueurs : "+game.prefs.getString("meilleurTpsUtilisePseudo1")+" et "+game.prefs.getString("meilleurTpsUtilisePseudo2");
+        if(game.prefs.getInteger("meilleurTpsUtilise") >= tpsInit-tpsLeft){//new best score
+        	//sauvegarde en local
+        	if(isHost) {
+        		game.prefs.putString("meilleurTpsUtilisePseudo1", game.getGameSocket().getIdentifiant());
+        	}else {
+        		game.prefs.putString("meilleurTpsUtilisePseudo2", game.getGameSocket().getIdentifiant());
+        	}
+        	game.prefs.putInteger("meilleurTpsUtilise", tpsInit-tpsLeft);
+        	//affichage
+        	Label meilleurTpsUtilise = new Label("Nouveau meilleur temps !", game.skin);
+            root.add(meilleurTpsUtilise).expandY();
+            root.row();
+            Label ancienMeilleurTpsUtilise = new Label("Ancien meilleur temps : "+ancienMeilleurScore, game.skin);
+            root.add(ancienMeilleurTpsUtilise).expandY();
+            root.row();
+        }else {
+        	Label meilleurTpsUtilise = new Label("Meilleur temps : "+ancienMeilleurScore, game.skin);
+            root.add(meilleurTpsUtilise).expandY();
+            root.row();
+        }
+        Label ancienMeilleurTpsUtiliseJoueurs = new Label(ancienMeilleurScoreAuteurs, game.skin);
+        root.add(ancienMeilleurTpsUtiliseJoueurs).expandY();
         root.row();
         Label tpsInitial = new Label("Temps initial : "+tpsInit+" s", game.skin);
         root.add(tpsInitial).expandY();
-        root.row();
-        Label tpsUtilise = new Label("Temps utilisé : "+(tpsInit-tpsLeft)+" s", game.skin);
-        root.add(tpsUtilise).expandY();
-        root.row();
-        Label meilleurTpsUtilise = new Label(meilleurScore, game.skin);
-        root.add(meilleurTpsUtilise).expandY();
         root.row();
         Label tpsRestant = new Label("Temps restant : "+tpsLeft+" s", game.skin);
         root.add(tpsRestant).expandY();

@@ -33,7 +33,9 @@ public class OnEstDjbombGame extends Game {
     		prefs.putFloat("volumeEffetSonore", 100f);
     		prefs.putFloat("volumeChatVocal", 100f);
     		prefs.putString("pseudo", "Pseudo");
-    		prefs.putInteger("meilleurTpsUtilise", 10000);//volontairement eleve
+    		prefs.putInteger("meilleurTpsUtilise", 600);//volontairement eleve
+    		prefs.putString("meilleurTpsUtilisePseudo1", "Bob");
+    		prefs.putString("meilleurTpsUtilisePseudo2", "Dylan");
     	}
     	//Instanciation musique
         music=Gdx.audio.newMusic(Gdx.files.internal("audio/music_plongee_nocture.mp3"));

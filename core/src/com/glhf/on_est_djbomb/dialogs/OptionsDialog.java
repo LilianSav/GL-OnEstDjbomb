@@ -24,8 +24,6 @@ public class OptionsDialog extends Dialog {
         // Section Content
         Table informationsContentTable = getContentTable();
 
-        informationsContentTable.add(new Label("Options", skin));
-        informationsContentTable.row();
         informationsContentTable.add(new Label("Musique : ", skin));
         Slider sliderVolumeMusique = new Slider(0f, 100, 1f, false, skin);
         sliderVolumeMusique.setValue(prefs.getFloat("volumeMusique"));
@@ -48,8 +46,8 @@ public class OptionsDialog extends Dialog {
         //this.sliderVolumeChatVocal=sliderVolumeChatVocal;
         
         // Section button
-        button("Cancel",1L);
-        button("Apply",2L);
+        button("Retour",1L);
+        button("Sauvegarder",2L);
     }
 
     @Override

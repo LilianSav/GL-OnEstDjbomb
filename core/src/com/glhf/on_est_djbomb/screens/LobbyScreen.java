@@ -37,6 +37,7 @@ public class LobbyScreen implements Screen {
 
         // Création des labels
         Label titreLabel = new Label("Lancement d'une partie", game.skin);
+        Label motdepasse = new Label("Mot de passe : ", game.skin);
         TextField infoSocketLabel = new TextField(game.getGameSocket().getInfoSocket(), game.skin);
 
         // Création des boutons
@@ -48,6 +49,7 @@ public class LobbyScreen implements Screen {
         // Ajout des acteurs à la Table
         root.add(titreLabel).colspan(3).expandY().expandX();
         root.row();
+        root.add(motdepasse).expandY().expandX();
         root.add(infoSocketLabel).expandY().expandX();
         root.row();
         root.add(retourButton).expandY().expandX();
