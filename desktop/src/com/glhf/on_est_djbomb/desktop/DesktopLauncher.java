@@ -14,7 +14,7 @@ public class DesktopLauncher {
 		config.setTitle("On Est Djbomb");
 		config.setWindowedMode(OnEstDjbombGame.GAME_WIDTH, OnEstDjbombGame.GAME_HEIGHT);
 		config.setResizable(false);
-		config.setWindowIcon(Files.FileType.Internal, "icons/glassIcon.png");
+		config.setWindowIcon(Files.FileType.Internal, "icons/bombIcon.png");
 
 		// Lancement de l'application OnEstDjbombGame
 		new Lwjgl3Application(new OnEstDjbombGame(), config);
