@@ -82,9 +82,9 @@ public class EnigmaManager extends Table{
 	
 	// Intanciation du titre du table (composé du nom de l'énigme et d'une explication lorsque nécessaire)
 	private void chargerTitre() {
-		titreLabel = new Label(enigmeCourante.getTitreTable(),game.skin);
+		/*titreLabel = new Label(enigmeCourante.getTitreTable(),game.skin);
 		this.add(titreLabel);
-		this.row();
+		this.row();*/
 	}
 
 	// passer à l'énigme suivante

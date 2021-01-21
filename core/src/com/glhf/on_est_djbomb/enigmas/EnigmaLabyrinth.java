@@ -49,14 +49,14 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
 
         setNom("Échappez-vous du labyrinthe!");
         if(isHost){
-            setTitreTable("");/*
-            setTitreTable("L'autre équipe est bloquée dans un labyrinthe, vous seul en possédez la carte, " +
-                    "guidez-le vers les différents indices pour trouver le code secret permettant de s'enfuir!\n");*/
+            //setTitreTable("");
+            setTitreTable("L'autre équipe est bloquée dans un labyrinthe, vous seul en possédez la carte, guidez-le vers les\n" +
+                    " différents indices pour trouver le code secret permettant de s'enfuir!\n");
         }
         else {
-            setTitreTable("");/*
-            setTitreTable("Vous êtes bloqué dans un labyrinthe, cliquez sur les cases adjacentes à " +
-                    "votre personnage pour vous déplacer et laissez vous guider par votre partenaire pour trouver le code!\n");*/
+            //setTitreTable("");
+            setTitreTable("Vous êtes bloqué dans un labyrinthe, cliquez sur les cases adjacentes à votre personnage pour vous\n " +
+                    "déplacer et laissez vous guider par votre partenaire pour trouver le code!\n");
         }
 
         setTpsBeforeIndice(60);
@@ -126,10 +126,22 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
 
     public void load(boolean isHost, EnigmaManager enigmaManager){
 
-        fillTable=new Table();
+        //Place title
+        Label titreLabel = new Label(this.getTitreTable(),new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json")));
+        enigmaManager.add(titreLabel).growX().padBottom(100f);
+        enigmaManager.row();
 
-        enigmaManager.add(fillTable);
+        fillTable=new Table();
         fillTable.setFillParent(true);
+        //enigmaManager.add(fillTable).width(Value.percentHeight(0.100f, enigmaManager)).height(Value.percentHeight(0.100f, enigmaManager)).grow();
+
+        enigmaManager.add(fillTable).grow();
+
+
+
+        //Creating a square
+        fillTable.setHeight(enigmaManager.getHeight());
+        fillTable.setWidth(enigmaManager.getHeight());
 
         textureAtlas = new TextureAtlas(pathLabyrinth+"labyrinthSprites.txt");
 
@@ -140,7 +152,6 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         int cpt=1;
         for (char[] row: tabLabyrinth) {
             for(char elem : row){
-                System.out.print(elem);
                 Skin skin = new Skin(textureAtlas);
 
                 ImageButton.ImageButtonStyle button = new ImageButton.ImageButtonStyle();
@@ -165,9 +176,8 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
                 ImageButton real = new ImageButton(button);
                 TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
 
-                fillTable.add(real).grow();
+                fillTable.add(real).width(Value.percentHeight((float)1/(tabLabyrinth.length+1), fillTable)).height(Value.percentHeight((float)1/(tabLabyrinth.length+1), fillTable));
             }
-            System.out.println();
             fillTable.row();
         }
     }

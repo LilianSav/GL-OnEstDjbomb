@@ -37,6 +37,7 @@ public class GameScreen implements Screen {
     	
         // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
+
         // Liaison des Inputs au stage
         Gdx.input.setInputProcessor(stage);
 
@@ -47,8 +48,10 @@ public class GameScreen implements Screen {
         // Instanciation du gestionnaire d'énigmes
         if (game.getGameSocket().getSocketType() == GameSocket.GameSocketConstant.HOST) {
             enigmeManager = new EnigmaManager(true, game, stage);
+            enigmeManager.left().bottom();
         } else {
             enigmeManager = new EnigmaManager(false, game, stage);
+            enigmeManager.left().bottom();
         }
 
         // Instanciation d'une table pour contenir nos Layouts (Énigmes, UI, Chat)
