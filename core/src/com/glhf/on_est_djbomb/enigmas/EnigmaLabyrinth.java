@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.glhf.on_est_djbomb.dialogs.ClueDialog;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -39,6 +40,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
     private int coordXPlayer;
     private int coordYPlayer;
 
+    //To know if the player asked for a clue
+    boolean clueEnabled=false;
+
     //To read the sprites of the game
     Skin skin;
     TextureAtlas textureAtlas;
@@ -62,11 +66,13 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         if(isHost){
             setTitreTable("L'autre équipe est bloquée dans un labyrinthe, vous seul en possédez la carte, guidez-le vers les\n" +
                     " différents indices pour trouver le code secret permettant de s'enfuir!\n");
+            setIndice("Oui.");
         }
         else {
             setTitreTable("Vous êtes bloqué dans un labyrinthe, cliquez sur les cases adjacentes à votre personnage pour vous\n " +
                     "déplacer et laissez vous guider par votre partenaire pour trouver le code!\n");
             createDynamicClientMaze();
+            setIndice("Vous gardez désormais en mémoire les endroits explorés.");
         }
     }
 
@@ -132,8 +138,8 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
                         break;
                     case START: //if the read character corresponds to the starting place
                         imgButtonStyle.up = skin.getDrawable("LabyrinthStart");
-                        coordXPlayer = i;
-                        coordYPlayer = j;
+                        coordXPlayer = j;
+                        coordYPlayer = i;
                         break;
                     default: //Otherwise, the character corresponds to an element of the password
                         if(isHost){
@@ -161,15 +167,6 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
     }
 
     public void load(boolean isHost, EnigmaManager enigmaManager){
-        if (isHost){
-            loadHost(isHost,  enigmaManager);
-        }
-        else {
-            loadHost(isHost,  enigmaManager);
-        }
-    }
-    public void loadHost(boolean isHost, EnigmaManager enigmaManager){
-
         /*//Place title
         Label titreLabel = new Label(this.getTitreTable(),new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json")));
         enigmaManager.add(titreLabel).growX().pad(50f);
@@ -201,8 +198,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         }
     }
 
-    public void loadClient(boolean isHost, EnigmaManager enigmaManager){
-
+    public void unload(EnigmaManager enigmaManager){
+        fillTable.clear();
+        enigmaManager.removeActor(fillTable);
     }
 
     public void createDynamicClientMaze(){
@@ -261,12 +259,13 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         coordXPlayer=newCoordX;
         coordYPlayer=newCoordY;
 
-        //Mask old coord maze surroundings
-        tabButton[prevCoordX+1][prevCoordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthMask"),null,null,null,null,null));
-        tabButton[prevCoordX-1][prevCoordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthMask"),null,null,null,null,null));
-        tabButton[prevCoordX][prevCoordY+1].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthMask"),null,null,null,null,null));
-        tabButton[prevCoordX][prevCoordY-1].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthMask"),null,null,null,null,null));
-
+        if(!clueEnabled) {
+            //Mask old coord maze surroundings
+            tabButton[prevCoordX + 1][prevCoordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthMask"), null, null, null, null, null));
+            tabButton[prevCoordX - 1][prevCoordY].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthMask"), null, null, null, null, null));
+            tabButton[prevCoordX][prevCoordY + 1].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthMask"), null, null, null, null, null));
+            tabButton[prevCoordX][prevCoordY - 1].setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("LabyrinthMask"), null, null, null, null, null));
+        }
         //Display new coord maze surroundings
         updateDisplayCell(newCoordX+1, newCoordY);
         updateDisplayCell(newCoordX-1, newCoordY);
@@ -303,7 +302,10 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
                     break;
             }
         }
+    }
 
+    public void chargerIndice(){
+        clueEnabled=true;
     }
 
     public void dispose(){

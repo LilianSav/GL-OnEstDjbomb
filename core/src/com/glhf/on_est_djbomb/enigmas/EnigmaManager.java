@@ -32,7 +32,7 @@ public class EnigmaManager extends Table{
 		this.game=game;
 		this.stage = stage;
 		//ajout des enigmes
-		EnigmaLabyrinth l1 = new EnigmaLabyrinth(isHost, "labyrinthe.txt");
+		EnigmaLabyrinth l1 = new EnigmaLabyrinth(isHost, "labyrintheIntermédiaire.txt");
 		enigmes.add(l1);
 		EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
 		enigmes.add(enigme1);/*
@@ -70,8 +70,10 @@ public class EnigmaManager extends Table{
 	
 	// Intanciation du dialogue d'indice
 	private void chargerIndice() {
-        clueDialog = new ClueDialog("Indice", game.skin);
-        clueDialog.initContent();
+
+		clueDialog = new ClueDialog("Indice", game.skin);
+		clueDialog.initContent();
+
 	}
 	
 	// Intanciation du dialogue d'indice
@@ -82,9 +84,9 @@ public class EnigmaManager extends Table{
 	
 	// Intanciation du titre du table (composé du nom de l'énigme et d'une explication lorsque nécessaire)
 	private void chargerTitre() {
-		/*titreLabel = new Label(enigmeCourante.getTitreTable(),game.skin);
+		titreLabel = new Label(enigmeCourante.getTitreTable(),game.skin);
 		this.add(titreLabel);
-		this.row();*/
+		this.row();
 	}
 
 	// passer à l'énigme suivante
@@ -102,6 +104,11 @@ public class EnigmaManager extends Table{
 	
 	// Affichage du dialogue d'informations
 	public void getIndiceDialog() {
+
+		if(enigmeCourante instanceof EnigmaLabyrinth){
+			((EnigmaLabyrinth)enigmeCourante).chargerIndice();
+		}
+
     	clueDialog.setClue(enigmeCourante.getIndice());// récupération du texte d'indice de l'éngime courante
         clueDialog.show(stage);
 	}
@@ -115,14 +122,21 @@ public class EnigmaManager extends Table{
 	// est-ce qu'il reste des énigmes dans la liste d'énigme ?
 	public boolean isOver() {
 
-		// Suppression de l'ancienne image
-		enigmeImageTexture.dispose();
+		if(enigmeCourante instanceof EnigmaLabyrinth){
+			((EnigmaLabyrinth)enigmeCourante).unload(this);
+		}
+		else {
+			// Suppression de l'ancienne image
+			enigmeImageTexture.dispose();
+		}
 		this.clearChildren();
 		if(enigmes.size()-(enigmes.indexOf(enigmeCourante)) == 1) {
 			return true;
 		}else {
 			return false;
 		}
+
+
 	}
 
 	public ArrayList<EnigmaSkeleton> getEnigmes() {
