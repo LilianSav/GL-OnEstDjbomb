@@ -38,11 +38,9 @@ public class MainMenuScreen implements Screen {
         TextButton informationsButton = new TextButton("Informations", game.skin, "title");
         TextButton quitButton = new TextButton("Quitter", game.skin, "title");
 
-
-        // @modif test
+        // Ajout des acteurs à la Table
         root.add(setContainer(labelTitre)).expandY();
         root.row();
-
         root.add(setContainer(newGameButton)).expandY();
         root.row();
         root.add(setContainer(optionsButton)).expandY();
@@ -50,18 +48,6 @@ public class MainMenuScreen implements Screen {
         root.add(setContainer(informationsButton)).expandY();
         root.row();
         root.add(setContainer(quitButton)).expandY();
-
-        /*
-        // Ajout des acteurs à la Table
-        root.add(labelTitre).expandY();
-        root.row();
-        root.add(newGameButton).expandY();
-        root.row();
-        root.add(optionsButton).expandY();
-        root.row();
-        root.add(informationsButton).expandY();
-        root.row();
-        root.add(quitButton).expandY();*/
 
         // Création des dialogues
         OptionsDialog optionsDialog = new OptionsDialog("Options", game);
@@ -106,16 +92,16 @@ public class MainMenuScreen implements Screen {
         
     }
 
+    // setContainer retourne un TextButton dans son contenant fonction utilisée pour dimensionner le bouton
     public Container<TextButton> setContainer(TextButton textButton){
+        // Création du contenant
         Container<TextButton> ctnNewGameButton = new Container<TextButton>(textButton);
-        //ctnNewGameButton.width(250);
+
+        // Paramétrage du TextBouton
         textButton.pad(10);
         textButton.getLabel().setFontScale(1.5f);
-        //newGameButton.getLabel().setSize((float)(newGameButton.getLabel().getWidth()*1.5), (float)(newGameButton.getLabel().getHeight()*1.5));
-        //newGameButton.setSize((float)(newGameButton.getWidth()*1.5), (float)(newGameButton.getHeight()*1.5));
-        //newGameButton.setScale(1.5f);
-        //newGameButton.setTransform(true);
-        //ctnNewGameButton.setScale(2f);
+
+        // Paramétrage du contenant et ajout du TextBouton
         ctnNewGameButton.width(350);
         ctnNewGameButton.setOrigin(Align.center);
         ctnNewGameButton.center();
@@ -124,20 +110,18 @@ public class MainMenuScreen implements Screen {
         return ctnNewGameButton;
     }
 
+    // setContainer retourne un Label dans son contenant fonction utilisée pour dimensionner le bouton
     public Container<Label> setContainer(Label label){
+        // Création du contenant
         Container<Label> ctnLabel = new Container<Label>(label);
-        //ctnNewGameButton.width(250);
-        //label.pad(10);
+
+        // Paramétrage du Label
         label.setFontScale(1.5f);
-        //newGameButton.getLabel().setSize((float)(newGameButton.getLabel().getWidth()*1.5), (float)(newGameButton.getLabel().getHeight()*1.5));
-        //newGameButton.setSize((float)(newGameButton.getWidth()*1.5), (float)(newGameButton.getHeight()*1.5));
-        //newGameButton.setScale(1.5f);
-        //newGameButton.setTransform(true);
-        //ctnNewGameButton.setScale(2f);
+
+        // Paramétrage du contenant et ajout du TextBouton
         ctnLabel.width(350);
         ctnLabel.setOrigin(Align.center);
-        ctnLabel.center();
-        ctnLabel.setTransform(true);
+        ctnLabel.getActor().setAlignment(Align.center);
 
         return ctnLabel;
     }
