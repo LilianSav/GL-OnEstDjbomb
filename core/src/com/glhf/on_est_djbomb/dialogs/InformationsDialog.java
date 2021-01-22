@@ -22,10 +22,11 @@ public class InformationsDialog extends Dialog {
 
         // Ajout du texte dans la boîte de dialogue
         Label label = new Label("On est Djbomb est un escape game dans lequel la coopération est l'élément central du gameplay.\r\n\n" +
-                "Dans ce jeu, une équipe separée en deux groupes doit travailler de concert pour désamorcer une bombe qui menace de détruire le batiment \r\n"+
-        		"où ils se trouvent ! \r\n\n"+
+                "Dans ce jeu, une équipe separée en deux groupes doit travailler de concert pour désamorcer une bombe qui\r\n" +
+                "menace de détruire le batiment où ils se trouvent ! \r\n\n"+
                 "Au cours de la partie, les équipes seront confrontées à diverses énigmes qui leur permettront de sauver leur vie.\r\n" +
-                "La communication est essentielle, donc au cours de la partie, les deux équipes auront la possibilité d'interagir à l'aide d'un chat écrit.\r\n" +
+                "La communication est essentielle, donc au cours de la partie, les deux équipes auront la possibilité d'interagir \r\n" +
+                "à l'aide d'un chat écrit.\r\n" +
                 "\r\n\n" +
 
                 "Crédits\r\n\n" +
