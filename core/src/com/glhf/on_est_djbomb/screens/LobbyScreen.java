@@ -212,6 +212,7 @@ public class LobbyScreen implements Screen {
                                 commencerButton.setColor(Color.WHITE);
                             }
                             lblRemoteReady.setText("Prêt");
+                            lblRemoteId.setText(game.getGameSocket().getRemoteIdentifiant());
 
                         } else if (tokens[1].equals("NOTREADY")) {
                             // On mémorise le statut du joueur distant
@@ -220,6 +221,7 @@ public class LobbyScreen implements Screen {
                             commencerButton.setColor(Color.LIGHT_GRAY);
                             // On modifie le statut de la partie
                             lblRemoteReady.setText("Pas prêt");
+                            lblRemoteId.setText(game.getGameSocket().getRemoteIdentifiant());
 
                         } else if (tokens[1].equals("START")) {
                             // On vide le gestionnaire de listeners
