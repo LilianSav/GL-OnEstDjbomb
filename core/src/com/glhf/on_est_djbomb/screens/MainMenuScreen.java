@@ -7,13 +7,16 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 import com.glhf.on_est_djbomb.dialogs.*;
 
+import javax.xml.soap.Text;
+
 public class MainMenuScreen implements Screen {
     private final Stage stage;
-    
+
     public MainMenuScreen(final OnEstDjbombGame game) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
@@ -34,6 +37,20 @@ public class MainMenuScreen implements Screen {
         TextButton informationsButton = new TextButton("Informations", game.skin, "title");
         TextButton quitButton = new TextButton("Quitter", game.skin, "title");
 
+
+        // @modif test
+        root.add(labelTitre).expandY();
+        root.row();
+
+        root.add(setContainer(newGameButton)).expandY();
+        root.row();
+        root.add(setContainer(optionsButton)).expandY();
+        root.row();
+        root.add(setContainer(informationsButton)).expandY();
+        root.row();
+        root.add(setContainer(quitButton)).expandY();
+
+        /*
         // Ajout des acteurs à la Table
         root.add(labelTitre).expandY();
         root.row();
@@ -43,7 +60,7 @@ public class MainMenuScreen implements Screen {
         root.row();
         root.add(informationsButton).expandY();
         root.row();
-        root.add(quitButton).expandY();
+        root.add(quitButton).expandY();*/
 
         // Création des dialogues
         OptionsDialog optionsDialog = new OptionsDialog("Options", game);
@@ -86,6 +103,24 @@ public class MainMenuScreen implements Screen {
             }
         });
         
+    }
+
+    public Container<TextButton> setContainer(TextButton textButton){
+        Container<TextButton> ctnNewGameButton = new Container<TextButton>(textButton);
+        //ctnNewGameButton.width(250);
+        textButton.pad(10);
+        textButton.getLabel().setFontScale(1.6f);
+        //newGameButton.getLabel().setSize((float)(newGameButton.getLabel().getWidth()*1.5), (float)(newGameButton.getLabel().getHeight()*1.5));
+        //newGameButton.setSize((float)(newGameButton.getWidth()*1.5), (float)(newGameButton.getHeight()*1.5));
+        //newGameButton.setScale(1.5f);
+        //newGameButton.setTransform(true);
+        //ctnNewGameButton.setScale(2f);
+        ctnNewGameButton.width(350);
+        ctnNewGameButton.setOrigin(Align.center);
+        ctnNewGameButton.center();
+        ctnNewGameButton.setTransform(true);
+
+        return ctnNewGameButton;
     }
 
     @Override
