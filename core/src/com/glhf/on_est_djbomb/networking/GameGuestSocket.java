@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 
 public class GameGuestSocket extends GameSocket {
 
@@ -51,6 +53,8 @@ public class GameGuestSocket extends GameSocket {
         }).start();
     }
 
+    /** Modifié, à vérifier **/
+/*
     @Override
     public String getInfoSocket() {
         String infoSocket = "";
@@ -63,5 +67,29 @@ public class GameGuestSocket extends GameSocket {
             infoSocket = "Déconnecté";
         }
         return infoSocket;
+    }
+    */
+    @Override
+    public String getInfoIp() {
+        String infoIpAdress = "";
+        if (connexion.isConnected()) {
+            infoIpAdress = "" + connexion.getInetAddress().getHostAddress();
+            //infoIpAdress = "" + (((InetSocketAddress) connexion.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
+        } else {
+            infoIpAdress = "Déconnecté";
+        }
+        return infoIpAdress;
+    }
+
+    @Override
+    public String getInfoPort(){
+        String infoPort = "";
+        if (connexion.isConnected()) {
+            infoPort = "" + connexion.getPort();
+            //infoPort = "" + (((InetSocketAddress) connexion.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
+        } else {
+            infoPort = "Déconnecté";
+        }
+        return infoPort;
     }
 }
