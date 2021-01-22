@@ -3,6 +3,7 @@ package com.glhf.on_est_djbomb.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -39,7 +40,7 @@ public class MainMenuScreen implements Screen {
 
 
         // @modif test
-        root.add(labelTitre).expandY();
+        root.add(setContainer(labelTitre)).expandY();
         root.row();
 
         root.add(setContainer(newGameButton)).expandY();
@@ -121,6 +122,24 @@ public class MainMenuScreen implements Screen {
         ctnNewGameButton.setTransform(true);
 
         return ctnNewGameButton;
+    }
+
+    public Container<Label> setContainer(Label label){
+        Container<Label> ctnLabel = new Container<Label>(label);
+        //ctnNewGameButton.width(250);
+        //label.pad(10);
+        label.setFontScale(1.6f);
+        //newGameButton.getLabel().setSize((float)(newGameButton.getLabel().getWidth()*1.5), (float)(newGameButton.getLabel().getHeight()*1.5));
+        //newGameButton.setSize((float)(newGameButton.getWidth()*1.5), (float)(newGameButton.getHeight()*1.5));
+        //newGameButton.setScale(1.5f);
+        //newGameButton.setTransform(true);
+        //ctnNewGameButton.setScale(2f);
+        ctnLabel.width(350);
+        ctnLabel.setOrigin(Align.center);
+        ctnLabel.center();
+        ctnLabel.setTransform(true);
+
+        return ctnLabel;
     }
 
     @Override
