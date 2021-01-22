@@ -110,7 +110,7 @@ public class MainMenuScreen implements Screen {
         Container<TextButton> ctnNewGameButton = new Container<TextButton>(textButton);
         //ctnNewGameButton.width(250);
         textButton.pad(10);
-        textButton.getLabel().setFontScale(1.6f);
+        textButton.getLabel().setFontScale(1.5f);
         //newGameButton.getLabel().setSize((float)(newGameButton.getLabel().getWidth()*1.5), (float)(newGameButton.getLabel().getHeight()*1.5));
         //newGameButton.setSize((float)(newGameButton.getWidth()*1.5), (float)(newGameButton.getHeight()*1.5));
         //newGameButton.setScale(1.5f);
@@ -128,7 +128,7 @@ public class MainMenuScreen implements Screen {
         Container<Label> ctnLabel = new Container<Label>(label);
         //ctnNewGameButton.width(250);
         //label.pad(10);
-        label.setFontScale(1.6f);
+        label.setFontScale(1.5f);
         //newGameButton.getLabel().setSize((float)(newGameButton.getLabel().getWidth()*1.5), (float)(newGameButton.getLabel().getHeight()*1.5));
         //newGameButton.setSize((float)(newGameButton.getWidth()*1.5), (float)(newGameButton.getHeight()*1.5));
         //newGameButton.setScale(1.5f);

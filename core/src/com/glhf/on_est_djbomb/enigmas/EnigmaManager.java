@@ -49,6 +49,8 @@ public class EnigmaManager extends Table{
 		enigmes.add(enigme8);
 		EnigmaLabyrinth enigme9 = new EnigmaLabyrinth(isHost,"labyrintheHard.txt");
 		enigmes.add(enigme9);
+		EnigmaCutWire enigme10 = new EnigmaCutWire(isHost);
+		enigmes.add(enigme10);
 
 		enigmeCourante=enigme1;
 		// charger data des enigmes
