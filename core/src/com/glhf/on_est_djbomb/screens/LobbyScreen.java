@@ -18,7 +18,7 @@ public class LobbyScreen implements Screen {
     private boolean localReady = false;
     private boolean teammateReady = false;
 
-    public LobbyScreen(final OnEstDjbombGame game) {
+    public LobbyScreen(final OnEstDjbombGame game, boolean host) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
         // Liaison des Inputs au stage
@@ -42,12 +42,14 @@ public class LobbyScreen implements Screen {
         //Label Hôte/Guest
         Label lblLocalHostGuest;
         Label lblRemoteHostGuest;
-        if(GameSocket.GameSocketConstant.HOST.equals(game.getGameSocket().getSocketType())){
+        if(host = true){
             lblLocalHostGuest = new Label("Hébergeur :",game.skin, "title");
             lblRemoteHostGuest = new Label("Invité :",game.skin, "title");
         }else{
             lblLocalHostGuest = new Label("Invité :",game.skin, "title");
             lblRemoteHostGuest = new Label("Hébergeur :",game.skin, "title");
+            System.out.println(GameSocket.GameSocketConstant.HOST);
+            System.out.println(game.getGameSocket().getSocketType());
         }
 
         /** Local **/
@@ -90,32 +92,32 @@ public class LobbyScreen implements Screen {
 
         /** Création d'une table contenant les informations **/
         Table infoLobby = new Table();
-        root.add(infoLobby).width(Value.percentWidth(0.70f, root)).height(Value.percentHeight(0.50f, root)).pad(0,(float)(OnEstDjbombGame.GAME_WIDTH*0.3/2),0,(float)(OnEstDjbombGame.GAME_WIDTH*0.3/2)).colspan(3);
+        root.add(infoLobby).fillX().colspan(3);
 
         //Statut
-        infoLobby.add(lblReadStatut).pad(10,20,10,20).left();
+        infoLobby.add(lblReadStatut).pad(10,150,10,20).left();
         infoLobby.row();
 
         // Joueur Local
-        infoLobby.add(lblLocalHostGuest).pad(10,20,10,20).left();
+        infoLobby.add(lblLocalHostGuest).pad(10,150,10,20).left();
         infoLobby.add(lblLocalId).pad(10,20,10,20).left();
-        infoLobby.add(lblLocalReady).pad(10,20,10,20).left();
+        infoLobby.add(lblLocalReady).pad(10,20,10,150).left();
         infoLobby.row();
 
         // Partenaire
-        infoLobby.add(lblRemoteHostGuest).pad(10,20,10,20).left();
+        infoLobby.add(lblRemoteHostGuest).pad(10,150,10,20).left();
         infoLobby.add(lblRemoteId).pad(10,20,10,20).left();
-        infoLobby.add(lblRemoteReady).pad(10,20,10,20).left();
+        infoLobby.add(lblRemoteReady).pad(10,20,10,150).left();
         infoLobby.row();
 
         // Informations Ip Salon
-        infoLobby.add(lblIp).pad(70,20,10,20).left();
-        infoLobby.add(textIp).pad(70,20,10,20).left().width(300).colspan(2).left();
+        infoLobby.add(lblIp).pad(70,150,10,20).left();
+        infoLobby.add(textIp).pad(70,20,10,150).left().width(430).colspan(2).left();
         infoLobby.row();
 
         // Informations Port Salon
-        infoLobby.add(lblPort).pad(10,20,10,20).left();
-        infoLobby.add(textPort).pad(10,20,10,20).left().width(300).colspan(2).left();
+        infoLobby.add(lblPort).pad(10,150,10,20).left();
+        infoLobby.add(textPort).pad(10,20,10,150).left().width(430).colspan(2).left();
 
         root.row();
 

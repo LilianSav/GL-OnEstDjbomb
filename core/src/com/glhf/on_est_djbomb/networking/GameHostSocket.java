@@ -41,6 +41,7 @@ public class GameHostSocket extends GameSocket {
         sendMessage(identifiant);
         remoteIdentidiant = receiveMessage();
 
+
         // On délègue la lecture des flux entrants à un Thread appellant des listeners
         new Thread(() -> {
             // On observe les messages arrivant

@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Align;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 import com.glhf.on_est_djbomb.networking.GameGuestSocket;
 import com.glhf.on_est_djbomb.networking.GameHostSocket;
+import com.glhf.on_est_djbomb.networking.GameSocket;
 import com.glhf.on_est_djbomb.screens.LobbyScreen;
 
 public class NewGameDialog extends Dialog {
@@ -98,7 +99,7 @@ public class NewGameDialog extends Dialog {
 
                             // Changement d'écran
                             game.setGameSocket(gameSocket);
-                            game.switchScreen(new LobbyScreen(game));
+                            game.switchScreen(new LobbyScreen(game, true));
                         } else {
                             new Dialog("Pseudo invalide", game.skin) {
                                 {
@@ -188,7 +189,7 @@ public class NewGameDialog extends Dialog {
 
                             // Changement d'écran
                             game.setGameSocket(gameSocket);
-                            game.switchScreen(new LobbyScreen(game));
+                            game.switchScreen(new LobbyScreen(game, false));
                         } else {
                             new Dialog("Paramètres invalides", game.skin) {
                                 {
