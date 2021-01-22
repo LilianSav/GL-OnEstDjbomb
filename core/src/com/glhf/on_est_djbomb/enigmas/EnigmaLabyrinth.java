@@ -171,9 +171,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
     }
 
     public void load(boolean isHost, EnigmaManager enigmaManager){
-        /*//Place title
-        Label titreLabel = new Label(this.getTitreTable(),new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json")));
-        enigmaManager.add(titreLabel).growX().pad(50f);
+
+        /*Label titreLabel = new Label(this.getTitreTable(),new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json")));
+        float heightTitle = enigmaManager.add(titreLabel).getActorHeight();
         enigmaManager.row();*/
 
         fillTable=new Table();
@@ -195,8 +195,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
             for(Button elem : row){
 
                 //ImageButton real = new ImageButton(button);
-
-                fillTable.add(elem).width(Value.percentHeight((float)1/(tabLabyrinth.length+1), fillTable)).height(Value.percentHeight((float)1/(tabLabyrinth.length+1), fillTable));
+                fillTable.add(elem).width(Value.percentHeight((float)1/(tabLabyrinth.length+3), fillTable)).height(Value.percentHeight((float)1/(tabLabyrinth.length+3), fillTable));
             }
             fillTable.row();
         }
