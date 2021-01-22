@@ -1,9 +1,7 @@
 package com.glhf.on_est_djbomb.dialogs;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 
 public class ClueDialog extends Dialog {
     private final Skin skin;
@@ -15,16 +13,29 @@ public class ClueDialog extends Dialog {
     }
 
     public void initContent() {
+        /** Section Contenu **/
+        // Paramétrage du titre
+        getTitleLabel().setAlignment(Align.center);
+
         // Section Content
         clueContentTable.row();
 
-        // Section button
-        button("Retour");
+        /** Section Bouton **/
+        // Ajout du bouton Retour dans la boîte de dialogue
+        TextButton txtBtnReturn = new TextButton("  Retour  ",skin,"title");
+        txtBtnReturn.pad(5,30,5,30);
+        button(txtBtnReturn).pad(30);
+
+        // Section Content
+        clueContentTable.row();
     }
 
     public void setClue(String clue) {
         clueContentTable.clearChildren();
-        clueContentTable.add(new Label(clue, skin));
+
+        // Ajout de la solution dans la boîte de dialogue
+        Label lblSolution = new Label(clue, skin, "title");
+        clueContentTable.add(lblSolution).pad(30);
     }
 
     @Override

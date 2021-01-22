@@ -1,9 +1,7 @@
 package com.glhf.on_est_djbomb.dialogs;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 
 public class SolutionDialog extends Dialog{
 	private final Skin skin;
@@ -15,16 +13,26 @@ public class SolutionDialog extends Dialog{
     }
 
     public void initContent() {
-        // Section Content
-    	solutionContentTable.row();
+        /** Section Contenu **/
+        // Paramétrage du titre
+        getTitleLabel().setAlignment(Align.center);
 
-        // Section button
-        button("Retour");
+        // Section Content
+        solutionContentTable.row();
+
+        /** Section Bouton **/
+        // Ajout du bouton Retour dans la boîte de dialogue
+        TextButton txtBtnReturn = new TextButton("  Retour  ",skin,"title");
+        txtBtnReturn.pad(5,30,5,30);
+        button(txtBtnReturn).pad(30);
     }
 
     public void setSolution(String string) {
     	solutionContentTable.clearChildren();
-    	solutionContentTable.add(new Label(string, skin));
+
+        // Ajout de la solution dans la boîte de dialogue
+        Label lblSolution = new Label(string, skin, "title");
+        solutionContentTable.add(lblSolution).pad(30);
     }
 
     @Override

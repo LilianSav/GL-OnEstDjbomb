@@ -8,7 +8,7 @@ public class EnigmaCount extends EnigmaSkeleton {
 	public EnigmaCount(boolean isHost) {
 		super(isHost);
 		setSolution(81967);
-		setIndice("Collaborez pour trouver le résultat de l'équipe 2 (code : ABCDE)");
+		setIndice("La première case est un 8, la dernière est un 7");
 		setNom("Le compte est bon");
 		setTitreTable(getNom()+"\n");
 		setTpsBeforeIndice(30);
