@@ -53,10 +53,6 @@ public class GameGuestSocket extends GameSocket {
         }).start();
     }
 
-    public synchronized String receiveMessageEnigma() {
-        return receiveMessage();
-    }
-
     /** Modifié, à vérifier **/
 /*
     @Override

@@ -2,6 +2,7 @@ package com.glhf.on_est_djbomb.enigmas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,6 +19,7 @@ import com.glhf.on_est_djbomb.dialogs.ClueDialog;
 import com.glhf.on_est_djbomb.networking.GameGuestSocket;
 import com.glhf.on_est_djbomb.networking.GameHostSocket;
 import com.glhf.on_est_djbomb.networking.GameSocket;
+import com.glhf.on_est_djbomb.screens.EndGameScreen;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -91,6 +93,28 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
             createDynamicClientMaze();
             setIndice("Vous gardez désormais en mémoire les endroits explorés.");
         }
+
+        // Gestion Message et Game State
+        gameSocket.addListener(eventMessage -> {
+            // Parse
+            String[] tokens = eventMessage.split("::");
+
+            // FLAG TEXT : Pas concerné
+            if (tokens[0].equals("TEXT")) {
+            }
+            // FLAG STATE : Pas concerné
+            else if (tokens[0].equals("STATE")) {
+
+            }
+            // FLAG LABYRINTH :
+            else if (tokens[0].equals("LABYRINTH")) {
+
+            }
+            // Flag non reconnu
+            else {
+                Gdx.app.log("SocketFlagError", "Le flag envoyé par le socket distant n'est pas reconnu");
+            }
+        });
     }
 
     @Override
