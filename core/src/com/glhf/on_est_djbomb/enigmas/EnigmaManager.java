@@ -33,10 +33,25 @@ public class EnigmaManager extends Table{
 		//ajout des enigmes
 		EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
 		enigmes.add(enigme1);
-		EnigmaFindTheImage enigme2 = new EnigmaFindTheImage(isHost);
+		EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
 		enigmes.add(enigme2);
-		EnigmaPyramid enigme3 = new EnigmaPyramid(isHost);
+		EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost,"labyrintheTuto.txt");
 		enigmes.add(enigme3);
+		EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
+		enigmes.add(enigme4);
+		EnigmaSum enigme5 = new EnigmaSum(isHost);
+		enigmes.add(enigme5);
+		EnigmaLabyrinth enigme6 = new EnigmaLabyrinth(isHost,"labyrintheIntermédiaire.txt");
+		enigmes.add(enigme6);
+		EnigmaPyramid enigme7 = new EnigmaPyramid(isHost);
+		enigmes.add(enigme7);
+		EnigmaCount enigme8 = new EnigmaCount(isHost);
+		enigmes.add(enigme8);
+		EnigmaLabyrinth enigme9 = new EnigmaLabyrinth(isHost,"labyrintheHard.txt");
+		enigmes.add(enigme9);
+		EnigmaCutWire enigme10 = new EnigmaCutWire(isHost);
+		enigmes.add(enigme10);
+
 		enigmeCourante=enigme1;
 		// charger data des enigmes
 		chargerTitre();
@@ -47,13 +62,18 @@ public class EnigmaManager extends Table{
 	
 	// Récupération et affichage de l'images du table depuis la classe d'énigme
 	private void chargerImage() {
-		if(isHost) {
-			enigmeImageTexture = enigmeCourante.getTextureTableHost();
-		}else {
-			enigmeImageTexture = enigmeCourante.getTextureTableGuest();
+		if(enigmeCourante instanceof EnigmaLabyrinth){
+			((EnigmaLabyrinth) enigmeCourante).load(isHost, this);
+		}else{
+			if(isHost) {
+				enigmeImageTexture = enigmeCourante.getTextureTableHost();
+			}else {
+				enigmeImageTexture = enigmeCourante.getTextureTableGuest();
+			}
+			Image enigmeImageWidget = new Image(enigmeImageTexture);
+			this.add(enigmeImageWidget);
 		}
-		Image enigmeImageWidget = new Image(enigmeImageTexture);
-        this.add(enigmeImageWidget);
+
 	}
 	
 	// Intanciation du dialogue d'indice
@@ -70,9 +90,9 @@ public class EnigmaManager extends Table{
 	
 	// Intanciation du titre du table (composé du nom de l'énigme et d'une explication lorsque nécessaire)
 	private void chargerTitre() {
-		titreLabel = new Label(enigmeCourante.getTitreTable(),game.skin);
-		this.add(titreLabel);
-		this.row();
+			titreLabel = new Label(enigmeCourante.getTitreTable(), game.skin);
+			this.add(titreLabel);
+			this.row();
 	}
 
 	// passer à l'énigme suivante
@@ -90,6 +110,9 @@ public class EnigmaManager extends Table{
 	
 	// Affichage du dialogue d'informations
 	public void getIndiceDialog() {
+		if(enigmeCourante instanceof EnigmaLabyrinth){
+			((EnigmaLabyrinth) enigmeCourante).chargerIndice();
+		}
     	clueDialog.setClue(enigmeCourante.getIndice());// récupération du texte d'indice de l'éngime courante
         clueDialog.show(stage);
 	}
@@ -102,8 +125,13 @@ public class EnigmaManager extends Table{
 	
 	// est-ce qu'il reste des énigmes dans la liste d'énigme ?
 	public boolean isOver() {
-		// Suppression de l'ancienne image
-		enigmeImageTexture.dispose();
+		if(enigmeCourante instanceof EnigmaLabyrinth){
+			((EnigmaLabyrinth) enigmeCourante).unload(this);
+		}
+		else{
+			// Suppression de l'ancienne image
+			enigmeImageTexture.dispose();
+		}
 		this.clearChildren();
 		if(enigmes.size()-(enigmes.indexOf(enigmeCourante)) == 1) {
 			return true;

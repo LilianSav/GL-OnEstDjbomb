@@ -82,8 +82,13 @@ public abstract class GameSocket {
         }
     }
 
+    /** Modifié, à vérifier **/
+    /*
     // Fonction à implémenter dans les sous-classes pour afficher les informations pertinentes du Socket
     public abstract String getInfoSocket();
+     */
+    public abstract String getInfoIp();
+    public abstract String getInfoPort();
 
     // Ajoute un SocketListener à notre liste
     public void addListener(SocketListener listener) {
