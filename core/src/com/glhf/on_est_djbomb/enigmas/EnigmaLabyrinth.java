@@ -15,9 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.glhf.on_est_djbomb.dialogs.ClueDialog;
+import com.glhf.on_est_djbomb.networking.GameSocket;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.Random;
 
 public class EnigmaLabyrinth extends EnigmaSkeleton{
 
@@ -49,8 +51,11 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
 
     Table fillTable;
 
+    // To communicate with the other computer
+    GameSocket gameSocket;
 
-    public EnigmaLabyrinth(boolean isHost, String nameLabyrinth) {
+
+    public EnigmaLabyrinth(boolean isHost, String nameLabyrinth, GameSocket gameSocket) {
         super(isHost);
 
         this.nameLabyrinth=nameLabyrinth;
@@ -60,9 +65,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         setTpsBeforeIndice(60);
         setTpsBeforeSolution(100);
 
-        //Read the labyrinth text file to extract information
+        //Read the labyrinth text file to extract information, generates password
         try {
-            this.readTextFile(isHost);
+            this.readTextFile(isHost, gameSocket);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -91,7 +96,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
     }
 
     // Procedure readTextFile reads the labyrinth text file and extracts information
-    public void readTextFile(Boolean isHost) throws FileNotFoundException {
+    public void readTextFile(Boolean isHost, GameSocket gameSocket) throws FileNotFoundException {
 
         //Read the desired file
         FileHandle handle = Gdx.files.internal(pathLabyrinth+nameLabyrinth);
@@ -115,6 +120,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
     public void extractLabyrinth(String[] wordsArray, boolean isHost){
         //Initialize the password which will be deduced while reading the file
         String password = "";
+        Random random = new Random();
 
         //Initialize the labyrinth sprites
         textureAtlas = new TextureAtlas(pathLabyrinth+"labyrinthSprites.txt");
@@ -131,6 +137,8 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
 
                 //Create the 2D labyrinth and the buttons displayed
                 tabLabyrinth[j][i] = elem;
+
+                //Style of the buttons
                 ImageButton.ImageButtonStyle imgButtonStyle = new ImageButton.ImageButtonStyle();
 
                 switch (elem){
@@ -147,15 +155,21 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
                         break;
                     default: //Otherwise, the character corresponds to an element of the password
                         if(isHost){
+                            /** TODO **/
+
                             String clue = "LabyrinthClue" + String.valueOf(cpt);
                             imgButtonStyle.up = skin.getDrawable(clue);
                             cpt++;
                             password+=elem;
+                            //password+=random.nextInt(10);
                         }
                         else {
+                            /** TODO  **/
+
                             String clue = "LabyrinthClue" + elem;
                             imgButtonStyle.up = skin.getDrawable(clue);
                             password+=elem;
+
                         }
                         break;
                 }
