@@ -21,9 +21,9 @@ public class InformationsDialog extends Dialog {
         this.getTitleLabel().setAlignment(Align.center);
 
         // Ajout du texte dans la boîte de dialogue
-        Label label = new Label("On est Djbomb est un escape game dans lequel la coopération est l'élément central du gameplay.\r\n\n" +
-                "Dans ce jeu, une équipe separée en deux groupes doit travailler de concert pour désamorcer une bombe qui\r\n" +
-                "menace de détruire le batiment où ils se trouvent ! \r\n\n"+
+        Label label = new Label("\"On est Djbomb\" est un escape game dans lequel la coopération est l'élément central du gameplay.\r\n\n" +
+                "Dans ce jeu, une équipe séparée en deux groupes doit travailler de concert pour désamorcer une bombe qui\r\n" +
+                "menace de détruire le bâtiment où ils se trouvent ! \r\n\n"+
                 "Au cours de la partie, les équipes seront confrontées à diverses énigmes qui leur permettront de sauver leur vie.\r\n" +
                 "La communication est essentielle, donc au cours de la partie, les deux équipes auront la possibilité d'interagir \r\n" +
                 "à l'aide d'un chat écrit.\r\n" +
@@ -31,7 +31,7 @@ public class InformationsDialog extends Dialog {
 
                 "Crédits\r\n\n" +
                 "Musique : Hicham Chahidi - Plongée nocturne\r\n" +
-                "interface graphique : ray3k.wordpress.com\r\n" +
+                "Interface graphique : ray3k.wordpress.com\r\n" +
                 "MOA : Équipe Guzny\r\n" +
                 "MOE : Équipe Glhf\r\n", skin, "title");
         label.setFontScale(0.75f);
