@@ -53,6 +53,10 @@ public class GameGuestSocket extends GameSocket {
         }).start();
     }
 
+    public synchronized String receiveMessageEnigma() {
+        return receiveMessage();
+    }
+
     /** Modifié, à vérifier **/
 /*
     @Override
@@ -69,6 +73,8 @@ public class GameGuestSocket extends GameSocket {
         return infoSocket;
     }
     */
+
+
     @Override
     public String getInfoIp() {
         String infoIpAdress = "";

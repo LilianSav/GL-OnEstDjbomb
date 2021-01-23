@@ -15,9 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.glhf.on_est_djbomb.dialogs.ClueDialog;
+import com.glhf.on_est_djbomb.networking.GameGuestSocket;
+import com.glhf.on_est_djbomb.networking.GameHostSocket;
 import com.glhf.on_est_djbomb.networking.GameSocket;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -37,6 +41,10 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
 
     //2D array of Buttons to display during the enigma
     private ImageButton[][] tabButton;
+
+    // Shuffled password, used to place the right cells in the labyrinth
+    private String shuffledPassword;
+    private String passwordIndex;
 
     //Player coordinates
     private int coordXPlayer;
@@ -112,22 +120,22 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         tabLabyrinth = new char[labLength][labLength];
         tabButton = new ImageButton[labLength][labLength];
 
-        //Put file information into tabLabyrinth
-        extractLabyrinth(wordsArray, isHost);
+        shuffledPassword="";
+        // Put file information into tabLabyrinth, extract password
+        shuffledPassword = extractLabyrinth(wordsArray);
+
+        // Find the labyrinth password
+        generatePassword(isHost, gameSocket);
+
+        // Create the labyrinth visual
+        createDisplayLabyrinth(isHost);
     }
 
-    //Procedure extractLabyrinth, reads the String array parameter and creates the Labyrinth
-    public void extractLabyrinth(String[] wordsArray, boolean isHost){
+    //Procedure extractLabyrinth, reads the String array parameter and creates the 2D Labyrinth tab
+    public String extractLabyrinth(String[] wordsArray){
         //Initialize the password which will be deduced while reading the file
-        String password = "";
+        String shuffledPassword = "";
         Random random = new Random();
-
-        //Initialize the labyrinth sprites
-        textureAtlas = new TextureAtlas(pathLabyrinth+"labyrinthSprites.txt");
-        skin = new Skin(textureAtlas);
-
-        //cpt, to know the index of the clue associated to the password number
-        int cpt=1;
 
         //Loop to read the String[] wordsArray characters one by one
         int i=0;
@@ -135,13 +143,77 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         for(String word : wordsArray) {
             for (char elem : word.toCharArray()) {
 
-                //Create the 2D labyrinth and the buttons displayed
-                tabLabyrinth[j][i] = elem;
+                // Create the 2D labyrinth and the buttons displayed
+                tabLabyrinth[i][j] = elem;
+
+                // Test to add a character to the password when it's a clue for the Host
+                if((elem!=WALL) && (elem!= PATH) && (elem !=START) && isHost()){
+                    shuffledPassword+=random.nextInt(10);
+                }
+                j++;
+            }
+            j = 0;
+            i++;
+        }
+        return shuffledPassword;
+    }
+
+    public void generatePassword(boolean isHost, GameSocket gameSocket){
+        //Create password index and the password
+        String realPass="";
+        passwordIndex="";
+        if(isHost){ // The host finds the password and sends it
+
+            for(int i = 0 ; i<shuffledPassword.length() ; i++){
+                passwordIndex+=i;
+            }
+            passwordIndex= shuffle(passwordIndex);
+
+            //Send password and index to the Guest
+            ((GameHostSocket)gameSocket).sendMessageEnigma(shuffledPassword+":"+passwordIndex);
+
+            realPass=getPassword();
+        }
+        else { // The guest receives the password
+
+            shuffledPassword=((GameGuestSocket)gameSocket).receiveMessageEnigma();
+
+            String[] received = shuffledPassword.split(":");
+            shuffledPassword=received[0];
+            passwordIndex=received[1];
+            realPass=getPassword();
+        }
+        //Setting the password
+        this.setSolution(Integer.parseInt(realPass));
+    }
+
+    public String getPassword(){
+        //future password array
+        String realPass = "";
+
+        // Placing characters at the right place
+        for (int i = 0 ; i < passwordIndex.length() ; i++) {
+            realPass+=shuffledPassword.charAt(Character.getNumericValue(passwordIndex.charAt(i)));
+        }
+        return realPass;
+    }
+
+    //Procedure createDisplayLabyrinth, reads the 2D labyrinth tab creates the Labyrinth display
+    public void createDisplayLabyrinth(boolean isHost){
+
+        //Initialize the labyrinth sprites
+        textureAtlas = new TextureAtlas(pathLabyrinth+"labyrinthSprites.txt");
+        skin = new Skin(textureAtlas);
+
+        int count = 0;
+        //Loop to read the String[] wordsArray characters one by one
+        for(int i = 0 ; i < tabLabyrinth.length ; i++) {
+            for (int j = 0; j < tabLabyrinth.length; j++) {
 
                 //Style of the buttons
                 ImageButton.ImageButtonStyle imgButtonStyle = new ImageButton.ImageButtonStyle();
 
-                switch (elem){
+                switch (tabLabyrinth[i][j]){
                     case WALL: //if the read character corresponds to a wall
                         imgButtonStyle.up = skin.getDrawable("LabyrinthWall");
                         break;
@@ -154,34 +226,39 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
                         coordYPlayer = i;
                         break;
                     default: //Otherwise, the character corresponds to an element of the password
+                        String clue = "LabyrinthClue";
                         if(isHost){
-                            /** TODO **/
+                            clue += passwordIndex.charAt(count);
+                        }
+                        else {
+                            clue += shuffledPassword.charAt(count);
+                        }
+                        imgButtonStyle.up = skin.getDrawable(clue);
+                        count++;
+                        break;
 
-                            String clue = "LabyrinthClue" + String.valueOf(cpt);
+                        /*if(isHost){
+                            TODO
+                            /*String clue = "LabyrinthClue" + String.valueOf(cpt);
                             imgButtonStyle.up = skin.getDrawable(clue);
                             cpt++;
                             password+=elem;
-                            //password+=random.nextInt(10);
+                            password+=random.nextInt(10);
                         }
                         else {
-                            /** TODO  **/
+                            TODO
 
                             String clue = "LabyrinthClue" + elem;
                             imgButtonStyle.up = skin.getDrawable(clue);
                             password+=elem;
 
-                        }
-                        break;
+                        }*/
                 }
                 tabButton[j][i] = new ImageButton(imgButtonStyle);
 
-                i++;
             }
-            i = 0;
-            j++;
         }
-        //Setting the password
-        this.setSolution(Integer.parseInt(password));
+
     }
 
     public void load(boolean isHost, EnigmaManager enigmaManager){
@@ -319,6 +396,24 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
                     break;
             }
         }
+    }
+
+    public String shuffle(String word){
+        Random random = new Random();
+        // Convert the word into a char array
+        char wordArray[] = word.toCharArray();
+
+        // Shuffle the array
+        for( int i=0 ; i<wordArray.length ; i++ )
+        {
+            int j = random.nextInt(wordArray.length);
+            // Swap letters
+            char chatTemp = wordArray[i];
+            wordArray[i] = wordArray[j];
+            wordArray[j] = chatTemp;
+        }
+
+        return new String( wordArray );
     }
 
     public void chargerIndice(){

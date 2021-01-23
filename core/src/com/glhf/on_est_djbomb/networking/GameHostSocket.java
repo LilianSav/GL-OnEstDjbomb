@@ -70,11 +70,18 @@ public class GameHostSocket extends GameSocket {
         }
     }
 
+    public void sendMessageEnigma(String textMessage) {
+        sendMessage(textMessage);
+    }
+
     /** Modifié, à vérifier **/
        /* @Override
     public String getInfoSocket() {
         return server.getInetAddress().getHostAddress() + ":" + server.getLocalPort();
     }*/
+
+
+
     @Override
     public String getInfoIp(){
         return server.getInetAddress().getHostAddress();
