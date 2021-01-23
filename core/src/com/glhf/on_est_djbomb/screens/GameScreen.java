@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
@@ -29,6 +30,10 @@ public class GameScreen implements Screen {
     private TextButton solutionButton;
     private TextButton indiceButton;
 
+    // Champs textuels initiaux
+    private final String PSEUDO_INIT = "Discussion";
+    private final String MESSAGE_INIT = "En attente de message ...";
+
     public GameScreen(OnEstDjbombGame game) {
     	this.game=game;
     	isOver=false;
@@ -42,39 +47,91 @@ public class GameScreen implements Screen {
         sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_has_been_planted.mp3"));
         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
 
+        /** Ajout de la table contenant les éléments de GameScreen **/
+        // Instanciation de la table pour contenir les Layouts (Énigmes, UI, Chat)
+        Table root = new Table();
+        root.setFillParent(true);
+        stage.addActor(root);
+
+        /** Ajout de la table réservée aux énigmes **/
         // Instanciation du gestionnaire d'énigmes
         if (game.getGameSocket().getSocketType() == GameSocket.GameSocketConstant.HOST) {
             enigmeManager = new EnigmaManager(true, game, stage);
         } else {
             enigmeManager = new EnigmaManager(false, game, stage);
         }
-
-        // Instanciation d'une table pour contenir nos Layouts (Énigmes, UI, Chat)
-        Table root = new Table();
-        root.setFillParent(true);
-        stage.addActor(root);
-
-        // Ajout d'une table pour l'énigme
         root.add(enigmeManager).width(Value.percentWidth(0.70f, root)).height(Value.percentHeight(0.70f, root));
-        // Ajout d'une table pour l'interface utilisateur
+
+        /** Ajout de la table réservée à l'interface utilisateur **/
         Table userInterfaceTable = new Table();
-        root.add(userInterfaceTable).width(Value.percentWidth(0.20f, root)).height(Value.percentHeight(0.70f, root));
-        // Ajout d'une table pour le chat textuel
-        Table textChatTable = new Table();
+        root.add(userInterfaceTable).width(Value.percentWidth(0.30f, root)).height(Value.percentHeight(0.70f, root));
+
         root.row();
-        root.add(textChatTable).colspan(2).width(Value.percentWidth(0.9f, root)).height(Value.percentHeight(0.20f, root));
 
+        /** Ajout de la table réservée au chat textuel **/
+        Table textChatTable = new Table();
+        root.add(textChatTable).colspan(2).width(Value.percentWidth(0.9f, root)).height(Value.percentHeight(0.25f, root));
+
+        /** Remplissage de la table chat textuel **/
+        // Initialisation et paramétrage des labels
+        Label lblPseudo = new Label(PSEUDO_INIT+" :", game.skin, "title");
+        lblPseudo.setAlignment(Align.left);
+        lblPseudo.setFillParent(true);
+        Label lblMessage = new Label(MESSAGE_INIT, game.skin, "title");
+        lblMessage.setAlignment(Align.left);
+        lblMessage.setFillParent(true);
+        // Conteneurs des labels
+        Container<Label> ctnLblPseudo = new Container<Label>(lblPseudo);
+        ctnLblPseudo.pad(10).setOrigin(Align.center);
+        ctnLblPseudo.setTransform(true);
+        Container<Label> ctnLblMessage = new Container<Label>(lblMessage);
+        ctnLblMessage.pad(10).setOrigin(Align.center);
+        ctnLblMessage.setTransform(true);
+
+        // Table des conteneurs
+        Table tableMessage = new Table();
+        tableMessage.add(ctnLblPseudo).left();
+        tableMessage.add(ctnLblMessage).expandX().left();
+        // Initialisation du ScrollPane
+        ScrollPane scrollPaneMessage = new ScrollPane(tableMessage, game.skin);
+        scrollPaneMessage.setFadeScrollBars(false);
+        scrollPaneMessage.setScrollbarsVisible(true);
+        scrollPaneMessage.setFlickScroll(true);
+        scrollPaneMessage.setForceScroll(false, true);
+
+        // Table contenant le scrollPane
+        Table tableScrollPane = new Table();
+        tableScrollPane.add(scrollPaneMessage).left().width(Value.percentWidth(1f, tableScrollPane)).height(Value.percentHeight(1f, tableScrollPane));
+
+        textChatTable.add(tableScrollPane).height(Value.percentHeight(0.75f, textChatTable)).width(Value.percentWidth(1f, textChatTable));
+
+        /** Bouton et saisie textuelle **/
+        // Table des conteneurs
+        Table tableTextBox = new Table();
         // Création chat textuel
-        TextField chatTextField = new TextField("", game.skin);
-        TextButton sendButton = new TextButton("Envoyer", game.skin);
-        Label chatTextLabel = new Label("En attente de message ...", game.skin);
-        ScrollPane scrollPaneText = new ScrollPane(chatTextLabel, game.skin);
+        TextField chatTextField = new TextField("", game.skin, "title");
+        chatTextField.setFillParent(true);
+        TextButton sendButton = new TextButton("Envoyer", game.skin, "title");
+        sendButton.setFillParent(true);
+        sendButton.pad(5,20,5,20);
+        // Conteneurs
+        Container<TextField> ctnChatTextField = new Container<TextField>(chatTextField);
+        Container<TextButton> ctnSendButton = new Container<TextButton>(sendButton);
+        ctnChatTextField.setOrigin(Align.left);
+        ctnChatTextField.left();
+        ctnChatTextField.setTransform(true);
 
-        textChatTable.add(scrollPaneText).colspan(2).growX().height(Value.percentHeight(0.70f, textChatTable));
+        // Ajout à la table
+        tableTextBox.add(ctnChatTextField).expandX().fill().pad(10,10,5,10);
+        tableTextBox.add(ctnSendButton);
+
         textChatTable.row();
-        textChatTable.add(chatTextField).width(Value.percentWidth(0.80f, textChatTable)).height(Value.percentHeight(0.20f, textChatTable));
-        textChatTable.add(sendButton).width(Value.percentWidth(0.20f, textChatTable)).height(Value.percentHeight(0.20f, textChatTable));
+        textChatTable.add(tableTextBox).height(Value.percentHeight(0.25f, textChatTable)).width(Value.percentWidth(1f, textChatTable));
 
+        /*
+        textChatTable.add(chatTextField).width(Value.percentWidth(0.70f, root)).height(Value.percentHeight(0.05f, root));
+        textChatTable.add(sendButton).width(Value.percentWidth(0.20f, textChatTable)).height(Value.percentHeight(0.20f, textChatTable));
+*/
         // Création interface utilisateur latérale
         TextButton optionsButton = new TextButton("Options", game.skin);
         OptionsDialog optionsDialog = new OptionsDialog("Options", game);
@@ -107,8 +164,20 @@ public class GameScreen implements Screen {
         sendButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Changement texte
-                chatTextLabel.setText(chatTextLabel.getText() + "\n" + game.getGameSocket().getIdentifiant() + " - " + chatTextField.getText());
+                if(lblPseudo.getText().toString().equals(PSEUDO_INIT+" :") && lblMessage.getText().toString().equals(MESSAGE_INIT)){
+                    // Changement texte
+                    lblPseudo.setText(game.getGameSocket().getIdentifiant() + " :");
+                    lblMessage.setText(chatTextField.getText());
+                }
+                else{
+                    // Ajout texte
+                    lblPseudo.setText(lblPseudo.getText() + "\n" + game.getGameSocket().getIdentifiant() + " :");
+                    lblMessage.setText(lblMessage.getText() + "\n" + chatTextField.getText());
+
+                }
+                scrollPaneMessage.scrollTo(0, 0, 0, 0);
+
+                // Envoi de l'information à l'autre machine
                 game.getGameSocket().sendMessage("TEXT::" + chatTextField.getText());
                 chatTextField.setText("");
             }
@@ -167,7 +236,15 @@ public class GameScreen implements Screen {
 
             // FLAG TEXT : On modifie le contenu du chat textuel
             if (tokens[0].equals("TEXT")) {
-                Gdx.app.postRunnable(() -> chatTextLabel.setText(chatTextLabel.getText() + "\n" + game.getGameSocket().getRemoteIdentifiant() + " - " + tokens[1]));
+                if(lblPseudo.getText().toString().equals(PSEUDO_INIT+" :") && lblMessage.getText().toString().equals(MESSAGE_INIT)){
+                    Gdx.app.postRunnable(() -> lblPseudo.setText(game.getGameSocket().getRemoteIdentifiant() + " :"));
+                    Gdx.app.postRunnable(() -> lblMessage.setText(tokens[1]));
+                }
+                else {
+                    Gdx.app.postRunnable(() -> lblPseudo.setText(lblPseudo.getText() + "\n" + game.getGameSocket().getRemoteIdentifiant() + " :"));
+                    Gdx.app.postRunnable(() -> lblMessage.setText(lblMessage.getText() + "\n" + tokens[1]));
+                }
+                scrollPaneMessage.scrollTo(0, 0, 0, 0);
             }
             // FLAG STATE : On modifie l'état du jeu
             else if (tokens[0].equals("STATE")) {
