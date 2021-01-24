@@ -36,17 +36,20 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     //To know if the player asked for a clue
     boolean clueEnabled = false;
 
+    // Numéro de l'enigme dans les labyrinthes, pour communiquer
+    private int numero;
+
     //To read the sprites of the game
     Skin skinLabyrinthe;
     TextureAtlas textureAtlas;
 
     Table fillTable;
 
-
-    public EnigmaLabyrinth(boolean isHost, String nameLabyrinth) {
+    public EnigmaLabyrinth(boolean isHost, String nameLabyrinth, int numero) {
         super(isHost);
 
         this.nameLabyrinth = nameLabyrinth;
+        this.numero = numero;
 
         setNom("Échappez-vous du labyrinthe!");
 
@@ -161,10 +164,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         fillTable = new Table();
         fillTable.setFillParent(true);
 
-        //enigmaManager.add(fillTable).width(Value.percentHeight(0.100f, enigmaManager)).height(Value.percentHeight(0.100f, enigmaManager)).grow();
-
         enigmaManager.add(fillTable).grow();
-
 
         //Creating a square
         fillTable.setHeight(enigmaManager.getHeight());
@@ -190,7 +190,6 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     }
 
     public void createDynamicClientMaze() {
-
         //Add event Handlers
         for (int i = 0; i < tabLabyrinth.length; i++) {
             for (int j = 0; j < tabLabyrinth.length; j++) {
@@ -261,29 +260,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
             }
             //Display new coord maze surroundings
             displaySurroundings(newCoordX, newCoordY, VISION);
-          /* for(int i=-VISION ; i<=VISION ; i++){
-                for(int j=-VISION; j<=VISION; j++){
-                    if((newCoordX+i>=0) && (newCoordX+i<tabLabyrinth.length) && (newCoordX+j>=0) && (newCoordX+j<tabLabyrinth.length) && (Math.abs(i+j)<=VISION) && (Math.abs(i-j)<=VISION)){
-                        updateDisplayCell(newCoordX+i, newCoordY+j);
-                       // System.out.println("updateDisplayCell("+newCoordX+i+", "+ newCoordY+j+")");
-                    }
-                    else{
-                        System.out.println(Math.abs(i+j)+" : "+i+" - "+j+" - "+newCoordX+" - "+newCoordY);
-                    }
-                }
-            }*/
-            //System.out.println();
-
-            /*updateDisplayCell(newCoordX+1, newCoordY);
-            updateDisplayCell(newCoordX-1, newCoordY);
-            updateDisplayCell(newCoordX, newCoordY+1);
-            updateDisplayCell(newCoordX, newCoordY-1);
-            updateDisplayCell(newCoordX, newCoordY);*/
-
         } else {
             //Display new coord maze surroundings
             displaySurroundings(newCoordX, newCoordY, VISION_HELP);
-
         }
     }
 
@@ -329,6 +308,10 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     public void chargerIndice() {
         clueEnabled = true;
         displaySurroundings(coordXPlayer, coordYPlayer, VISION_HELP);
+    }
+
+    public void traiterMessage(String msg){
+        System.out.println("Message reçu : "+msg);
     }
 
     public void dispose() {
