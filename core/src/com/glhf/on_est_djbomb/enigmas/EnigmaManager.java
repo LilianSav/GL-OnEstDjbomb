@@ -35,7 +35,7 @@ public class EnigmaManager extends Table {
         enigmes.add(enigme1);
         EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
         enigmes.add(enigme2);
-        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "labyrintheTuto.txt");
+        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "labyrintheTutoBis.txt");
         enigmes.add(enigme3);
         EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
         enigmes.add(enigme4);

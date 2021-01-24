@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 import com.glhf.on_est_djbomb.dialogs.OptionsDialog;
+import com.glhf.on_est_djbomb.enigmas.EnigmaLabyrinth;
 import com.glhf.on_est_djbomb.enigmas.EnigmaManager;
 import com.glhf.on_est_djbomb.networking.GameSocket;
 
