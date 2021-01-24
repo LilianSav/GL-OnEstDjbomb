@@ -50,13 +50,13 @@ public class GameScreen implements Screen {
         sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_has_been_planted.mp3"));
         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
 
-        /** Ajout de la table contenant les éléments de GameScreen **/
+        // Ajout de la table contenant les éléments de GameScreen
         // Instanciation de la table pour contenir les Layouts (Énigmes, UI, Chat)
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
 
-        /** Ajout de la table réservée aux énigmes **/
+        // Ajout de la table réservée aux énigmes
         // Instanciation du gestionnaire d'énigmes
         if (game.getGameSocket().getSocketType() == GameSocket.GameSocketConstant.HOST) {
             enigmeManager = new EnigmaManager(true, game, stage);
@@ -65,17 +65,17 @@ public class GameScreen implements Screen {
         }
         root.add(enigmeManager).width(Value.percentWidth(0.70f, root)).height(Value.percentHeight(0.70f, root));
 
-        /** Ajout de la table réservée à l'interface utilisateur **/
+        // Ajout de la table réservée à l'interface utilisateur
         Table userInterfaceTable = new Table();
         root.add(userInterfaceTable).width(Value.percentWidth(0.30f, root)).height(Value.percentHeight(0.70f, root));
 
         root.row();
 
-        /** Ajout de la table réservée au chat textuel **/
+        // Ajout de la table réservée au chat textuel
         Table textChatTable = new Table();
         root.add(textChatTable).colspan(2).width(Value.percentWidth(0.9f, root)).height(Value.percentHeight(0.25f, root));
 
-        /** Remplissage de la table chat textuel **/
+        // Remplissage de la table chat textuel
         // Initialisation et paramétrage des labels
         Label lblPseudo = new Label(PSEUDO_INIT+" :", game.skin, "title");
         lblPseudo.setAlignment(Align.left);
@@ -108,7 +108,7 @@ public class GameScreen implements Screen {
 
         textChatTable.add(tableScrollPane).height(Value.percentHeight(0.75f, textChatTable)).width(Value.percentWidth(1f, textChatTable));
 
-        /** Bouton et saisie textuelle **/
+        // Bouton et saisie textuelle
         // Table des conteneurs
         Table tableTextBox = new Table();
         // Création chat textuel
@@ -401,7 +401,7 @@ public class GameScreen implements Screen {
         public void run() {
         	timerLabel.setText("");
         	//temps écoulé
-            if (tpsRestant == 0 && isOver==false) {
+            if (tpsRestant == 0 && !isOver) {
                 myTimerTask2.cancel();
             }
         }
@@ -412,7 +412,7 @@ public class GameScreen implements Screen {
         public void run() {
         	timerLabel.setText(tpsRestant + " sec");
         	//temps écoulé
-            if (tpsRestant == 0 && isOver==false) {
+            if (tpsRestant == 0 && !isOver) {
                 myTimerTask3.cancel();
             }
         }
