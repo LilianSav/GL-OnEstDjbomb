@@ -15,22 +15,18 @@ public class EnigmaManager extends Table {
     private final ArrayList<EnigmaSkeleton> enigmes;// liste des énigmes
     private EnigmaSkeleton enigmeCourante;// classe de l'énigme en cours d'utilisation
     private final boolean isHost;
-    private ClueDialog clueDialog;// dialogue d'information affichant l'indice de l'énigme courante
-    private SolutionDialog solutionDialog;// dialogue d'information affichant la solution de l'énigme courante
-    private final OnEstDjbombGame game;
+    private final ClueDialog clueDialog;// dialogue d'information affichant l'indice de l'énigme courante
+    private final SolutionDialog solutionDialog;// dialogue d'information affichant la solution de l'énigme courante
     private final Stage stage;
-    private Texture enigmeImageTexture;// image affichée sur le Table
-    private Label titreLabel;
 
     public EnigmaManager(boolean isHost, OnEstDjbombGame game, Stage stage) {
         // Initialisation
         super(game.skin);
         enigmes = new ArrayList<EnigmaSkeleton>();
         this.isHost = isHost;
-        this.game = game;
         this.stage = stage;
 
-        //ajout des enigmes
+        // Ajout des énigmes
         EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
         enigmes.add(enigme1);
         EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
@@ -57,7 +53,6 @@ public class EnigmaManager extends Table {
         // Création des dialogues d'indices et de solutions
         clueDialog = new ClueDialog("Indice", game.skin);
         clueDialog.initContent();
-
         solutionDialog = new SolutionDialog("Solution", game.skin);
         solutionDialog.initContent();
 
@@ -65,7 +60,6 @@ public class EnigmaManager extends Table {
         enigmeCourante.load(isHost, this);
     }
 
-    // passer à l'énigme suivante
     public void nextEnigme() {
     	// On passe à l'énigme suivante
         enigmeCourante = enigmes.get(enigmes.indexOf(enigmeCourante) + 1);
