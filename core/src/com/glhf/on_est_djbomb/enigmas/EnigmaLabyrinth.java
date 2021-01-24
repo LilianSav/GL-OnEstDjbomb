@@ -1,11 +1,13 @@
 package com.glhf.on_est_djbomb.enigmas;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.glhf.on_est_djbomb.networking.GameSocket;
 
 import java.io.FileNotFoundException;
 
@@ -38,6 +40,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
 
     // Numéro de l'enigme dans les labyrinthes, pour communiquer
     private int numero;
+    private GameSocket socket;
 
     //To read the sprites of the game
     Skin skinLabyrinthe;
@@ -45,23 +48,17 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
 
     Table fillTable;
 
-    public EnigmaLabyrinth(boolean isHost, String nameLabyrinth, int numero) {
+    public EnigmaLabyrinth(boolean isHost, String nameLabyrinth, int numero, GameSocket socket) {
         super(isHost);
 
         this.nameLabyrinth = nameLabyrinth;
         this.numero = numero;
+        this.socket = socket;
 
         setNom("Échappez-vous du labyrinthe!");
 
         setTpsBeforeIndice(10);
         setTpsBeforeSolution(100);
-
-        //Read the labyrinth text file to extract information
-        try {
-            this.readTextFile(isHost);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
 
         if (isHost) {
             setTitreTable("L'autre équipe est bloquée dans un labyrinthe, vous seul en possédez la carte, guidez-le vers les\n" +
@@ -70,7 +67,6 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         } else {
             setTitreTable("Vous êtes bloqué dans un labyrinthe, cliquez sur les cases adjacentes à votre personnage pour vous\n " +
                     "déplacer et laissez vous guider par votre partenaire pour trouver le code!\n");
-            createDynamicClientMaze();
             setIndice("Vous êtes désormais plus clairvoyant et avez amélioré votre mémoire");
         }
     }
@@ -155,11 +151,19 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     }
 
 
-    public void load(boolean isHost, Table enigmaManager) {
+    public void load( Table enigmaManager) {
 
-        /*Label titreLabel = new Label(this.getTitreTable(),new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json")));
-        float heightTitle = enigmaManager.add(titreLabel).getActorHeight();
-        enigmaManager.row();*/
+        //Read the labyrinth text file to extract information
+        try {
+            this.readTextFile(this.isHost());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if(!this.isHost()){
+            createDynamicClientMaze();
+        }
+
 
         fillTable = new Table();
         fillTable.setFillParent(true);
@@ -169,9 +173,6 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         //Creating a square
         fillTable.setHeight(enigmaManager.getHeight());
         fillTable.setWidth(enigmaManager.getHeight());
-
-        int squareSize = (int) (fillTable.getHeight() / tabLabyrinth.length);
-
 
         for (ImageButton[] row : tabButton) {
             for (Button elem : row) {
@@ -200,7 +201,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
                         public void clicked(InputEvent event, float x, float y) {
                             if (playerAdjacentButton((ImageButton) event.getTarget())) {
                                 movePlayer((ImageButton) event.getTarget());
+                                socket.sendMessage("LABYRINTH::"+numero+"::"+"voici mon message");
                             }
+
                         }
 
                         ;
