@@ -16,7 +16,7 @@ public class InformationsDialog extends Dialog {
 
         Table informationsContentTable = getContentTable();
 
-        /** Section Contenu **/
+        /* Section Contenu */
         // Paramétrage du titre
         this.getTitleLabel().setAlignment(Align.center);
 
@@ -39,7 +39,7 @@ public class InformationsDialog extends Dialog {
         informationsContentTable.add(label).pad(30);
         informationsContentTable.row();
 
-        /** Section Bouton **/
+        /* Section Bouton */
         // Ajout du bouton retour dans la boîte de dialogue
         TextButton txtBtn = new TextButton("Retour",skin,"title");
         txtBtn.pad(15,30,15,30);

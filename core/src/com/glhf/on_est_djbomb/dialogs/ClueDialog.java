@@ -13,14 +13,14 @@ public class ClueDialog extends Dialog {
     }
 
     public void initContent() {
-        /** Section Contenu **/
+        /* Section Contenu */
         // Paramétrage du titre
         getTitleLabel().setAlignment(Align.center);
 
         // Section Content
         clueContentTable.row();
 
-        /** Section Bouton **/
+        /* Section Bouton */
         // Ajout du bouton Retour dans la boîte de dialogue
         TextButton txtBtnReturn = new TextButton("  Retour  ",skin,"title");
         txtBtnReturn.pad(5,30,5,30);

@@ -24,7 +24,7 @@ public class OptionsDialog extends Dialog {
     //Procédure initContent, initialise le contenu de la boîte de dialogue d'options
     public void initContent(){
 
-        /** Section Contenu **/
+        /* Section Contenu */
         Table informationsContentTable = getContentTable();
 
         // Paramétrage du titre
@@ -52,7 +52,7 @@ public class OptionsDialog extends Dialog {
         informationsContentTable.row();
         this.sliderVolumeEffetSonore=sliderVolumeEffetSonore;
 
-        /** Section Boutons **/
+        /* Section Boutons */
         // Ajout du bouton retour dans la boîte de dialogue
         TextButton txtBtnReturn = new TextButton("  Retour  ",skin,"title");
         txtBtnReturn.pad(5,30,5,30);

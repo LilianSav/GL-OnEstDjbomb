@@ -27,7 +27,7 @@ public class NewGameDialog extends Dialog {
 
         Table informationsContentTable = getContentTable();
 
-        /** Section Contenu **/
+        /* Section Contenu */
         // Paramétrage du titre
         this.getTitleLabel().setAlignment(Align.center);
 
@@ -36,7 +36,7 @@ public class NewGameDialog extends Dialog {
         informationsContentTable.add(lblHost).pad(30);
         informationsContentTable.row();
 
-        /** Section Boutons **/
+        /* Section Boutons */
         // Ajout du bouton Héberger dans la boîte de dialogue
         TextButton txtBtnHost = new TextButton("  Héberger  ",game.skin,"title");
         txtBtnHost.pad(5,30,5,30);
@@ -59,7 +59,7 @@ public class NewGameDialog extends Dialog {
         if (object.equals(1L)) {
             new Dialog("Créer une partie", game.skin) {
                 {
-                    /** Section Contenu **/
+                    /* Section Contenu */
                     // Paramétrage du titre
                     getTitleLabel().setAlignment(Align.center);
 
@@ -71,7 +71,7 @@ public class NewGameDialog extends Dialog {
                     pseudoTextField = new TextField(game.prefs.getString("pseudo"), game.skin, "title");
                     getContentTable().add(pseudoTextField).pad(30).width(300);
 
-                    /** Section Boutons **/
+                    /* Section Boutons */
                     // Ajout du bouton Retour dans la boîte de dialogue
                     TextButton txtBtnReturn = new TextButton("  Retour  ",game.skin,"title");
                     txtBtnReturn.pad(5,30,5,30);
@@ -103,7 +103,7 @@ public class NewGameDialog extends Dialog {
                         } else {
                             new Dialog("Pseudo invalide", game.skin) {
                                 {
-                                    /** Section Contenu **/
+                                    /* Section Contenu */
                                     // Paramétrage du titre
                                     getTitleLabel().setAlignment(Align.center);
 
@@ -111,7 +111,7 @@ public class NewGameDialog extends Dialog {
                                     Label lblNeedTitle = new Label("Veuillez renseigner un pseudo", game.skin, "title");
                                     getContentTable().add(lblNeedTitle).pad(30);
 
-                                    /** Section Boutons **/
+                                    /* Section Boutons */
                                     // Ajout du bouton Retour dans la boîte de dialogue
                                     TextButton txtBtnReturn = new TextButton("  Retour  ",game.skin,"title");
                                     txtBtnReturn.pad(5,30,5,30);
@@ -128,7 +128,7 @@ public class NewGameDialog extends Dialog {
         else if (object.equals(2L)) {
             new Dialog("Rejoindre une partie", game.skin) {
                 {
-                    /** Section Contenu **/
+                    /* Section Contenu */
                     // Paramétrage du titre
                     getTitleLabel().setAlignment(Align.center);
 
@@ -162,7 +162,7 @@ public class NewGameDialog extends Dialog {
 
                     getContentTable().row();
 
-                    /** Section Boutons **/
+                    /* Section Boutons */
                     // Ajout du bouton Retour dans la boîte de dialogue
                     TextButton txtBtnReturn = new TextButton("  Retour  ",game.skin,"title");
                     txtBtnReturn.pad(5,30,5,30);
@@ -193,7 +193,7 @@ public class NewGameDialog extends Dialog {
                         } else {
                             new Dialog("Paramètres invalides", game.skin) {
                                 {
-                                    /** Section Contenu **/
+                                    /* Section Contenu */
                                     // Paramétrage du titre
                                     getTitleLabel().setAlignment(Align.center);
 
@@ -201,7 +201,7 @@ public class NewGameDialog extends Dialog {
                                     Label lblNeedParameter = new Label("Un des champs n'est pas renseigné", game.skin, "title");
                                     getContentTable().add(lblNeedParameter).pad(30);
 
-                                    /** Section Boutons **/
+                                    /* Section Boutons */
                                     // Ajout du bouton Retour dans la boîte de dialogue
                                     TextButton txtBtnReturn = new TextButton("  Retour  ",game.skin,"title");
                                     txtBtnReturn.pad(5,30,5,30);
