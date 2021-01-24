@@ -127,7 +127,7 @@ public class LobbyScreen implements Screen {
         root.add(setContainer(pretButton)).expandY();//.expand();
         root.add(setContainer(commencerButton)).expandY();
 
-        // Gestionnaire d'évènements des bouttons
+        // Gestionnaire d'évènements des boutons
         retourButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

@@ -5,10 +5,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.glhf.on_est_djbomb.networking.GameSocket;
 import com.glhf.on_est_djbomb.screens.MainMenuScreen;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.color.ColorPicker;
+import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 
 
 public class OnEstDjbombGame extends Game {
@@ -20,15 +25,20 @@ public class OnEstDjbombGame extends Game {
     private GameSocket gameSocket;
     public Music music;
     public Preferences prefs;
+    public ColorPicker colorPicker;
 
     public void create() {
         // Instanciation du batch
         batch = new SpriteBatch();
+
         // Instanciation du skin
         skin = new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json"));
+
     	//instanciation préférences utilisateur
     	prefs = Gdx.app.getPreferences("My Preferences");
-    	if(!prefs.contains("volumeMusique")) {//premier lancement
+
+        // Dans le cas d'un premier lancement, on remplit les préférences
+    	if(!prefs.contains("volumeMusique")) {
     		prefs.putFloat("volumeMusique", 100f);
     		prefs.putFloat("volumeEffetSonore", 100f);
     		prefs.putFloat("volumeChatVocal", 100f);
@@ -37,11 +47,24 @@ public class OnEstDjbombGame extends Game {
     		prefs.putString("meilleurTpsUtilisePseudo1", "Bob");
     		prefs.putString("meilleurTpsUtilisePseudo2", "Dylan");
     	}
-    	//Instanciation musique
+
+    	// Instanciation musique
         music=Gdx.audio.newMusic(Gdx.files.internal("audio/music_plongee_nocture.mp3"));
         music.play();
         music.setVolume(prefs.getFloat("volumeMusique")/100);
     	music.setLooping(true);
+
+        // Création de VisUI pour les widgets avancés
+        VisUI.load();
+        // Initialisation du colorPicker, Ce composant lourd est ainsi initialisé une seule fois
+        colorPicker = new ColorPicker(new ColorPickerAdapter() {
+            @Override
+            public void finished (Color newColor) {
+                prefs.putString("interfaceColorValue", newColor.toString());
+            }
+        });
+        colorPicker.setColor(Color.valueOf(prefs.getString("interfaceColorValue")));
+
         // Lancement du menu principal
         this.setScreen(new MainMenuScreen(this));
     }
@@ -55,6 +78,10 @@ public class OnEstDjbombGame extends Game {
         batch.dispose();
         skin.dispose();
         music.dispose();
+
+        // Libère les composants avancés de VISUI
+        colorPicker.dispose();
+        VisUI.dispose();
         
         //enregistre les paramètres utilisateurs
         prefs.flush();

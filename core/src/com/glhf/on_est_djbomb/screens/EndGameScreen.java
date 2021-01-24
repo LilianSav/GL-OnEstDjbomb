@@ -107,7 +107,7 @@ public class EndGameScreen implements Screen{
         TextButton menuPrincipalButton = new TextButton("Menu principal", game.skin);
         root.add(menuPrincipalButton).expandY();
         
-        // Gestionnaire d'évènements des bouttons
+        // Gestionnaire d'évènements des boutons
         menuPrincipalButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

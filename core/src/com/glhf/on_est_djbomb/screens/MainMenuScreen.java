@@ -2,9 +2,7 @@ package com.glhf.on_est_djbomb.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -49,14 +47,14 @@ public class MainMenuScreen implements Screen {
         root.add(setContainer(quitButton)).expandY();
 
         // Création des dialogues
-        OptionsDialog optionsDialog = new OptionsDialog("Options", game);
+        OptionsDialog optionsDialog = new OptionsDialog("Options", game, stage);
         optionsDialog.initContent();
         InformationsDialog informationsDialog = new InformationsDialog("Informations", game.skin);
         informationsDialog.initContent();
         NewGameDialog newGameDialog = new NewGameDialog("Nouvelle partie", game, stage);
         newGameDialog.initContent();
 
-        // Gestionnaire d'évènements des bouttons
+        // Gestionnaire d'évènements des boutons
         newGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -95,7 +93,7 @@ public class MainMenuScreen implements Screen {
     }
 
     // setContainer retourne un TextButton dans son contenant fonction utilisée pour dimensionner le bouton
-    public Container<TextButton> setContainer(TextButton textButton){
+    public Container<TextButton> setContainer(TextButton textButton) {
         // Création du contenant
         Container<TextButton> ctnNewGameButton = new Container<TextButton>(textButton);
 
@@ -113,7 +111,7 @@ public class MainMenuScreen implements Screen {
     }
 
     // setContainer retourne un Label dans son contenant fonction utilisée pour dimensionner le bouton
-    public Container<Label> setContainer(Label label){
+    public Container<Label> setContainer(Label label) {
         // Création du contenant
         Container<Label> ctnLabel = new Container<Label>(label);
 

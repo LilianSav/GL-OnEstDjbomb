@@ -58,7 +58,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 		over: button-over
 	}
 	colorwheel: {
-		up: button-colorwheel
+		up: icon-colorwheel-over
 		down: button-colorwheel-pressed
 		over: button-colorwheel-over
 	}
