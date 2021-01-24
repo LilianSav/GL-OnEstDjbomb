@@ -31,37 +31,37 @@ public class OnEstDjbombGame extends Game {
         // Instanciation du batch
         batch = new SpriteBatch();
 
-        // Instanciation du skin
-        skin = new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json"));
-
-    	//instanciation préférences utilisateur
-    	prefs = Gdx.app.getPreferences("My Preferences");
+        //instanciation préférences utilisateur
+        prefs = Gdx.app.getPreferences("My Preferences");
 
         // Dans le cas d'un premier lancement, on remplit les préférences
-    	if(!prefs.contains("volumeMusique") || !prefs.contains("interfaceColorValue")) {
-    		prefs.putFloat("volumeMusique", 100f);
-    		prefs.putFloat("volumeEffetSonore", 100f);
-    		prefs.putFloat("volumeChatVocal", 100f);
-    		prefs.putString("pseudo", "Pseudo");
-    		prefs.putInteger("meilleurTpsUtilise", 600);//volontairement eleve
-    		prefs.putString("meilleurTpsUtilisePseudo1", "Bob");
-    		prefs.putString("meilleurTpsUtilisePseudo2", "Dylan");
+        if (!prefs.contains("volumeMusique") || !prefs.contains("interfaceColorValue")) {
+            prefs.putFloat("volumeMusique", 100f);
+            prefs.putFloat("volumeEffetSonore", 100f);
+            prefs.putFloat("volumeChatVocal", 100f);
+            prefs.putString("pseudo", "Pseudo");
+            prefs.putInteger("meilleurTpsUtilise", 600);//volontairement eleve
+            prefs.putString("meilleurTpsUtilisePseudo1", "Bob");
+            prefs.putString("meilleurTpsUtilisePseudo2", "Dylan");
             prefs.putString("interfaceColorValue", "000000ff");
-            prefs.putBoolean("interfaceColorChecked", true);
-    	}
+            prefs.putBoolean("interfaceColorChecked", false);
+        }
 
-    	// Instanciation musique
-        music=Gdx.audio.newMusic(Gdx.files.internal("audio/music_plongee_nocture.mp3"));
+        // Instanciation musique
+        music = Gdx.audio.newMusic(Gdx.files.internal("audio/music_plongee_nocture.mp3"));
         music.play();
-        music.setVolume(prefs.getFloat("volumeMusique")/100);
-    	music.setLooping(true);
+        music.setVolume(prefs.getFloat("volumeMusique") / 100);
+        music.setLooping(true);
+
+        // Instanciation du skin
+        skin = createSkin();
 
         // Création de VisUI pour les widgets avancés
         VisUI.load();
         // Initialisation du colorPicker, Ce composant lourd est ainsi initialisé une seule fois
         colorPicker = new ColorPicker(new ColorPickerAdapter() {
             @Override
-            public void finished (Color newColor) {
+            public void finished(Color newColor) {
                 prefs.putString("interfaceColorValue", newColor.toString());
             }
         });
@@ -84,7 +84,7 @@ public class OnEstDjbombGame extends Game {
         // Libère les composants avancés de VISUI
         colorPicker.dispose();
         VisUI.dispose();
-        
+
         //enregistre les paramètres utilisateurs
         prefs.flush();
 
@@ -107,5 +107,51 @@ public class OnEstDjbombGame extends Game {
     // Get GameSocket
     public GameSocket getGameSocket() {
         return this.gameSocket;
+    }
+
+    // Instanciation du skin et de ses paramètres
+    private Skin createSkin() {
+        // Variable du skin à retourner
+        Skin newSkin = null;
+        
+        // On regarde si l'utilisateur a demandé un changement de couleur
+        boolean personalColorActivated = prefs.getBoolean("interfaceColorChecked");
+
+        // Si le choix de couleur est activé, on instancie le skin avec ses couleurs personnalisées
+        if (personalColorActivated) {
+            newSkin = new Skin(Gdx.files.internal("skincomposerui-grey/skin-composer-ui.json"));
+
+            // Récupération de la couleur
+            Color customColor = Color.valueOf(prefs.getString("interfaceColorValue"));
+            // Application de la couleur
+            newSkin.getPatch("button").setColor(customColor);
+            newSkin.getPatch("button-pressed").setColor(customColor);
+            newSkin.getPatch("button-over").setColor(customColor);
+            newSkin.getPatch("button-file").setColor(customColor);
+            newSkin.getPatch("scrollpane").setColor(customColor);
+            newSkin.getPatch("scrollpane-knob").setColor(customColor);
+            newSkin.getPatch("slider-knob").setColor(customColor);
+            newSkin.getPatch("slider-knob-over").setColor(customColor);
+            newSkin.getPatch("slider-knob-pressed").setColor(customColor);
+            newSkin.getPatch("slider-horizontal").setColor(customColor);
+            newSkin.getPatch("slider-vertical").setColor(customColor);
+            newSkin.getPatch("selectbox").setColor(customColor);
+            newSkin.getPatch("selectbox-over").setColor(customColor);
+            newSkin.getPatch("selectbox-pressed").setColor(customColor);
+            newSkin.getPatch("list").setColor(customColor);
+            newSkin.getPatch("checkbox-on").setColor(customColor);
+            newSkin.getPatch("checkbox-off").setColor(customColor);
+            newSkin.getPatch("checkbox-off-over").setColor(customColor);
+
+            newSkin.getPatch("window").setColor(customColor);
+            newSkin.getPatch("textfield").setColor(customColor);
+        }
+        // Sinon on affiche l'interface de base
+        else {
+            newSkin = new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json"));
+        }
+
+        // On retourne le skin instancié
+        return newSkin;
     }
 }
