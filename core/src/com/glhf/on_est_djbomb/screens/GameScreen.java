@@ -37,9 +37,9 @@ public class GameScreen implements Screen {
     private final String MESSAGE_INIT = "En attente de message ...";
 
     public GameScreen(OnEstDjbombGame game) {
-    	this.game=game;
-    	isOver=false;
-    	
+        this.game = game;
+        isOver = false;
+
         // Instanciation du stage (Hiérarchie de nos acteurs)
         stage = new Stage(new ScreenViewport());
         // Liaison des Inputs au stage
@@ -141,7 +141,7 @@ public class GameScreen implements Screen {
         TextButton quitterButton = new TextButton("Quitter", game.skin);
         tpsInitial = 300;//5min
         tpsRestant = tpsInitial;
-        tpsInitialEnigme=tpsInitial;
+        tpsInitialEnigme = tpsInitial;
         timerLabel = new Label(tpsRestant + " sec", game.skin);
         isUnder30s=false;
         startTimer();
@@ -209,28 +209,28 @@ public class GameScreen implements Screen {
         verificationbutton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	boolean repTrouve = verificationTextField.getText().equals(String.valueOf(enigmeManager.getSolution()));
-                finDePartie(repTrouve,false);
+                boolean repTrouve = verificationTextField.getText().equals(String.valueOf(enigmeManager.getSolution()));
+                finDePartie(repTrouve, false);
             }
         });
         indiceButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	if(tpsRestant<=tpsInitialEnigme-enigmeManager.getTpsBeforeIndice()) {
-            		enigmeManager.getIndiceDialog();
-            	}else {
-            		enigmeManager.getInstructionIndice();
-            	}
+                if (tpsRestant <= tpsInitialEnigme - enigmeManager.getTpsBeforeIndice()) {
+                    enigmeManager.getIndiceDialog();
+                } else {
+                    enigmeManager.getInstructionIndice();
+                }
             }
         });
         solutionButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	if(tpsRestant<=tpsInitialEnigme-enigmeManager.getTpsBeforeSolution()) {
-            		enigmeManager.getSolutionDialog();
-            	}else {
-            		enigmeManager.getInstructionSolution();
-            	}
+                if (tpsRestant <= tpsInitialEnigme - enigmeManager.getTpsBeforeSolution()) {
+                    enigmeManager.getSolutionDialog();
+                } else {
+                    enigmeManager.getInstructionSolution();
+                }
             }
         });
 
@@ -260,12 +260,14 @@ public class GameScreen implements Screen {
                         public void run() {
                             new Dialog("Bonne reponse", game.skin) {
                                 {
+                                    // Indication que l'autre équipe a trouvé la réponse
                                     text("Vos coéquipiers ont trouvés la bonne réponse !");
-                                    //effet sonore
-                                	sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
+
+                                    // Effet sonore
+                                    sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
                                     sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
                                     //mise à jour tps utilisé
-                                    tpsInitialEnigme=tpsRestant;
+                                    tpsInitialEnigme = tpsRestant;
                                     enigmeManager.setTpsUtilise(tpsInitialEnigme);
                                     if (enigmeManager.isOver()) {
                                     	stopTimer();
@@ -278,7 +280,7 @@ public class GameScreen implements Screen {
 
                                 @Override
                                 protected void result(Object object) {
-                                	if (object.equals(1L)) {//fin de partie
+                                    if (object.equals(1L)) {//fin de partie
                                         // Changement d'écran pour revenir au menu principal
                                         game.switchScreen(new EndGameScreen(game,tpsRestant,tpsInitial,enigmeManager.getEnigmes(),game.getGameSocket().getSocketType() == GameSocket.GameSocketConstant.HOST));
                                     } else if (object.equals(2L)) {//enigme suivante
@@ -301,17 +303,17 @@ public class GameScreen implements Screen {
     }
 
     protected void finDePartie(boolean repTrouve, boolean timer) {//suivant
-    	// Changement d'écran pour revenir au menu principal
+        // Changement d'écran pour revenir au menu principal
         if (repTrouve || timer) {
-        	isOver=true;
-        	String dialogTitle="Bonne réponse";
-        	if(timer) {
-        		dialogTitle="Timer fini";
-        	}
+            isOver = true;
+            String dialogTitle = "Bonne réponse";
+            if (timer) {
+                dialogTitle = "Timer fini";
+            }
             new Dialog(dialogTitle, game.skin) {
                 {
-                	//mise à jour tps utilisé
-                	tpsInitialEnigme=tpsRestant;
+                    //mise à jour tps utilisé
+                    tpsInitialEnigme = tpsRestant;
                     enigmeManager.setTpsUtilise(tpsInitialEnigme);
                     if (timer) {//tps écoulé
                     	text("Vous n'avez pas terminé à temps, la bombe a explosé !");
@@ -355,24 +357,24 @@ public class GameScreen implements Screen {
                 {
                     text("La réponse donnée n'est pas correcte");
                     //effet sonore
-                	sound = Gdx.audio.newSound(Gdx.files.internal("audio/wrong_sound_effect.mp3"));
+                    sound = Gdx.audio.newSound(Gdx.files.internal("audio/wrong_sound_effect.mp3"));
                     sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
                     button("Retour");
                 }
             }.show(stage);
         }
-	}
+    }
 
-	private final Timer.Task myTimerTask = new Timer.Task() {
+    private final Timer.Task myTimerTask = new Timer.Task() {
         @Override
         public void run() {
             tpsRestant--;
             //gère la couleur des boutons
-            if(tpsRestant==tpsInitialEnigme-enigmeManager.getTpsBeforeIndice()) {
-            	indiceButton.setColor(Color.WHITE);
+            if (tpsRestant == tpsInitialEnigme - enigmeManager.getTpsBeforeIndice()) {
+                indiceButton.setColor(Color.WHITE);
             }
-            if(tpsRestant==tpsInitialEnigme-enigmeManager.getTpsBeforeSolution()) {
-            	solutionButton.setColor(Color.WHITE);
+            if (tpsRestant == tpsInitialEnigme - enigmeManager.getTpsBeforeSolution()) {
+                solutionButton.setColor(Color.WHITE);
             }
             if(tpsRestant==30){
             	clignoteTimer();
@@ -386,9 +388,9 @@ public class GameScreen implements Screen {
             	timerLabel.setText(tpsRestant + " sec");
             }
             //temps écoulé
-            if (tpsRestant == 0 && isOver==false) {
+            if (tpsRestant == 0 && !isOver) {
                 myTimerTask.cancel();
-                finDePartie(false,true);
+                finDePartie(false, true);
             }
         }
     };
@@ -449,7 +451,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         // Clear background
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 0.8f);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
         // Stage - act et draw

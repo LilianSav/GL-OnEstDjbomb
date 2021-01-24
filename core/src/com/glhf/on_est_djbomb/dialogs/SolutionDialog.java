@@ -27,7 +27,7 @@ public class SolutionDialog extends Dialog{
         button(txtBtnReturn).pad(30);
     }
 
-    public void setSolution(String string) {
+    public void setText(String string) {
     	solutionContentTable.clearChildren();
 
         // Ajout de la solution dans la boîte de dialogue

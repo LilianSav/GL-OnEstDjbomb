@@ -80,16 +80,6 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         }
     }
 
-    @Override
-    public Texture getTextureTableHost() {
-        return null;
-    }
-
-    @Override
-    public Texture getTextureTableGuest() {
-        return null;
-    }
-
     // Procedure readTextFile reads the labyrinth text file and extracts information
     public void readTextFile(Boolean isHost) throws FileNotFoundException {
 
@@ -170,7 +160,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         this.setSolution(Integer.parseInt(password));
     }
 
-    public void load(boolean isHost, EnigmaManager enigmaManager){
+    public void load(boolean isHost, Table enigmaManager){
 
         /*Label titreLabel = new Label(this.getTitreTable(),new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json")));
         float heightTitle = enigmaManager.add(titreLabel).getActorHeight();
@@ -201,9 +191,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton{
         }
     }
 
-    public void unload(EnigmaManager enigmaManager){
-        fillTable.clear();
-        enigmaManager.removeActor(fillTable);
+    public void unload(){
+        // On décharge les ressources
+        // ...
     }
 
     public void createDynamicClientMaze(){

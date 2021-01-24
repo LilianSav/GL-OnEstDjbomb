@@ -2,8 +2,12 @@ package com.glhf.on_est_djbomb.enigmas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class EnigmaSum extends EnigmaSkeleton {
+	Texture enigmeTexture;
 
 	public EnigmaSum(boolean isHost) {
 		super(isHost);
@@ -16,13 +20,24 @@ public class EnigmaSum extends EnigmaSkeleton {
 	}
 
 	@Override
-	public Texture getTextureTableHost() {
-		return new Texture(Gdx.files.internal("assetEnigme/sum/sumHost.png"));
+	public void load(boolean isHost, Table enigmaManagerTable) {
+		// Chargement du titre
+		enigmaManagerTable.add(new Label(getTitreTable(), enigmaManagerTable.getSkin()));
+		enigmaManagerTable.row();
+
+		// Chargement de la texture
+		Image enigmeImageTexture;
+		if (isHost) {
+			enigmeTexture = new Texture(Gdx.files.internal("assetEnigme/sum/sumHost.png"));
+		} else {
+			enigmeTexture = new Texture(Gdx.files.internal("assetEnigme/sum/sumGuest.png"));
+		}
+		enigmeImageTexture = new Image(enigmeTexture);
+		enigmaManagerTable.add(enigmeImageTexture);
 	}
 
 	@Override
-	public Texture getTextureTableGuest() {
-		return new Texture(Gdx.files.internal("assetEnigme/sum/sumGuest.png"));
+	public void unload() {
+		enigmeTexture.dispose();
 	}
-
 }

@@ -2,6 +2,7 @@ package com.glhf.on_est_djbomb.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,8 +13,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 import com.glhf.on_est_djbomb.dialogs.*;
-
-import javax.xml.soap.Text;
 
 public class MainMenuScreen implements Screen {
     private final Stage stage;
@@ -89,7 +88,10 @@ public class MainMenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
-        
+
+//        for(Actor actor : root.getChildren()){
+//            actor.setColor(Color.BLUE);
+//        }
     }
 
     // setContainer retourne un TextButton dans son contenant fonction utilisée pour dimensionner le bouton
@@ -129,7 +131,7 @@ public class MainMenuScreen implements Screen {
     @Override
     public void render(float delta) {
         // Clear background
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 0.8f);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
         // Stage - act et draw

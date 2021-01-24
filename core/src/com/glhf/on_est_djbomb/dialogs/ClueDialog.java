@@ -25,12 +25,9 @@ public class ClueDialog extends Dialog {
         TextButton txtBtnReturn = new TextButton("  Retour  ",skin,"title");
         txtBtnReturn.pad(5,30,5,30);
         button(txtBtnReturn).pad(30);
-
-        // Section Content
-        clueContentTable.row();
     }
 
-    public void setClue(String clue) {
+    public void setText(String clue) {
         clueContentTable.clearChildren();
 
         // Ajout de la solution dans la boîte de dialogue

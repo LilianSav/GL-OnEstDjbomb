@@ -1,173 +1,145 @@
 package com.glhf.on_est_djbomb.enigmas;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 import com.glhf.on_est_djbomb.dialogs.ClueDialog;
 import com.glhf.on_est_djbomb.dialogs.SolutionDialog;
 
-public class EnigmaManager extends Table{
+import java.util.ArrayList;
 
-	private final ArrayList<EnigmaSkeleton> enigmes;// liste des énigmes
-	private EnigmaSkeleton enigmeCourante;// classe de l'énigme en cours d'utilisation
-	private final boolean isHost;
-	private ClueDialog clueDialog;// dialogue d'information affichant l'indice de l'énigme courante
-	private SolutionDialog solutionDialog;// dialogue d'information affichant la solution de l'énigme courante
-	private final OnEstDjbombGame game;
-	private final Stage stage;
-	private Texture enigmeImageTexture;// image affichée sur le Table
-	private Label titreLabel;
+public class EnigmaManager extends Table {
 
-	public EnigmaManager(boolean isHost , OnEstDjbombGame game , Stage stage) {
-		// initialisation
-		super();
-		enigmes = new ArrayList<EnigmaSkeleton>();
-		this.isHost=isHost;
-		this.game=game;
-		this.stage = stage;
-		//ajout des enigmes
-		EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
-		enigmes.add(enigme1);
-		EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
-		enigmes.add(enigme2);
-		EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost,"labyrintheTutoBis.txt");
-		enigmes.add(enigme3);
-		EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
-		enigmes.add(enigme4);
-		EnigmaSum enigme5 = new EnigmaSum(isHost);
-		enigmes.add(enigme5);
-		EnigmaLabyrinth enigme6 = new EnigmaLabyrinth(isHost,"labyrintheIntermédiaire.txt");
-		enigmes.add(enigme6);
-		EnigmaPyramid enigme7 = new EnigmaPyramid(isHost);
-		enigmes.add(enigme7);
-		EnigmaCount enigme8 = new EnigmaCount(isHost);
-		enigmes.add(enigme8);
-		EnigmaLabyrinth enigme9 = new EnigmaLabyrinth(isHost,"labyrintheHard.txt");
-		enigmes.add(enigme9);
-		EnigmaCutWire enigme10 = new EnigmaCutWire(isHost);
-		enigmes.add(enigme10);
+    private final ArrayList<EnigmaSkeleton> enigmes;// liste des énigmes
+    private EnigmaSkeleton enigmeCourante;// classe de l'énigme en cours d'utilisation
+    private final boolean isHost;
+    private ClueDialog clueDialog;// dialogue d'information affichant l'indice de l'énigme courante
+    private SolutionDialog solutionDialog;// dialogue d'information affichant la solution de l'énigme courante
+    private final OnEstDjbombGame game;
+    private final Stage stage;
+    private Texture enigmeImageTexture;// image affichée sur le Table
+    private Label titreLabel;
 
-		enigmeCourante=enigme1;
-		// charger data des enigmes
-		chargerTitre();
-		chargerImage();
-		chargerIndice();
-		chargerSolution();
-	}
-	
-	// Récupération et affichage de l'images du table depuis la classe d'énigme
-	private void chargerImage() {
-		if(enigmeCourante instanceof EnigmaLabyrinth){
-			((EnigmaLabyrinth) enigmeCourante).load(isHost, this);
-		}else{
-			if(isHost) {
-				enigmeImageTexture = enigmeCourante.getTextureTableHost();
-			}else {
-				enigmeImageTexture = enigmeCourante.getTextureTableGuest();
-			}
-			Image enigmeImageWidget = new Image(enigmeImageTexture);
-			this.add(enigmeImageWidget);
-		}
+    public EnigmaManager(boolean isHost, OnEstDjbombGame game, Stage stage) {
+        // Initialisation
+        super(game.skin);
+        enigmes = new ArrayList<EnigmaSkeleton>();
+        this.isHost = isHost;
+        this.game = game;
+        this.stage = stage;
 
-	}
-	
-	// Intanciation du dialogue d'indice
-	private void chargerIndice() {
+        //ajout des enigmes
+        EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
+        enigmes.add(enigme1);
+        EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
+        enigmes.add(enigme2);
+        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "labyrintheTuto.txt");
+        enigmes.add(enigme3);
+        EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
+        enigmes.add(enigme4);
+        EnigmaSum enigme5 = new EnigmaSum(isHost);
+        enigmes.add(enigme5);
+        EnigmaLabyrinth enigme6 = new EnigmaLabyrinth(isHost, "labyrintheIntermédiaire.txt");
+        enigmes.add(enigme6);
+        EnigmaPyramid enigme7 = new EnigmaPyramid(isHost);
+        enigmes.add(enigme7);
+        EnigmaCount enigme8 = new EnigmaCount(isHost);
+        enigmes.add(enigme8);
+        EnigmaLabyrinth enigme9 = new EnigmaLabyrinth(isHost, "labyrintheHard.txt");
+        enigmes.add(enigme9);
+        EnigmaCutWire enigme10 = new EnigmaCutWire(isHost);
+        enigmes.add(enigme10);
+
+        enigmeCourante = enigme1;
+
+        // Création des dialogues d'indices et de solutions
         clueDialog = new ClueDialog("Indice", game.skin);
         clueDialog.initContent();
-	}
-	
-	// Intanciation du dialogue d'indice
-	private void chargerSolution() {
+
         solutionDialog = new SolutionDialog("Solution", game.skin);
         solutionDialog.initContent();
-	}
-	
-	// Intanciation du titre du table (composé du nom de l'énigme et d'une explication lorsque nécessaire)
-	private void chargerTitre() {
-			titreLabel = new Label(enigmeCourante.getTitreTable(), game.skin);
-			this.add(titreLabel);
-			this.row();
-	}
 
-	// passer à l'énigme suivante
-	public void nextEnigme() {
-		enigmeCourante=enigmes.get(enigmes.indexOf(enigmeCourante)+1);
-		chargerTitre();
-		chargerImage();
-		chargerIndice();
-		chargerSolution();
-	}
-	
-	public int getSolution() {
-		return enigmeCourante.getSolution();
-	}
-	
-	// Affichage du dialogue d'informations
-	public void getIndiceDialog() {
-		if(enigmeCourante instanceof EnigmaLabyrinth){
-			((EnigmaLabyrinth) enigmeCourante).chargerIndice();
-		}
-    	clueDialog.setClue(enigmeCourante.getIndice());// récupération du texte d'indice de l'éngime courante
+        // Chargement de la première énigme
+        enigmeCourante.load(isHost, this);
+    }
+
+    // passer à l'énigme suivante
+    public void nextEnigme() {
+    	// On passe à l'énigme suivante
+        enigmeCourante = enigmes.get(enigmes.indexOf(enigmeCourante) + 1);
+        // On charge l'énigme courante
+        enigmeCourante.load(isHost, this);
+    }
+
+    public int getSolution() {
+        return enigmeCourante.getSolution();
+    }
+
+    // Affichage du dialogue d'informations
+    public void getIndiceDialog() {
+        // Si l'énigme courante est de type labyrinthe, on active l'aide
+        if (enigmeCourante instanceof EnigmaLabyrinth) {
+            ((EnigmaLabyrinth) enigmeCourante).chargerIndice();
+        }
+        // Récupération du texte d'indice de l'énigme courante, puis affichage
+        clueDialog.setText(enigmeCourante.getIndice());
         clueDialog.show(stage);
-	}
-	
-	// Affichage du dialogue d'informations
-	public void getSolutionDialog() {
-    	solutionDialog.setSolution(enigmeCourante.getSolution()+"");// récupération du texte d'indice de l'éngime courante
-    	solutionDialog.show(stage);
-	}
-	
-	// est-ce qu'il reste des énigmes dans la liste d'énigme ?
-	public boolean isOver() {
-		if(enigmeCourante instanceof EnigmaLabyrinth){
-			((EnigmaLabyrinth) enigmeCourante).unload(this);
-		}
-		else{
-			// Suppression de l'ancienne image
-			enigmeImageTexture.dispose();
-		}
-		this.clearChildren();
-		if(enigmes.size()-(enigmes.indexOf(enigmeCourante)) == 1) {
-			return true;
-		}else {
-			return false;
-		}
-	}
+    }
 
-	public ArrayList<EnigmaSkeleton> getEnigmes() {
-		return enigmes;
-	}
-	
-	// sauvegarde du tps pour le menu de fin de partie
-	public void setTpsUtilise(int tps) {
-		enigmeCourante.setTpsUtilise(tps);
-	}
+    // Affichage du dialogue d'informations
+    public void getSolutionDialog() {
+        solutionDialog.setText(String.valueOf(enigmeCourante.getSolution()));// récupération du texte d'indice de l'éngime courante
+        solutionDialog.show(stage);
+    }
 
-	// nombre de secondes minimum de l'énigme avant d'autoriser l'utilisateur à afficher l'indice
-	public int getTpsBeforeIndice() {
-		return enigmeCourante.getTpsBeforeIndice();
-	}
-	
-	// nombre de secondes minimum de l'énigme avant d'autoriser l'utilisateur à afficher la solution
-	public int getTpsBeforeSolution() {
-		return enigmeCourante.getTpsBeforeSolution();
-	}
+    // est-ce qu'il reste des énigmes dans la liste d'énigme ?
+    public boolean isOver() {
+        // On vide la table
+        this.clearChildren();
 
-	// informer l'utilisateur qu'il clique sur le bouton d'indice trop tôt
-	public void getInstructionIndice() {
-		clueDialog.setClue("Cherchez encore un peu !\nL'indice sera disponible plus tard si vous ne trouvez pas.");// récupération du texte d'indice de l'éngime courante
+        // On décharge les ressources de l'énigme courante
+        enigmeCourante.unload();
+
+        // On renvoie si la partie est terminée
+        if (enigmes.size() - (enigmes.indexOf(enigmeCourante)) == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public ArrayList<EnigmaSkeleton> getEnigmes() {
+        return enigmes;
+    }
+
+    // sauvegarde du tps pour le menu de fin de partie
+    public void setTpsUtilise(int tps) {
+        enigmeCourante.setTpsUtilise(tps);
+    }
+
+    // nombre de secondes minimum de l'énigme avant d'autoriser l'utilisateur à afficher l'indice
+    public int getTpsBeforeIndice() {
+        return enigmeCourante.getTpsBeforeIndice();
+    }
+
+    // nombre de secondes minimum de l'énigme avant d'autoriser l'utilisateur à afficher la solution
+    public int getTpsBeforeSolution() {
+        return enigmeCourante.getTpsBeforeSolution();
+    }
+
+    // informer l'utilisateur qu'il clique sur le bouton d'indice trop tôt
+    public void getInstructionIndice() {
+        // Récupération du texte d'indice de l'énigme courante
+        clueDialog.setText("Cherchez encore un peu !\nL'indice sera disponible plus tard si vous ne trouvez pas.");
         clueDialog.show(stage);
-	}
-	
-	// informer l'utilisateur qu'il clique sur le bouton d'indice trop tôt
-	public void getInstructionSolution() {
-		solutionDialog.setSolution("Cherchez encore un peu !\nLa solution sera disponible plus tard si vous ne trouvez pas.");// récupération du texte d'indice de l'éngime courante
-		solutionDialog.show(stage);
-	}
+    }
+
+    // informer l'utilisateur qu'il clique sur le bouton d'indice trop tôt
+    public void getInstructionSolution() {
+        // Récupération du texte de solution de l'énigme courante
+        solutionDialog.setText("Cherchez encore un peu !\nLa solution sera disponible plus tard si vous ne trouvez pas.");
+        solutionDialog.show(stage);
+    }
 }

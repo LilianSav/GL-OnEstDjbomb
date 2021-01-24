@@ -276,7 +276,7 @@ public class LobbyScreen implements Screen {
     @Override
     public void render(float delta) {
         // Clear background
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 0.8f);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
         // Stage - act et draw

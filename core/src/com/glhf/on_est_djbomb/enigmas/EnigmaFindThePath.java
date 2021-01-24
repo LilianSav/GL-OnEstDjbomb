@@ -2,8 +2,12 @@ package com.glhf.on_est_djbomb.enigmas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class EnigmaFindThePath extends EnigmaSkeleton {
+    Texture enigmeTexture;
 
     public EnigmaFindThePath(boolean isHost) {
         super(isHost);
@@ -15,11 +19,25 @@ public class EnigmaFindThePath extends EnigmaSkeleton {
         setTpsBeforeSolution(50);
     }
 
-    public Texture getTextureTableHost() {
-        return new Texture(Gdx.files.internal("assetEnigme/trajet/trajetHost.png"));
+    @Override
+    public void load(boolean isHost, Table enigmaManagerTable) {
+        // Chargement du titre
+        enigmaManagerTable.add(new Label(getTitreTable(), enigmaManagerTable.getSkin()));
+        enigmaManagerTable.row();
+
+        // Chargement de la texture
+        Image enigmeImageTexture;
+        if (isHost) {
+            enigmeTexture = new Texture(Gdx.files.internal("assetEnigme/trajet/trajetHost.png"));
+        } else {
+            enigmeTexture = new Texture(Gdx.files.internal("assetEnigme/trajet/trajetGuest.png"));
+        }
+        enigmeImageTexture = new Image(enigmeTexture);
+        enigmaManagerTable.add(enigmeImageTexture);
     }
 
-    public Texture getTextureTableGuest() {
-        return new Texture(Gdx.files.internal("assetEnigme/trajet/trajetGuest.png"));
+    @Override
+    public void unload() {
+        enigmeTexture.dispose();
     }
 }
