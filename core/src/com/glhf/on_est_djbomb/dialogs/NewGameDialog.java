@@ -134,31 +134,31 @@ public class NewGameDialog extends Dialog {
 
                     // Label Pseudonyme
                     Label lblPseudo = new Label("Pseudonyme :", game.skin, "title");
-                    getContentTable().add(lblPseudo).pad(30).left();
+                    getContentTable().add(lblPseudo).pad(30,30,10,30).left();
 
                     // Paramétrage du champ réservé au texte
                     pseudoTextField = new TextField(game.prefs.getString("pseudo"), game.skin, "title");
-                    getContentTable().add(pseudoTextField).pad(30).width(300);
+                    getContentTable().add(pseudoTextField).pad(30,30,10,30).width(300);
 
                     getContentTable().row();
 
                     // Label IP
                     Label lblIP = new Label("Adresse IP :", game.skin, "title");
-                    getContentTable().add(lblIP).pad(30).left();
+                    getContentTable().add(lblIP).pad(10,30,10,30).left();
 
                     // Paramétrage du champ réservé au texte
                     ipTextField = new TextField(game.prefs.getString("IP"), game.skin, "title");
-                    getContentTable().add(ipTextField).pad(30).width(300);
+                    getContentTable().add(ipTextField).pad(10,30,10,30).width(300);
 
                     getContentTable().row();
 
                     // Label Port
                     Label lblPort = new Label("Clé de la salle :", game.skin, "title");
-                    getContentTable().add(lblPort).pad(30).left();
+                    getContentTable().add(lblPort).pad(10,30,30,30).left();
 
                     // Paramétrage du champ réservé au texte
                     portTextField = new TextField(game.prefs.getString("Clef"), game.skin, "title");
-                    getContentTable().add(portTextField).pad(30).width(300);
+                    getContentTable().add(portTextField).pad(10,30,30,30).width(300);
 
                     getContentTable().row();
 
