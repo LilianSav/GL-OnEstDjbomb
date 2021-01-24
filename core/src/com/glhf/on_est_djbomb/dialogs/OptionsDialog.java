@@ -85,7 +85,6 @@ public class OptionsDialog extends Dialog {
             }
         });
 
-
         /* Section Boutons */
         // Ajout du bouton retour dans la boîte de dialogue
         TextButton txtBtnReturn = new TextButton("  Retour  ", skin, "title");

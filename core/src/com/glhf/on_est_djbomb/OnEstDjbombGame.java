@@ -38,7 +38,7 @@ public class OnEstDjbombGame extends Game {
     	prefs = Gdx.app.getPreferences("My Preferences");
 
         // Dans le cas d'un premier lancement, on remplit les préférences
-    	if(!prefs.contains("volumeMusique")) {
+    	if(!prefs.contains("volumeMusique") || !prefs.contains("interfaceColorValue")) {
     		prefs.putFloat("volumeMusique", 100f);
     		prefs.putFloat("volumeEffetSonore", 100f);
     		prefs.putFloat("volumeChatVocal", 100f);
@@ -46,6 +46,8 @@ public class OnEstDjbombGame extends Game {
     		prefs.putInteger("meilleurTpsUtilise", 600);//volontairement eleve
     		prefs.putString("meilleurTpsUtilisePseudo1", "Bob");
     		prefs.putString("meilleurTpsUtilisePseudo2", "Dylan");
+            prefs.putString("interfaceColorValue", "000000ff");
+            prefs.putBoolean("interfaceColorChecked", true);
     	}
 
     	// Instanciation musique
