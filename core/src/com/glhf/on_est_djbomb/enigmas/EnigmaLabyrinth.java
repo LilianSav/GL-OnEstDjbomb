@@ -161,11 +161,8 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         this.setSolution(Integer.parseInt(password));
     }
 
-<<<<<<< Updated upstream
-    public void load(boolean isHost, Table enigmaManager){
-=======
+
     public void load(boolean isHost, Table enigmaManager) {
->>>>>>> Stashed changes
 
         /*Label titreLabel = new Label(this.getTitreTable(),new Skin(Gdx.files.internal("skincomposerui/skin-composer-ui.json")));
         float heightTitle = enigmaManager.add(titreLabel).getActorHeight();
@@ -196,15 +193,10 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         }
     }
 
-<<<<<<< Updated upstream
-    public void unload(){
+
+    public void unload() {
         // On décharge les ressources
         // ...
-=======
-    public void unload() {
-        //fillTable.clear();
-        //enigmaManager.removeActor(fillTable);
->>>>>>> Stashed changes
     }
 
     public void createDynamicClientMaze() {
