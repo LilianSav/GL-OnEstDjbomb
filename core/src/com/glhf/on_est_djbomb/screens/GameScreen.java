@@ -66,8 +66,7 @@ public class GameScreen implements Screen {
 
         // Ajout de la table réservée à l'interface utilisateur
         Table userInterfaceTable = new Table();
-        root.add(userInterfaceTable).width(Value.percentWidth(0.30f, root)).height(Value.percentHeight(0.70f, root));
-
+        root.add(userInterfaceTable).width(Value.percentWidth(0.20f, root)).height(Value.percentHeight(0.70f, root));
         root.row();
 
         // Ajout de la table réservée au chat textuel
@@ -130,36 +129,66 @@ public class GameScreen implements Screen {
         textChatTable.row();
         textChatTable.add(tableTextBox).height(Value.percentHeight(0.25f, textChatTable)).width(Value.percentWidth(1f, textChatTable));
 
-        // Création interface utilisateur latérale
-        TextButton optionsButton = new TextButton("Options", game.skin);
-        OptionsDialog optionsDialog = new OptionsDialog("Options", game);
-        optionsDialog.initContent();
-        TextButton quitterButton = new TextButton("Quitter", game.skin);
+        // Paramétrage du timer
         tpsInitial = 300;//5min
         tpsRestant = tpsInitial;
         tpsInitialEnigme = tpsInitial;
-        timerLabel = new Label(tpsRestant + " sec", game.skin);
-        isUnder30s=false;
+        isUnder30s=tpsRestant<30;
         startTimer();
-        indiceButton = new TextButton("Indice", game.skin);
-        indiceButton.setColor(Color.BLACK);
-        solutionButton = new TextButton("Solution", game.skin);
-        solutionButton.setColor(Color.BLACK);
-        TextField verificationTextField = new TextField("", game.skin);
-        TextButton verificationbutton = new TextButton("Ok", game.skin);
+
+        // Création interface utilisateur latérale
+        TextButton optionsButton = new TextButton("Options",game.skin,"title");
+        TextButton quitterButton = new TextButton("Quitter", game.skin,"title");
+
+        Image imgBombeL = new Image(new Texture(Gdx.files.internal("images/bombeEnAttendant.png")));
+        Container<Image> ctnImgBombeL = new Container<Image>(imgBombeL);
+        timerLabel = new Label(tpsRestant + " sec", game.skin,"title");
+        Image imgBombeR = new Image(new Texture(Gdx.files.internal("images/bombeEnAttendant.png")));
+        Container<Image> ctnImgBombeR = new Container<Image>(imgBombeR);
+        Table tableTimer = new Table();
+        tableTimer.add(ctnImgBombeL).width(50).height(50).pad(10); tableTimer.add(timerLabel).expand().pad(10); tableTimer.add(ctnImgBombeR).width(50).height(50).pad(10);;
+
+        indiceButton = new TextButton(" Indice  ", game.skin,"title");
+        solutionButton = new TextButton("Solution", game.skin,"title");
+
+        Image imgCode = new Image(new Texture(Gdx.files.internal("images/codeLabel.png")));
+        Container<Image> ctnImgCode = new Container<Image>(imgCode);
+
+        TextField verificationTextField = new TextField("", game.skin,"title");
+        TextButton verificationbutton = new TextButton("Ok", game.skin,"title");
+
+        Table tableValidationCode = new Table();
+        tableValidationCode.add(verificationTextField).width(200);
+        tableValidationCode.add(verificationbutton).width(80).padLeft(20);
+
+        optionsButton.pad(5,20,5,20);
+        quitterButton.pad(5,20,5,20);
+        indiceButton.pad(5,20,5,20);
+        solutionButton.pad(5,20,5,20);
+        sendButton.pad(5,20,5,20);
+        verificationbutton.pad(5,20,5,20);
+
+        // Paramétrages boutons
+        indiceButton.setColor(Color.LIGHT_GRAY);
+        solutionButton.setColor(Color.LIGHT_GRAY);
+
+        // Création boîte de dialogue option
+        OptionsDialog optionsDialog = new OptionsDialog("Options", game);
+        optionsDialog.initContent();
+
+
 
         userInterfaceTable.add(optionsButton).expand();
         userInterfaceTable.add(quitterButton).expand();
         userInterfaceTable.row();
-		Image imgBombe = new Image(new Texture(Gdx.files.internal("images/bombe.png")));
-		userInterfaceTable.add(imgBombe);
-        userInterfaceTable.add(timerLabel).expand().colspan(2);
+		userInterfaceTable.add(tableTimer).colspan(2).pad(10);
         userInterfaceTable.row();
         userInterfaceTable.add(indiceButton).expand();
         userInterfaceTable.add(solutionButton).expand();
         userInterfaceTable.row();
-        userInterfaceTable.add(verificationTextField).expand();
-        userInterfaceTable.add(verificationbutton).expand();
+        userInterfaceTable.add(ctnImgCode).padTop(100).colspan(2).width(300).height(65);
+        userInterfaceTable.row();
+        userInterfaceTable.add(tableValidationCode).pad(20,20,50,20).colspan(2);
 
         // Gestion des événements
         sendButton.addListener(new ClickListener() {
@@ -290,8 +319,8 @@ public class GameScreen implements Screen {
                                     } else if (object.equals(2L)) {//enigme suivante
                                         enigmeManager.nextEnigme();
                                         //gère la couleur des boutons
-                                        indiceButton.setColor(Color.BLACK);
-                                        solutionButton.setColor(Color.BLACK);
+                                        indiceButton.setColor(Color.LIGHT_GRAY);
+                                        solutionButton.setColor(Color.LIGHT_GRAY);
                                     }
                                 }
                             }.show(stage);
@@ -358,11 +387,6 @@ public class GameScreen implements Screen {
                     // Label Message
                     Label lblMessage = new Label(texteContenu, game.skin, "title");
                     getContentTable().add(lblMessage).pad(30);
-
-
-
-
-
                 }
 
                 @Override
@@ -373,8 +397,8 @@ public class GameScreen implements Screen {
                     } else if (object.equals(2L)) {//enigme suivante
                         enigmeManager.nextEnigme();
                         //gère la couleur des boutons
-                        indiceButton.setColor(Color.BLACK);
-                        solutionButton.setColor(Color.BLACK);
+                        indiceButton.setColor(Color.LIGHT_GRAY);
+                        solutionButton.setColor(Color.LIGHT_GRAY);
                     }
                 }
             }.show(stage);
