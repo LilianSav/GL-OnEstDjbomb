@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 import com.glhf.on_est_djbomb.dialogs.OptionsDialog;
-import com.glhf.on_est_djbomb.enigmas.EnigmaLabyrinth;
 import com.glhf.on_est_djbomb.enigmas.EnigmaManager;
 import com.glhf.on_est_djbomb.networking.GameSocket;
 
@@ -131,10 +130,6 @@ public class GameScreen implements Screen {
         textChatTable.row();
         textChatTable.add(tableTextBox).height(Value.percentHeight(0.25f, textChatTable)).width(Value.percentWidth(1f, textChatTable));
 
-        /*
-        textChatTable.add(chatTextField).width(Value.percentWidth(0.70f, root)).height(Value.percentHeight(0.05f, root));
-        textChatTable.add(sendButton).width(Value.percentWidth(0.20f, textChatTable)).height(Value.percentHeight(0.20f, textChatTable));
-*/
         // Création interface utilisateur latérale
         TextButton optionsButton = new TextButton("Options", game.skin);
         OptionsDialog optionsDialog = new OptionsDialog("Options", game);
@@ -261,8 +256,12 @@ public class GameScreen implements Screen {
                         public void run() {
                             new Dialog("Bonne reponse", game.skin) {
                                 {
+                                    // Paramétrage du titre
+                                    getTitleLabel().setAlignment(Align.center);
+
                                     // Indication que l'autre équipe a trouvé la réponse
-                                    text("Vos coéquipiers ont trouvés la bonne réponse !");
+                                    Label lblMessage = new Label("Vos coéquipiers ont trouvés la bonne réponse !", game.skin, "title");
+                                    getContentTable().add(lblMessage).pad(30);
 
                                     // Effet sonore
                                     sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
@@ -272,9 +271,13 @@ public class GameScreen implements Screen {
                                     enigmeManager.setTpsUtilise(tpsInitialEnigme);
                                     if (enigmeManager.isOver()) {
                                     	stopTimer();
-                                        button("Menu fin de partie", 1L);
+                                        TextButton txtBtnEndgame = new TextButton("Menu de fin de partie",game.skin,"title");
+                                        txtBtnEndgame.pad(5,30,5,30);
+                                        button(txtBtnEndgame,1L).pad(30);
                                     } else {
-                                        button("Enigme suivante", 2L);
+                                        TextButton txtBtnEndgame = new TextButton("Enigme suivante",game.skin,"title");
+                                        txtBtnEndgame.pad(5,30,5,30);
+                                        button(txtBtnEndgame,2L).pad(30);
                                     }
 
                                 }
@@ -313,31 +316,53 @@ public class GameScreen implements Screen {
             }
             new Dialog(dialogTitle, game.skin) {
                 {
+                    String texteContenu = "";
                     //mise à jour tps utilisé
                     tpsInitialEnigme = tpsRestant;
                     enigmeManager.setTpsUtilise(tpsInitialEnigme);
                     if (timer) {//tps écoulé
-                    	text("Vous n'avez pas terminé à temps, la bombe a explosé !");
+                        texteContenu="Vous n'avez pas terminé à temps, la bombe a explosé !";
                     	//effet sonore
                     	sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_exploding_sound_effect.mp3"));
                         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
 						enigmeManager.setTpsUtilise(tpsInitialEnigme-tpsRestant);
 						stopTimer();
-                    	button("Menu de fin de partie", 1L);
+
+                        // Ajout du bouton Fin de partie dans la boîte de dialogue
+                        TextButton txtBtnEndgame = new TextButton("Menu de fin de partie",game.skin,"title");
+                        txtBtnEndgame.pad(5,30,5,30);
+                        button(txtBtnEndgame,1L).pad(30);
                     }else {//énigme suivante
                     	isOver=true;
-                    	text("Vous avez trouvé la solution !");
+                        texteContenu = "Vous avez trouvé la solution !";
                     	game.getGameSocket().sendMessage("STATE::GOODEND");
                     	//effet sonore
                     	sound = Gdx.audio.newSound(Gdx.files.internal("audio/correct_sound_effect.mp3"));
                         sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
                     	if (enigmeManager.isOver()) {//plus d'énigmes suivantes
-                            button("Menu de fin de partie", 1L);
+                            // Ajout du bouton Fin de partie dans la boîte de dialogue
+                            TextButton txtBtnEndgame = new TextButton("Menu de fin de partie",game.skin,"title");
+                            txtBtnEndgame.pad(5,30,5,30);
+                            button(txtBtnEndgame,1L).pad(30);
                             stopTimer();
                         } else {
-                            button("Enigme suivante", 2L);
+                            // Ajout du bouton Enigme suivante dans la boîte de dialogue
+                            TextButton txtBtnNextenigma = new TextButton("Enigme suivante",game.skin,"title");
+                            txtBtnNextenigma.pad(5,30,5,30);
+                            button(txtBtnNextenigma,2L).pad(30);
                         }
                     }
+                    // Paramétrage du titre
+                    getTitleLabel().setAlignment(Align.center);
+
+                    // Label Message
+                    Label lblMessage = new Label(texteContenu, game.skin, "title");
+                    getContentTable().add(lblMessage).pad(30);
+
+
+
+
+
                 }
 
                 @Override
@@ -356,11 +381,20 @@ public class GameScreen implements Screen {
         } else {
             new Dialog("Mauvaise réponse", game.skin) {
                 {
-                    text("La réponse donnée n'est pas correcte");
+                    // Paramétrage du titre
+                    getTitleLabel().setAlignment(Align.center);
+
+                    // Indication que l'autre équipe a trouvé la réponse
+                    Label lblMessage = new Label("La réponse donnée n'est pas correcte !", game.skin, "title");
+                    getContentTable().add(lblMessage).pad(30);
+
                     //effet sonore
                     sound = Gdx.audio.newSound(Gdx.files.internal("audio/wrong_sound_effect.mp3"));
                     sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
-                    button("Retour");
+
+                    TextButton txtBtnRetour = new TextButton("Retour",game.skin,"title");
+                    txtBtnRetour.pad(5,30,5,30);
+                    button(txtBtnRetour).pad(30);
                 }
             }.show(stage);
         }
