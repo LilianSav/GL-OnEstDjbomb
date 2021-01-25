@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 import com.glhf.on_est_djbomb.dialogs.ClueDialog;
 import com.glhf.on_est_djbomb.dialogs.SolutionDialog;
+import com.glhf.on_est_djbomb.networking.GameSocket;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ public class EnigmaManager extends Table {
     private final ClueDialog clueDialog;// dialogue d'information affichant l'indice de l'énigme courante
     private final SolutionDialog solutionDialog;// dialogue d'information affichant la solution de l'énigme courante
     private final Stage stage;
+    private GameSocket socket;
 
     private ArrayList<EnigmaLabyrinth> labyrinths;
 
@@ -27,6 +29,7 @@ public class EnigmaManager extends Table {
         enigmes = new ArrayList<EnigmaSkeleton>();
         this.isHost = isHost;
         this.stage = stage;
+        this.socket= game.getGameSocket();
 
         labyrinths = new ArrayList<>();
 
@@ -150,9 +153,12 @@ public class EnigmaManager extends Table {
         solutionDialog.show(stage);
     }
     public void dispose(){
-        enigmeCourante.unload();
         for(EnigmaLabyrinth lab : labyrinths){
             lab.freeLock();
         }
+        this.clearChildren();
+        enigmeCourante.unload();
+        socket.clearListeners();
+        socket.close();
     }
 }

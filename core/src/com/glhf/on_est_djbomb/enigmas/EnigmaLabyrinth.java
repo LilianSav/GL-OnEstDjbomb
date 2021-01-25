@@ -72,13 +72,11 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         setTpsBeforeSolution(100);
 
         if (isHost) {
-            setTitreTable("L'autre équipe est bloquée dans un labyrinthe, vous seul en possédez la carte, guidez-le vers les\n" +
-                    " différents indices pour trouver le code secret permettant de s'enfuir!\n");
+            setTitreTable("Aidez vos partenaires à s'échapper !");
             setIndice("Dites à vos partenaires de demander un indice");
         } else {
-            setTitreTable("Vous êtes bloqué dans un labyrinthe, cliquez sur les cases adjacentes à votre personnage pour vous\n " +
-                    "déplacer et laissez vous guider par votre partenaire pour trouver le code!\n");
-            setIndice("Vous êtes désormais plus clairvoyant et avez amélioré votre mémoire");
+            setTitreTable("Echappez-vous !");
+            setIndice("Vous avez désormais une meilleure visibilité et avez amélioré votre mémoire");
         }
 
         // Verrou de communication
@@ -281,6 +279,10 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         }
 
     public void load( Table enigmaManager) {
+        // Chargement du titre
+        enigmaManager.add(new Label(getTitreTable(), enigmaManager.getSkin(), "title")).pad(5);
+        enigmaManager.row();
+
 
         if(this.isHost()){ // On envoie le password au Client
             socket.sendMessage("LABYRINTH::"+numero+"::"+"CODE:"+password+":"+passwordIndex+":"+shuffledPassword);

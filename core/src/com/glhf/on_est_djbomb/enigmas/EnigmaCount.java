@@ -22,7 +22,7 @@ public class EnigmaCount extends EnigmaSkeleton {
 	@Override
 	public void load( Table enigmaManagerTable) {
 		// Chargement du titre
-		enigmaManagerTable.add(new Label(getTitreTable(), enigmaManagerTable.getSkin()));
+		enigmaManagerTable.add(new Label(getTitreTable(), enigmaManagerTable.getSkin(), "title"));
 		enigmaManagerTable.row();
 
 		// Chargement de la texture
