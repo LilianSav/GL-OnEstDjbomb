@@ -35,9 +35,9 @@ public class EnigmaManager extends Table {
         enigmes.add(enigme1);        /*
         EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
         enigmes.add(enigme2);*/
-        EnigmaLabyrinth enigme2 = new EnigmaLabyrinth(isHost, "LabyrintheTutoBis.txt", labyrinths.size(), game.getGameSocket());
+        EnigmaLabyrinth enigme2 = new EnigmaLabyrinth(isHost, "debug.txt", labyrinths.size(), game.getGameSocket());
         enigmes.add(enigme2); labyrinths.add(enigme2);
-        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "debug.txt", labyrinths.size(), game.getGameSocket());
+        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "LabyrintheTutoBis.txt", labyrinths.size(), game.getGameSocket());
         enigmes.add(enigme3); labyrinths.add(enigme3);
         /*EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
         enigmes.add(enigme4);

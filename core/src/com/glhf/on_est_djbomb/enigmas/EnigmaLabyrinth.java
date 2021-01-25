@@ -4,11 +4,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.glhf.on_est_djbomb.networking.GameSocket;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
@@ -22,10 +25,14 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     private final static char CLUE = '?';
 
     private final static int VISION = 1;
-    private final static int VISION_HELP = 2;
+    private final static int VISION_HELP = 3;
+
+    //To know if the player asked for a clue
+    private final static boolean memory_noclue = false; // true if memory without help is enabled
+    private final static boolean memory_clue= true; // true if memory with help is enabled
 
     //Available files path
-    private String pathLabyrinth = "assetEnigme/labyrinthe/";
+    private final static String pathLabyrinth = "assetEnigme/labyrinthe/";
     private String nameLabyrinth;
 
     //2D array, corresponds to the given text file
@@ -38,9 +45,6 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     private int coordXPlayer;
     private int coordYPlayer;
 
-    //To know if the player asked for a clue
-    boolean clueEnabled = false;
-
     // Attributs permettant la communication
     private int numero;
     private GameSocket socket;
@@ -48,6 +52,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     private String password="";
     private String passwordIndex="";
     private Object lock_com;
+
+    // true if the player asked for help
+    boolean clueEnabled = false;
 
     // Verrou permettant de synchroniser le mot de passe du client
     private Object lock_algo;
@@ -107,7 +114,6 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         } catch (FileNotFoundException | InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
     // Procedure readTextFile reads the labyrinth text file and extracts information
@@ -263,7 +269,15 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
                             tabButton[i][j].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable(clue), null, null, null, null, null));
                         }
                         else {
-                            tabButton[i][j].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthMask"), null, null, null, null, null));
+                            int distanceX=coordXPlayer-i;
+                            int distanceY=coordYPlayer-j;
+                            double distance = Math.pow(distanceX,2)+Math.pow(distanceY,2); // Formule rayon d'un cercle
+                            if (Math.sqrt(distance) <= VISION){ // Le joueur a la vision
+                                tabButton[i][j].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable(clue), null, null, null, null, null));
+                            }
+                            else {
+                                tabButton[i][j].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthMask"), null, null, null, null, null));
+                            }
                         }
                         count++;
                         break;
@@ -273,6 +287,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         }
 
     public void load( Table enigmaManager) {
+
         if(this.isHost()){ // On envoie le password au Client
             socket.sendMessage("LABYRINTH::"+numero+"::"+"CODE:"+password+":"+passwordIndex+":"+shuffledPassword);
         }
@@ -347,19 +362,22 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
                 }
 
             }
-
-            //Mask maze
-            for (ImageButton[] imgBtnTable : tabButton) {
-                for (ImageButton imgBtn : imgBtnTable) {
-                    if (!playerAdjacentButton(imgBtn) && !(imgBtn.equals(tabButton[coordXPlayer][coordYPlayer]))) {
-                        imgBtn.setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthMask"), null, null, null, null, null));
-                    }
+        }
+        // Mask maze
+        for( int i=0 ; i<tabLabyrinth.length ; i++){
+            for( int j=0 ; j<tabLabyrinth.length ; j++){
+                int distanceX=coordXPlayer-i;
+                int distanceY=coordYPlayer-j;
+                double val = Math.pow(distanceX,2)+Math.pow(distanceY,2);
+                if (Math.sqrt(val) > VISION){ // Hors de la vue du joueur
+                    tabButton[i][j].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthMask"), null, null, null, null, null));
                 }
             }
-            //Display player on start cell
-            updateDisplayCell(coordXPlayer, coordYPlayer);
         }
+        //Display player on start cell
+        updateDisplayCell(coordXPlayer, coordYPlayer);
     }
+
 
     boolean playerAdjacentButton(ImageButton btn) {
 
@@ -384,7 +402,6 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         return (checkNorth || checkSouth || checkWest ||checkEast);
     }
 
-
     void movePlayer(ImageButton btn) {
         int newX = 0;
         int newY = 0;
@@ -407,18 +424,31 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         coordXPlayer = newCoordX;
         coordYPlayer = newCoordY;
 
-        if (!clueEnabled) {
-            //Mask old coord maze surroundings
-            for (int i = -VISION; i <= VISION; i++) {
-                for (int j = -VISION; j <= VISION; j++) {
-                    if ((prevCoordX + i >= 0) && (prevCoordX + i < tabLabyrinth.length) && (prevCoordY + j >= 0) && (prevCoordY + j < tabLabyrinth.length)) {
-                        tabButton[prevCoordX + i][prevCoordY + j].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthMask"), null, null, null, null, null));
+        if (!clueEnabled ) {
+            if(!memory_noclue){ // No clue, no memory
+                //Mask old coord maze surroundings
+                for (int i = -VISION; i <= VISION; i++) {
+                    for (int j = -VISION; j <= VISION; j++) {
+                        if ((prevCoordX + i >= 0) && (prevCoordX + i < tabLabyrinth.length) && (prevCoordY + j >= 0) && (prevCoordY + j < tabLabyrinth.length)) {
+                            tabButton[prevCoordX + i][prevCoordY + j].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthMask"), null, null, null, null, null));
+                        }
                     }
                 }
             }
             //Display new coord maze surroundings
             displaySurroundings(newCoordX, newCoordY, VISION);
-        } else {
+        }
+        else {
+            if(!memory_clue){
+                //Mask old coord maze surroundings
+                for (int i = -VISION_HELP; i <= VISION_HELP; i++) {
+                    for (int j = -VISION_HELP; j <= VISION_HELP; j++) {
+                        if ((prevCoordX + i >= 0) && (prevCoordX + i < tabLabyrinth.length) && (prevCoordY + j >= 0) && (prevCoordY + j < tabLabyrinth.length)) {
+                            tabButton[prevCoordX + i][prevCoordY + j].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthMask"), null, null, null, null, null));
+                        }
+                    }
+                }
+            }
             //Display new coord maze surroundings
             displaySurroundings(newCoordX, newCoordY, VISION_HELP);
         }
@@ -427,8 +457,12 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     public void displaySurroundings(int coordX, int coordY, int vision) {
         for (int i = -vision; i <= vision; i++) {
             for (int j = -vision; j <= vision; j++) {
-                if ((coordX + i >= 0) && (coordX + i < tabLabyrinth.length) && (coordY + j >= 0) && (coordY + j < tabLabyrinth.length) && (Math.abs(i + j) <= vision) && (Math.abs(i - j) <= vision)) {
-                    updateDisplayCell(coordX + i, coordY + j);
+                if ((coordX + i >= 0) && (coordX + i < tabLabyrinth.length) && (coordY + j >= 0) && (coordY + j < tabLabyrinth.length) ) {
+                    // Formule rayon d'un cercle
+                    double val = Math.pow(i,2)+Math.pow(j,2);
+                    if (Math.sqrt(val) <= vision){
+                        updateDisplayCell(coordX + i, coordY + j);
+                    }
                 }
             }
         }
