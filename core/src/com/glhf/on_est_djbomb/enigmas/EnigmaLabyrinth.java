@@ -543,8 +543,12 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     }
 
     public void freeLock(){
-        lock_algo.notify();
-        lock_com.notify();
+        synchronized (lock_algo){
+            lock_algo.notify();
+        }
+        synchronized (lock_com){
+            lock_com.notify();
+        }
     }
 
     public void dispose() {
