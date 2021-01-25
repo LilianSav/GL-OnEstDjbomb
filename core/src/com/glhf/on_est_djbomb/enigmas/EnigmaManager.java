@@ -32,13 +32,15 @@ public class EnigmaManager extends Table {
 
         // Ajout des énigmes
         EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
-        enigmes.add(enigme1);/*
+        enigmes.add(enigme1);        /*
         EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
         enigmes.add(enigme2);*/
-        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "labyrintheTutoBis.txt", labyrinths.size(), game.getGameSocket());
+        EnigmaLabyrinth enigme2 = new EnigmaLabyrinth(isHost, "LabyrintheTutoBis.txt", labyrinths.size(), game.getGameSocket());
+        enigmes.add(enigme2); labyrinths.add(enigme2);
+        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "debug.txt", labyrinths.size(), game.getGameSocket());
         enigmes.add(enigme3); labyrinths.add(enigme3);
-        EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
-        /*enigmes.add(enigme4);
+        /*EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
+        enigmes.add(enigme4);
         EnigmaSum enigme5 = new EnigmaSum(isHost);
         enigmes.add(enigme5);*/
         EnigmaLabyrinth enigme6 = new EnigmaLabyrinth(isHost, "labyrintheIntermédiaire.txt", labyrinths.size(), game.getGameSocket());

@@ -17,7 +17,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
 
     //Labyrinth text file known elements
     private final static char WALL = '*';
-    private final static char PATH = ' ';
+    private final static char PATH = '_';
     private final static char START = 'X';
     private final static char CLUE = '?';
 
@@ -362,20 +362,39 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     }
 
     boolean playerAdjacentButton(ImageButton btn) {
-        return (btn.equals(tabButton[coordXPlayer + 1][coordYPlayer]) ||
-                btn.equals(tabButton[coordXPlayer - 1][coordYPlayer]) ||
-                btn.equals(tabButton[coordXPlayer][coordYPlayer + 1]) ||
-                btn.equals(tabButton[coordXPlayer][coordYPlayer - 1]));
+
+        boolean checkNorth = false;
+        boolean checkSouth = false;
+        boolean checkWest = false;
+        boolean checkEast = false;
+
+        if(coordYPlayer-1>=0){ // North
+            checkNorth= btn.equals(tabButton[coordXPlayer][coordYPlayer - 1]);
+        }
+        if(coordYPlayer+1<tabLabyrinth.length){ // South
+            checkSouth = btn.equals(tabButton[coordXPlayer][coordYPlayer + 1]);
+        }
+        if(coordXPlayer-1>=0){ // West
+            checkWest = btn.equals(tabButton[coordXPlayer - 1][coordYPlayer]);
+        }
+        if(coordXPlayer+1<tabLabyrinth.length){ // East
+            checkEast = btn.equals(tabButton[coordXPlayer + 1][coordYPlayer]);
+        }
+
+        return (checkNorth || checkSouth || checkWest ||checkEast);
     }
+
 
     void movePlayer(ImageButton btn) {
         int newX = 0;
         int newY = 0;
         for (int relativeX = -1; relativeX < 2; relativeX++) {
             for (int relativeY = -1; relativeY < 2; relativeY++) {
-                if (btn.equals(tabButton[relativeX + coordXPlayer][relativeY + coordYPlayer])) {
-                    newX = relativeX + coordXPlayer;
-                    newY = relativeY + coordYPlayer;
+                if ((coordXPlayer + relativeX >= 0) && (coordXPlayer + relativeX < tabLabyrinth.length) && (coordYPlayer + relativeY >= 0) && (coordYPlayer + relativeY < tabLabyrinth.length)) {
+                    if (btn.equals(tabButton[relativeX + coordXPlayer][relativeY + coordYPlayer])) {
+                        newX = relativeX + coordXPlayer;
+                        newY = relativeY + coordYPlayer;
+                    }
                 }
             }
         }
