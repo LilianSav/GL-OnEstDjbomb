@@ -73,7 +73,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
 
         if (isHost) {
             setTitreTable("Aidez vos partenaires à s'échapper !");
-            setIndice("Dites à vos partenaires de demander un indice");
+            setIndice("Vous pouvez désormais voir les déplacements");
         } else {
             setTitreTable("Echappez-vous !");
             setIndice("Vous avez désormais une meilleure visibilité et avez amélioré votre mémoire");
