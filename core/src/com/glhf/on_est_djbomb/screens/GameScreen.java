@@ -130,7 +130,7 @@ public class GameScreen implements Screen {
         textChatTable.add(tableTextBox).height(Value.percentHeight(0.25f, textChatTable)).width(Value.percentWidth(1f, textChatTable));
 
         // Paramétrage du timer
-        tpsInitial = 300;//5min
+        tpsInitial = 1800; // 30 minutes
         tpsRestant = tpsInitial;
         tpsInitialEnigme = tpsInitial;
         isUnder30s = tpsRestant < 30;
@@ -194,21 +194,24 @@ public class GameScreen implements Screen {
         sendButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (lblPseudo.getText().toString().equals(PSEUDO_INIT + " :") && lblMessage.getText().toString().equals(MESSAGE_INIT)) {
-                    // Changement texte
-                    lblPseudo.setText(game.getGameSocket().getIdentifiant() + " :");
-                    lblMessage.setText(chatTextField.getText());
-                } else {
-                    // Ajout texte
-                    lblPseudo.setText(lblPseudo.getText() + "\n" + game.getGameSocket().getIdentifiant() + " :");
-                    lblMessage.setText(lblMessage.getText() + "\n" + chatTextField.getText());
+                // On vérifie que le champ de texte n'est pas vide
+                if(!chatTextField.getText().equals("")){
+                    if (lblPseudo.getText().toString().equals(PSEUDO_INIT + " :") && lblMessage.getText().toString().equals(MESSAGE_INIT)) {
+                        // Changement texte
+                        lblPseudo.setText(game.getGameSocket().getIdentifiant() + " :");
+                        lblMessage.setText(chatTextField.getText());
+                    } else {
+                        // Ajout texte
+                        lblPseudo.setText(lblPseudo.getText() + "\n" + game.getGameSocket().getIdentifiant() + " :");
+                        lblMessage.setText(lblMessage.getText() + "\n" + chatTextField.getText());
 
+                    }
+                    scrollPaneMessage.scrollTo(0, 0, 0, 0);
+
+                    // Envoi de l'information à l'autre machine
+                    game.getGameSocket().sendMessage("TEXT::" + chatTextField.getText());
+                    chatTextField.setText("");
                 }
-                scrollPaneMessage.scrollTo(0, 0, 0, 0);
-
-                // Envoi de l'information à l'autre machine
-                game.getGameSocket().sendMessage("TEXT::" + chatTextField.getText());
-                chatTextField.setText("");
             }
         });
         optionsButton.addListener(new ClickListener() {
