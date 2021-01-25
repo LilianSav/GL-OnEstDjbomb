@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.glhf.on_est_djbomb.networking.GameSocket;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Random;
 
 public class EnigmaLabyrinth extends EnigmaSkeleton {
 
@@ -38,9 +40,14 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     //To know if the player asked for a clue
     boolean clueEnabled = false;
 
-    // Numéro de l'enigme dans les labyrinthes, pour communiquer
+    // Attributs permettant la communication
     private int numero;
     private GameSocket socket;
+    private String shuffledPassword;
+    private String password;
+    private String passwordIndex;
+    private Object lock;
+    private boolean extracted=false;
 
     //To read the sprites of the game
     Skin skinLabyrinthe;
@@ -69,10 +76,14 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
                     "déplacer et laissez vous guider par votre partenaire pour trouver le code!\n");
             setIndice("Vous êtes désormais plus clairvoyant et avez amélioré votre mémoire");
         }
+
+        // Verrou de communication
+        lock = new Object();
+
     }
 
     // Procedure readTextFile reads the labyrinth text file and extracts information
-    public void readTextFile(Boolean isHost) throws FileNotFoundException {
+    public synchronized void readTextFile() throws FileNotFoundException, InterruptedException {
 
         //Read the desired file
         FileHandle handle = Gdx.files.internal(pathLabyrinth + nameLabyrinth);
@@ -89,32 +100,92 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         tabButton = new ImageButton[labLength][labLength];
 
         //Put file information into tabLabyrinth
-        extractLabyrinth(wordsArray, isHost);
+        extractLabyrinth(wordsArray);
+
+        if(isHost()){
+            // Find the labyrinth password
+            generatePassword();
+        }
+        // Create the labyrinth visual
+        createDisplayLabyrinth();
+
+        if(!isHost()){
+            extracted=true;
+        }
+    }
+
+    public void getPassword(){
+
+        String realPass = "";
+
+        // Placing characters at the right place
+        for (int i = 0 ; i < passwordIndex.length() ; i++) {
+            realPass+=shuffledPassword.charAt(Character.getNumericValue(passwordIndex.charAt(i)));
+        }
+        password=realPass;
     }
 
     //Procedure extractLabyrinth, reads the String array parameter and creates the Labyrinth
-    public void extractLabyrinth(String[] wordsArray, boolean isHost) {
+    public void extractLabyrinth(String[] wordsArray) {
         //Initialize the password which will be deduced while reading the file
-        String password = "";
+        shuffledPassword = "";
+        Random random = new Random();
 
-        //Initialize the labyrinth sprites
+        //Loop to read the String[] wordsArray characters one by one
+        int i=0;
+        int j=0;
+        for(String word : wordsArray) {
+            for (char elem : word.toCharArray()) {
+
+                // Create the 2D labyrinth and the buttons displayed
+                tabLabyrinth[i][j] = elem;
+
+                // Test to add a character to the password when it's a clue for the Host
+                if((elem!=WALL) && (elem!= PATH) && (elem !=START)){
+                    int val =random.nextInt(10);
+                    shuffledPassword+=val;
+                    tabLabyrinth[i][j] = String.valueOf(val).charAt(0);
+                }
+                j++;
+            }
+            j = 0;
+            i++;
+        }
+    }
+
+    public void generatePassword(){
+        password="";
+        passwordIndex="";
+
+        // Initialisation de passwordIndex
+        for(int i = 0 ; i<shuffledPassword.length() ; i++){
+            passwordIndex+=i;
+        }
+
+        passwordIndex= shuffle(passwordIndex); // Randomisation
+        getPassword();
+
+        this.setSolution(Integer.parseInt(password));
+
+        socket.sendMessage("LABYRINTH::"+numero+"::"+"CODE:"+password+":"+passwordIndex+":"+shuffledPassword);
+    }
+
+        //Procedure createDisplayLabyrinth, reads the 2D labyrinth tab creates the Labyrinth display
+        public void createDisplayLabyrinth(){
+
+       //Initialize the labyrinth sprites
         textureAtlas = new TextureAtlas(pathLabyrinth + "labyrinthSprites.txt");
         skinLabyrinthe = new Skin(textureAtlas);
 
-        //cpt, to know the index of the clue associated to the password number
-        int cpt = 1;
-
+        int count=0;
         //Loop to read the String[] wordsArray characters one by one
-        int i = 0;
-        int j = 0;
-        for (String word : wordsArray) {
-            for (char elem : word.toCharArray()) {
+        for(int i = 0 ; i < tabLabyrinth.length ; i++) {
+            for (int j = 0; j < tabLabyrinth.length; j++) {
 
-                //Create the 2D labyrinth and the buttons displayed
-                tabLabyrinth[j][i] = elem;
+                //Style of the buttons
                 ImageButton.ImageButtonStyle imgButtonStyle = new ImageButton.ImageButtonStyle();
 
-                switch (elem) {
+                switch (tabLabyrinth[i][j]){
                     case WALL: //if the read character corresponds to a wall
                         imgButtonStyle.up = skinLabyrinthe.getDrawable("LabyrinthWall");
                         break;
@@ -127,43 +198,82 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
                         coordYPlayer = i;
                         break;
                     default: //Otherwise, the character corresponds to an element of the password
-                        if (isHost) {
-                            String clue = "LabyrinthClue" + String.valueOf(cpt);
-                            imgButtonStyle.up = skinLabyrinthe.getDrawable(clue);
-                            cpt++;
-                            password += elem;
-                        } else {
-                            String clue = "LabyrinthClue" + elem;
-                            imgButtonStyle.up = skinLabyrinthe.getDrawable(clue);
-                            password += elem;
+                        String clue = "LabyrinthClue";
+                        if (this.isHost()) {
+                            clue += String.valueOf(Character.getNumericValue(passwordIndex.charAt(count))+1);
                         }
+                        else {
+                            clue +=shuffledPassword.charAt(count);
+                        }
+                        imgButtonStyle.up = skinLabyrinthe.getDrawable(clue);
+                        count++;
                         break;
                 }
-                tabButton[j][i] = new ImageButton(imgButtonStyle);
-
-                i++;
+                tabButton[i][j] = new ImageButton(imgButtonStyle);
             }
-            i = 0;
-            j++;
         }
-        //Setting the password
-        this.setSolution(Integer.parseInt(password));
     }
 
+    public void updateMazePassword() {
+        int count = 0;
+        //Loop to read the String[] wordsArray characters one by one
+        for (int i = 0; i < tabLabyrinth.length; i++) {
+            for (int j = 0; j < tabLabyrinth.length; j++) {
+                switch (tabLabyrinth[i][j]){
+                    case WALL: // if the read character corresponds to a wall
+                        break;
+                    case PATH: // if the read character corresponds to an available path
+                        break;
+                    case START: // if the read character corresponds to the starting place
+                        break;
+                    default: // Otherwise, the character corresponds to an element of the password
+                        char val = shuffledPassword.charAt(count);
+                        tabLabyrinth[i][j]=val;
+                        String clue = "LabyrinthClue"+val;
+                        if(playerAdjacentButton(tabButton[i][j])) {
+                            tabButton[i][j].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable(clue), null, null, null, null, null));
+                        }
+                        else {
+                            tabButton[i][j].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthMask"), null, null, null, null, null));
+                        }
+                        count++;
+                        break;
+                    }
+                }
+            }
+        }
 
     public void load( Table enigmaManager) {
+        System.out.println(this.isHost());
+
+        if(!isHost()){
+            // On délègue la gestion du password à un Thread
+            new Thread(() -> {
+                try {
+                    synchronized (lock) {
+                        lock.wait();
+                        while(!extracted){
+                            //wait
+                        }
+                        updateMazePassword();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
 
         //Read the labyrinth text file to extract information
         try {
-            this.readTextFile(this.isHost());
-        } catch (FileNotFoundException e) {
+            this.readTextFile();
+        } catch (FileNotFoundException | InterruptedException e) {
             e.printStackTrace();
         }
+
 
         if(!this.isHost()){
             createDynamicClientMaze();
         }
-
 
         fillTable = new Table();
         fillTable.setFillParent(true);
@@ -176,12 +286,27 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
 
         for (ImageButton[] row : tabButton) {
             for (Button elem : row) {
-
-                //ImageButton real = new ImageButton(button);
                 fillTable.add(elem).width(Value.percentHeight((float) 1 / (tabLabyrinth.length + 3), fillTable)).height(Value.percentHeight((float) 1 / (tabLabyrinth.length + 3), fillTable));
             }
             fillTable.row();
         }
+    }
+
+    public String shuffle(String word){
+        Random random = new Random();
+        // Convert the word into a char array
+        char wordArray[] = word.toCharArray();
+
+        // Shuffle the array
+        for( int i=0 ; i<wordArray.length ; i++ )
+        {
+            int j = random.nextInt(wordArray.length);
+            // Swap letters
+            char chatTemp = wordArray[i];
+            wordArray[i] = wordArray[j];
+            wordArray[j] = chatTemp;
+        }
+        return new String(wordArray );
     }
 
 
@@ -201,12 +326,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
                         public void clicked(InputEvent event, float x, float y) {
                             if (playerAdjacentButton((ImageButton) event.getTarget())) {
                                 movePlayer((ImageButton) event.getTarget());
-                                socket.sendMessage("LABYRINTH::"+numero+"::"+"voici mon message");
                             }
 
                         }
-
-                        ;
                     });
                 }
             }
@@ -302,6 +424,12 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
                     tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthStart"), null, null, null, null, null));
                     break;
                 default: //Otherwise, the character corresponds to an element of the password
+                    for(char[] elem:tabLabyrinth){
+                        for(char e : elem){
+                            System.out.print(e+" ");
+                        }
+                        System.out.println();
+                    }
                     tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthClue" + tabLabyrinth[coordX][coordY]), null, null, null, null, null));
                     break;
             }
@@ -315,11 +443,22 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
 
     public void traiterMessage(String msg){
         System.out.println("Message reçu : "+msg);
+        String[] tokens = msg.split(":");
+        // FLAG CODE
+        if (tokens[0].equals("CODE")) {
+            password=tokens[1];
+            passwordIndex=tokens[2];
+            shuffledPassword=tokens[3];
+            // Setting the password
+            this.setSolution(Integer.parseInt(password));
+            synchronized (lock){
+                lock.notify();
+            }
+        }
     }
 
     public void dispose() {
         textureAtlas.dispose();
-
     }
 
 }

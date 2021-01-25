@@ -31,11 +31,11 @@ public class EnigmaManager extends Table {
         labyrinths = new ArrayList<>();
 
         // Ajout des énigmes
-        /*EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
-        enigmes.add(enigme1);
+        EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
+        enigmes.add(enigme1);/*
         EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
         enigmes.add(enigme2);*/
-        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "labyrintheTutoBis.txt", labyrinths.size(), game.getGameSocket());
+        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "labyrintheTuto.txt", labyrinths.size(), game.getGameSocket());
         enigmes.add(enigme3); labyrinths.add(enigme3);
         EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
         /*enigmes.add(enigme4);
@@ -52,7 +52,7 @@ public class EnigmaManager extends Table {
         EnigmaCutWire enigme10 = new EnigmaCutWire(isHost);
         enigmes.add(enigme10);
 
-        enigmeCourante = enigme3;
+        enigmeCourante = enigme1;
 
         // Création des dialogues d'indices et de solutions
         clueDialog = new ClueDialog("Indice", game.skin);
