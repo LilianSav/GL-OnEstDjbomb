@@ -20,7 +20,7 @@ public abstract class EnigmaSkeleton {
     }
 
     // Path de l'image à afficher
-    public abstract void load(boolean isHost, Table enigmaManagerTable);
+    public abstract void load(Table enigmaManagerTable);
 
     public abstract void unload();
 

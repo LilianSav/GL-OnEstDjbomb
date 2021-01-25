@@ -232,10 +232,6 @@ public class LobbyScreen implements Screen {
                     }
                 });
             }
-            // Flag non reconnu
-            else {
-                Gdx.app.log("SocketFlagError", "Le flag envoyé par le socket distant n'est pas reconnu");
-            }
         });
     }
 

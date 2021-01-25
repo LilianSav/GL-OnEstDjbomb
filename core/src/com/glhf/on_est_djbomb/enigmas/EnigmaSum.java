@@ -20,14 +20,14 @@ public class EnigmaSum extends EnigmaSkeleton {
 	}
 
 	@Override
-	public void load(boolean isHost, Table enigmaManagerTable) {
+	public void load( Table enigmaManagerTable) {
 		// Chargement du titre
 		enigmaManagerTable.add(new Label(getTitreTable(), enigmaManagerTable.getSkin()));
 		enigmaManagerTable.row();
 
 		// Chargement de la texture
 		Image enigmeImageTexture;
-		if (isHost) {
+		if (this.isHost()) {
 			enigmeTexture = new Texture(Gdx.files.internal("assetEnigme/sum/sumHost.png"));
 		} else {
 			enigmeTexture = new Texture(Gdx.files.internal("assetEnigme/sum/sumGuest.png"));
