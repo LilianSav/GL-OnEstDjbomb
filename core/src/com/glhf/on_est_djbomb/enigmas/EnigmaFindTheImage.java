@@ -22,7 +22,6 @@ public class EnigmaFindTheImage extends EnigmaSkeleton {
     @Override
     public void load( Table enigmaManagerTable) {
         // Chargement du titre
-        // Chargement du titre
         enigmaManagerTable.add(new Label(getTitreTable(), enigmaManagerTable.getSkin(), "title"));
         enigmaManagerTable.row();
 
