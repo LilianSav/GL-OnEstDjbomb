@@ -32,23 +32,21 @@ public class EnigmaManager extends Table {
 
         // Ajout des énigmes
         EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
-        enigmes.add(enigme1);        /*
+        enigmes.add(enigme1);
         EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
-        enigmes.add(enigme2);*/
-        EnigmaLabyrinth enigme2 = new EnigmaLabyrinth(isHost, "debug.txt", labyrinths.size(), game.getGameSocket());
-        enigmes.add(enigme2); labyrinths.add(enigme2);
+        enigmes.add(enigme2);
         EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "LabyrintheTutoBis.txt", labyrinths.size(), game.getGameSocket());
         enigmes.add(enigme3); labyrinths.add(enigme3);
-        /*EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
+        EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
         enigmes.add(enigme4);
         EnigmaSum enigme5 = new EnigmaSum(isHost);
-        enigmes.add(enigme5);*/
+        enigmes.add(enigme5);
         EnigmaLabyrinth enigme6 = new EnigmaLabyrinth(isHost, "labyrintheIntermédiaire.txt", labyrinths.size(), game.getGameSocket());
         enigmes.add(enigme6); labyrinths.add(enigme6);
-       /* EnigmaPyramid enigme7 = new EnigmaPyramid(isHost);
+        EnigmaPyramid enigme7 = new EnigmaPyramid(isHost);
         enigmes.add(enigme7);
         EnigmaCount enigme8 = new EnigmaCount(isHost);
-        enigmes.add(enigme8);*/
+        enigmes.add(enigme8);
         EnigmaLabyrinth enigme9 = new EnigmaLabyrinth(isHost, "labyrintheHard.txt", labyrinths.size(), game.getGameSocket());
         enigmes.add(enigme9); labyrinths.add(enigme9);
         EnigmaCutWire enigme10 = new EnigmaCutWire(isHost);
