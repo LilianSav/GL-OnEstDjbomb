@@ -1,19 +1,14 @@
 package com.glhf.on_est_djbomb.enigmas;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.glhf.on_est_djbomb.networking.GameSocket;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Random;
 
 public class EnigmaLabyrinth extends EnigmaSkeleton {
@@ -24,12 +19,11 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     private final static char START = 'X';
     private final static char CLUE = '?';
 
-    private final static int VISION = 1;
-    private final static int VISION_HELP = 3;
-
-    //To know if the player asked for a clue
-    private final static boolean memory_noclue = false; // true if memory without help is enabled
-    private final static boolean memory_clue= true; // true if memory with help is enabled
+    // Options
+    private final static int VISION = 1; // Distance vue par le joueur Client sans indice (échelle : longueur d'une cellule)
+    private final static boolean MEMORY_NOCLUE = false; // Mémoire du joueur Client sans indice
+    private final static int VISION_HELP = 2; // Distance vue par le joueur Client avec indice
+    private final static boolean MEMORY_CLUE = true; // Mémoire du joueur Client avec indice
 
     //Available files path
     private final static String pathLabyrinth = "assetEnigme/labyrinthe/";
@@ -425,7 +419,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         coordYPlayer = newCoordY;
 
         if (!clueEnabled ) {
-            if(!memory_noclue){ // No clue, no memory
+            if(!MEMORY_NOCLUE){ // No clue, no memory
                 //Mask old coord maze surroundings
                 for (int i = -VISION; i <= VISION; i++) {
                     for (int j = -VISION; j <= VISION; j++) {
@@ -439,7 +433,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
             displaySurroundings(newCoordX, newCoordY, VISION);
         }
         else {
-            if(!memory_clue){
+            if(!MEMORY_CLUE){
                 //Mask old coord maze surroundings
                 for (int i = -VISION_HELP; i <= VISION_HELP; i++) {
                     for (int j = -VISION_HELP; j <= VISION_HELP; j++) {
