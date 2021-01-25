@@ -407,12 +407,12 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
                     if (btn.equals(tabButton[relativeX + coordXPlayer][relativeY + coordYPlayer])) {
                         newX = relativeX + coordXPlayer;
                         newY = relativeY + coordYPlayer;
+                        socket.sendMessage("LABYRINTH::"+numero+"::"+"MOVEMENT:"+newX+":"+newY);
                     }
                 }
             }
         }
         updateDisplay(coordXPlayer, coordYPlayer, newX, newY);
-
     }
 
     void updateDisplay(int prevCoordX, int prevCoordY, int newCoordX, int newCoordY) {
@@ -451,18 +451,19 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     }
 
     public void displaySurroundings(int coordX, int coordY, int vision) {
-        for (int i = -vision; i <= vision; i++) {
-            for (int j = -vision; j <= vision; j++) {
-                if ((coordX + i >= 0) && (coordX + i < tabLabyrinth.length) && (coordY + j >= 0) && (coordY + j < tabLabyrinth.length) ) {
-                    // Formule rayon d'un cercle
-                    double val = Math.pow(i,2)+Math.pow(j,2);
-                    if (Math.sqrt(val) <= vision){
-                        updateDisplayCell(coordX + i, coordY + j);
+        if(!isHost()){
+            for (int i = -vision; i <= vision; i++) {
+                for (int j = -vision; j <= vision; j++) {
+                    if ((coordX + i >= 0) && (coordX + i < tabLabyrinth.length) && (coordY + j >= 0) && (coordY + j < tabLabyrinth.length) ) {
+                        // Formule rayon d'un cercle
+                        double val = Math.pow(i,2)+Math.pow(j,2);
+                        if (Math.sqrt(val) <= vision){
+                            updateDisplayCell(coordX + i, coordY + j);
+                        }
                     }
                 }
             }
         }
-
     }
 
     public void updateDisplayCell(int coordX, int coordY) {
@@ -507,9 +508,18 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         displaySurroundings(coordXPlayer, coordYPlayer, VISION_HELP);
     }
 
+    public void updateDisplayPlayerHost(int newX, int newY) {
+        int oldX=coordXPlayer;
+        int oldY=coordYPlayer;
+        coordXPlayer=newX;
+        coordYPlayer=newY;
+        updateDisplayCell(oldX,oldY);
+        updateDisplayCell(coordXPlayer,coordYPlayer);
+    }
+
     public void traiterMessage(String msg){
         String[] tokens = msg.split(":");
-        // FLAG CODE
+        // FLAG CODE : Host => Client
         if (tokens[0].equals("CODE")) {
             password=tokens[1];
             passwordIndex=tokens[2];
@@ -520,6 +530,14 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
             System.out.println("Labyrinthe "+val+" password : "+password);
             synchronized (lock_com){
                 lock_com.notify();
+            }
+        }
+        // FLAG MOVEMENT : Client => Host
+        else if (tokens[0].equals("MOVEMENT")) {
+            if(clueEnabled){
+                int newX=Integer.parseInt(tokens[1]);
+                int newY=Integer.parseInt(tokens[2]);
+                updateDisplayPlayerHost( newX, newY);
             }
         }
     }
