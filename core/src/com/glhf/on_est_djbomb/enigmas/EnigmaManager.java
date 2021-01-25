@@ -35,7 +35,7 @@ public class EnigmaManager extends Table {
         enigmes.add(enigme1);
         EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
         enigmes.add(enigme2);
-        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "LabyrintheTutoBis.txt", labyrinths.size(), game.getGameSocket());
+        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "labyrintheTutoBis.txt", labyrinths.size(), game.getGameSocket());
         enigmes.add(enigme3); labyrinths.add(enigme3);
         EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
         enigmes.add(enigme4);
@@ -148,5 +148,11 @@ public class EnigmaManager extends Table {
         // Récupération du texte de solution de l'énigme courante
         solutionDialog.setText("Cherchez encore un peu !\nLa solution sera disponible plus tard si vous ne trouvez pas.");
         solutionDialog.show(stage);
+    }
+    public void dispose(){
+        enigmeCourante.unload();
+        for(EnigmaLabyrinth lab : labyrinths){
+            lab.freeLock();
+        }
     }
 }

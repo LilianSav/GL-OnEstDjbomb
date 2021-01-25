@@ -140,16 +140,15 @@ public class GameScreen implements Screen {
         TextButton optionsButton = new TextButton("Options", game.skin, "title");
         TextButton quitterButton = new TextButton("Quitter", game.skin, "title");
 
-        Image imgBombeL = new Image(new Texture(Gdx.files.internal("images/bombeEnAttendant.png")));
+        Image imgBombeL = new Image(new Texture(Gdx.files.internal("images/bombe.png")));
         Container<Image> ctnImgBombeL = new Container<Image>(imgBombeL);
         timerLabel = new Label(tpsRestant + " sec", game.skin, "title");
-        Image imgBombeR = new Image(new Texture(Gdx.files.internal("images/bombeEnAttendant.png")));
+        Image imgBombeR = new Image(new Texture(Gdx.files.internal("images/bombe.png")));
         Container<Image> ctnImgBombeR = new Container<Image>(imgBombeR);
         Table tableTimer = new Table();
         tableTimer.add(ctnImgBombeL).width(50).height(50).pad(10);
         tableTimer.add(timerLabel).expand().pad(10);
         tableTimer.add(ctnImgBombeR).width(50).height(50).pad(10);
-        ;
 
         indiceButton = new TextButton(" Indice  ", game.skin, "title");
         solutionButton = new TextButton("Solution", game.skin, "title");
@@ -223,6 +222,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stopTimer();
+                enigmeManager.dispose();
                 // On vide le gestionnaire de listeners
                 game.getGameSocket().clearListeners();
                 // Fermeture des flux

@@ -522,8 +522,14 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         }
     }
 
+    public void freeLock(){
+        lock_algo.notify();
+        lock_com.notify();
+    }
+
     public void dispose() {
         textureAtlas.dispose();
+        skinLabyrinthe.dispose();
     }
 
 }
