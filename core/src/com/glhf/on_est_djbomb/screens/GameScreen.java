@@ -225,7 +225,6 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stopTimer();
-                enigmeManager.dispose();
                 // On vide le gestionnaire de listeners
                 game.getGameSocket().clearListeners();
                 // Fermeture des flux
@@ -532,6 +531,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         stopTimer();
+        enigmeManager.dispose();
         stage.dispose();
         sound.dispose();
     }
