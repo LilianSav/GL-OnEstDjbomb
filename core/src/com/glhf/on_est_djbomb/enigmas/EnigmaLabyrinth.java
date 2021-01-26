@@ -10,6 +10,7 @@ import com.glhf.on_est_djbomb.networking.GameSocket;
 
 import java.io.FileNotFoundException;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class EnigmaLabyrinth extends EnigmaSkeleton {
 
@@ -46,13 +47,14 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     private String shuffledPassword="";
     private String password="";
     private String passwordIndex="";
-    private Object lock_com;
 
     // true if the player asked for help
     boolean clueEnabled = false;
 
     // Verrou permettant de synchroniser le mot de passe du client
-    private Object lock_algo;
+    private final ArrayBlockingQueue<Object> lock_algo_queue;
+    private final ArrayBlockingQueue<Object> lock_com_queue;
+    boolean lockFreed;
 
     //To read the sprites of the game
     Skin skinLabyrinthe;
@@ -81,20 +83,19 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         }
 
         // Verrou de communication
-        lock_com = new Object();
-        lock_algo = new Object();
+        lock_algo_queue = new ArrayBlockingQueue<>(2);
+        lock_com_queue = new ArrayBlockingQueue<>(2);
+        lockFreed = false;
 
         if(!isHost()){
             // On délègue la gestion du password à un Thread
             new Thread(() -> {
                 try {
-                    synchronized (lock_com) {
-                        lock_com.wait();
+                    lock_com_queue.take();
+                    lock_algo_queue.take();
+                    if(!lockFreed){
+                        updateMazePassword();
                     }
-                    synchronized (lock_algo){
-                        lock_algo.wait();
-                    }
-                    updateMazePassword();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -313,8 +314,10 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         }
 
         if(!isHost()){
-            synchronized (lock_algo){
-                lock_algo.notify();
+            try {
+                lock_algo_queue.put(new Object());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -557,8 +560,10 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
             this.setSolution(Integer.parseInt(password));
             int val = numero+1;
             System.out.println("Labyrinthe "+val+" password : "+password);
-            synchronized (lock_com){
-                lock_com.notify();
+            try {
+                lock_com_queue.put(new Object());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         // FLAG MOVEMENT : Client => Host
@@ -572,11 +577,12 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     }
 
     public void freeLock(){
-        synchronized (lock_algo){
-            lock_algo.notify();
-        }
-        synchronized (lock_com){
-            lock_com.notify();
+        lockFreed = true;
+        try {
+            lock_com_queue.put(new Object());
+            lock_algo_queue.put(new Object());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
