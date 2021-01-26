@@ -24,6 +24,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     private final static boolean MEMORY_NOCLUE = false; // Mémoire du joueur Client sans indice
     private final static int VISION_HELP = 2; // Distance vue par le joueur Client avec indice
     private final static boolean MEMORY_CLUE = true; // Mémoire du joueur Client avec indice
+    private final static boolean DISPLAY_ON_HOST_PRECLUE = false; // Activer les déplacements sur l'hôte sans l'indice
 
     //Available files path
     private final static String pathLabyrinth = "assetEnigme/labyrinthe/";
@@ -493,10 +494,15 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
                             updateMazePassword();
                         }
                     default: //Otherwise, the character corresponds to an element of the password
-                        if (shuffledPassword.equals("") ) {
-                            tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthPath"), null, null, null, null, null));
-                        } else {
-                            tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthClue" + tabLabyrinth[coordX][coordY]), null, null, null, null, null));
+                        if(isHost()){
+                            updateDisplayClue(coordX,coordY);
+                        }
+                        else {
+                            if (shuffledPassword.equals("") ) {
+                                tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthPath"), null, null, null, null, null));
+                            } else {
+                                tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthClue" + tabLabyrinth[coordX][coordY]), null, null, null, null, null));
+                            }
                         }
                         break;
                 }
@@ -507,6 +513,29 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         clueEnabled = true;
         displaySurroundings(coordXPlayer, coordYPlayer, VISION_HELP);
     }
+
+    public void updateDisplayClue(int coordX, int coordY){
+        System.out.println("IN !" + passwordIndex);
+        int count=0;
+        for(int i = 0 ; i < tabLabyrinth.length ; i++){
+            for(int j = 0 ; j < tabLabyrinth.length ; j++) {
+                if(i == coordX && j == coordY){
+                    tabButton[coordX][coordY].setStyle(new ImageButton.ImageButtonStyle(skinLabyrinthe.getDrawable("LabyrinthClue" + (1+Character.getNumericValue(passwordIndex.charAt(count)))), null, null, null, null, null));
+                }
+                switch (tabLabyrinth[i][j]){
+                    case WALL: //if the read character corresponds to a wall
+                    case PATH: // if the read character corresponds to an available path
+                    case START: //if the read character corresponds to the starting place
+                        break;
+                    default:
+                        count++;
+                        break;
+                }
+            }
+        }
+        System.out.println("OUT : "+coordX+" - "+coordY + " - "+count);
+    }
+
 
     public void updateDisplayPlayerHost(int newX, int newY) {
         int oldX=coordXPlayer;
@@ -534,7 +563,7 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         }
         // FLAG MOVEMENT : Client => Host
         else if (tokens[0].equals("MOVEMENT")) {
-            if(clueEnabled){
+            if(clueEnabled || DISPLAY_ON_HOST_PRECLUE){
                 int newX=Integer.parseInt(tokens[1]);
                 int newY=Integer.parseInt(tokens[2]);
                 updateDisplayPlayerHost( newX, newY);
