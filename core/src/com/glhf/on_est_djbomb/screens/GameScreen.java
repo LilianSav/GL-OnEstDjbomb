@@ -142,7 +142,7 @@ public class GameScreen implements Screen {
 
         Image imgBombeL = new Image(new Texture(Gdx.files.internal("images/bombe.png")));
         Container<Image> ctnImgBombeL = new Container<Image>(imgBombeL);
-        timerLabel = new Label(tpsRestant + " sec", game.skin, "title");
+        timerLabel = new Label(secToMinSec(tpsRestant), game.skin, "title");
         Image imgBombeR = new Image(new Texture(Gdx.files.internal("images/bombe.png")));
         Container<Image> ctnImgBombeR = new Container<Image>(imgBombeR);
         Table tableTimer = new Table();
@@ -448,7 +448,7 @@ public class GameScreen implements Screen {
                 clignoteRapideTimer();
             }
             if (!isUnder30s) {
-                timerLabel.setText(tpsRestant + " sec");
+                timerLabel.setText(secToMinSec(tpsRestant));
             }
             //temps écoulé
             if (tpsRestant == 0 && !isOver) {
@@ -472,7 +472,7 @@ public class GameScreen implements Screen {
     private final Timer.Task myTimerTask3 = new Timer.Task() {
         @Override
         public void run() {
-            timerLabel.setText(tpsRestant + " sec");
+            timerLabel.setText(secToMinSec(tpsRestant));
             //temps écoulé
             if (tpsRestant == 0 && !isOver) {
                 myTimerTask3.cancel();
@@ -510,6 +510,13 @@ public class GameScreen implements Screen {
         myTimerTask2.cancel();
         myTimerTask3.cancel();
     }
+    
+    //affichage des secondes en minutes et secondes
+    public String secToMinSec(int sec) {
+		int secondes=sec%60;
+		int minutes=sec/60;
+		return minutes+":"+secondes+" min";
+	}
 
     @Override
     public void render(float delta) {
