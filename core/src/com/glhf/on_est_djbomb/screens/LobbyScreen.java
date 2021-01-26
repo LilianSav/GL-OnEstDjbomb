@@ -68,7 +68,7 @@ public class LobbyScreen implements Screen {
         // Label Adress IP
         Label lblIp = new Label("Adresse IP du salon :",game.skin, "title");
         // Label Port
-        Label lblPort = new Label("Clef du salon :", game.skin, "title");
+        Label lblPort = new Label("Clé du salon :", game.skin, "title");
 
         // Avertissement de la connexion à l'hôte distant
         game.getGameSocket().sendMessage("STATE::NOTREADY");

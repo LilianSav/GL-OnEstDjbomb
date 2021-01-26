@@ -57,12 +57,12 @@ public class EndGameScreen implements Screen{
         	Label congrat = new Label("En complétant la dernière énigme, vous avez désamorcé la bombe.", game.skin);
             root.add(congrat).expandY();
             root.row();
-        	Label tpsUtilise = new Label("Temps utilisé : "+(tpsInit-tpsLeft)+" s", game.skin);
+        	Label tpsUtilise = new Label("Temps utilisé : "+secToMinSec(tpsInit-tpsLeft), game.skin);
             root.add(tpsUtilise).expandY();
             root.row();
         }
         // Gestion meilleur temps
-        String ancienMeilleurScore=game.prefs.getInteger("meilleurTpsUtilise")+" s";
+        String ancienMeilleurScore=secToMinSec(game.prefs.getInteger("meilleurTpsUtilise"));
         String ancienMeilleurScoreAuteurs = "Joueurs : "+game.prefs.getString("meilleurTpsUtilisePseudo1")+" et "+game.prefs.getString("meilleurTpsUtilisePseudo2");
         if(game.prefs.getInteger("meilleurTpsUtilise") >= tpsInit-tpsLeft){//new best score
         	//sauvegarde en local
@@ -87,10 +87,10 @@ public class EndGameScreen implements Screen{
         Label ancienMeilleurTpsUtiliseJoueurs = new Label(ancienMeilleurScoreAuteurs, game.skin);
         root.add(ancienMeilleurTpsUtiliseJoueurs).expandY();
         root.row();
-        Label tpsInitial = new Label("Temps initial : "+tpsInit+" s", game.skin);
+        Label tpsInitial = new Label("Temps initial : "+secToMinSec(tpsInit), game.skin);
         root.add(tpsInitial).expandY();
         root.row();
-        Label tpsRestant = new Label("Temps restant : "+tpsLeft+" s", game.skin);
+        Label tpsRestant = new Label("Temps restant : "+secToMinSec(tpsLeft), game.skin);
         root.add(tpsRestant).expandY();
         root.row();
         // todo fix
@@ -119,10 +119,13 @@ public class EndGameScreen implements Screen{
             	game.switchScreen(new MainMenuScreen(game));
             }
         });
-        
-		
 	}
-
+	
+	public String secToMinSec(int sec) {//affichage des secondes en minutes et secondes
+		int secondes=sec%60;
+		int minutes=sec/60;
+		return minutes+":"+secondes+" min";
+	}
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub

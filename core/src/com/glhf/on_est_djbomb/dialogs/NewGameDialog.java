@@ -38,7 +38,7 @@ public class NewGameDialog extends Dialog {
 
         /* Section Boutons */
         // Ajout du bouton Héberger dans la boîte de dialogue
-        TextButton txtBtnHost = new TextButton("  Héberger  ",game.skin,"title");
+        TextButton txtBtnHost = new TextButton("  Créer  ",game.skin,"title");
         txtBtnHost.pad(5,30,5,30);
         button(txtBtnHost,1L).pad(30);
 

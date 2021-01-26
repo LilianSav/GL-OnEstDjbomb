@@ -238,6 +238,12 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 boolean repTrouve = verificationTextField.getText().equals(String.valueOf(enigmeManager.getSolution()));
+                //cas réponses multiples
+                if(!repTrouve) {
+                	if(enigmeManager.getSolution2()!=0) {
+                		repTrouve = verificationTextField.getText().equals(String.valueOf(enigmeManager.getSolution2()));
+                	}
+            	}
                 finDePartie(repTrouve, false);
             }
         });

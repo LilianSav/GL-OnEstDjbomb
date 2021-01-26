@@ -86,6 +86,10 @@ public class EnigmaManager extends Table {
     public int getSolution() {
         return enigmeCourante.getSolution();
     }
+    
+    public int getSolution2() {
+        return enigmeCourante.getSolution2();
+    }
 
     // Affichage du dialogue d'informations
     public void getIndiceDialog() {
