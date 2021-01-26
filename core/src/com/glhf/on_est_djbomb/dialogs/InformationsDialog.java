@@ -31,7 +31,7 @@ public class InformationsDialog extends Dialog {
 
                 "Crédits\r\n\n" +
                 "Musique : Hicham Chahidi - Plongée nocturne\r\n" +
-                "Interface graphique : ray3k.wordpress.com\r\n" +
+                "Interface graphique (fichier de textures) : ray3k.wordpress.com\r\n" +
                 "MOA : Équipe Guzny\r\n" +
                 "MOE : Équipe Glhf\r\n", skin, "title");
         label.setFontScale(0.75f);
