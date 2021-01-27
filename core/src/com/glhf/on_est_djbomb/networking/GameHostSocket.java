@@ -70,11 +70,6 @@ public class GameHostSocket extends GameSocket {
         }
     }
 
-    /** Modifié, à vérifier **/
-       /* @Override
-    public String getInfoSocket() {
-        return server.getInetAddress().getHostAddress() + ":" + server.getLocalPort();
-    }*/
     @Override
     public String getInfoIp(){
         return server.getInetAddress().getHostAddress();
