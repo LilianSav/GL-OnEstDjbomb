@@ -1,5 +1,7 @@
 package com.glhf.on_est_djbomb.enigmas;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -75,7 +77,7 @@ public class EnigmaManager extends Table {
                 case "Labyrinthe":
                     // On cherche le labyrinthe.txt affilié
                     String labyrintheName = "labyrinthe" + tokens[1] + ".txt";
-                    File file = new File("assetEnigme/labyrinthe/" + labyrintheName);
+                    FileHandle file = new FileHandle("assetEnigme/labyrinthe/" + labyrintheName);
                     // Si le fichier existe bien, on peut initialiser l'énigme
                     if (file.exists()) {
                         EnigmaLabyrinth newLabyrinthEnigma = new EnigmaLabyrinth(isHost, labyrintheName, labyrinths.size(), game.getGameSocket());
@@ -83,6 +85,8 @@ public class EnigmaManager extends Table {
                         labyrinths.add(newLabyrinthEnigma);
                     } else {
                         errorManager = true;
+                        Gdx.app.log("LabError", "Erreur génération labyrinthe - " + labyrintheName);
+                        Gdx.app.log("LabError", "" + file.exists());
                     }
                     break;
                 case "FindTheImage":
@@ -102,6 +106,7 @@ public class EnigmaManager extends Table {
                     break;
                 default:
                     errorManager = true;
+                    Gdx.app.log("ManagerError", row + tokens[0]);
                     break;
             }
 

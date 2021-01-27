@@ -1,14 +1,15 @@
 package com.glhf.on_est_djbomb.dialogs;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 
 public class ScenarioDialog extends Dialog {
     private final Skin skin;
-    private String gameConfig;
+    private final StringBuilder gameConfig;
     private TextField textScenario;
 
-    public ScenarioDialog(String title, Skin skin, String gameConfig) {
+    public ScenarioDialog(String title, Skin skin, StringBuilder gameConfig) {
         super(title, skin);
         this.skin = skin;
         this.gameConfig = gameConfig;
@@ -25,10 +26,11 @@ public class ScenarioDialog extends Dialog {
         // Ajout du texte dans la boîte de dialogue
         Label label = new Label("Veuillez inscrire le nom des énigmes à utiliser pour ce scénario", skin, "title");
         label.setFontScale(0.75f);
+
         informationsContentTable.add(label).align(Align.center).pad(10, 30, 10, 30);
         informationsContentTable.row();
 
-        textScenario = new TextField(gameConfig, skin, "title");
+        textScenario = new TextField(gameConfig.toString(), skin, "title");
         informationsContentTable.add(textScenario).align(Align.center).width(450).pad(10, 30, 10, 30);
 
         /* Section Bouton */
@@ -44,7 +46,9 @@ public class ScenarioDialog extends Dialog {
     @Override
     protected void result(Object object) {
         if (object.equals(2L)) {
-            gameConfig = textScenario.getText();
+            gameConfig.setLength(0);
+            gameConfig.append(textScenario.getText());
+            Gdx.app.log("ScenarioDialogTest", gameConfig.toString());
         }
     }
 }
