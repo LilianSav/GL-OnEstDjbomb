@@ -3,6 +3,7 @@ package com.glhf.on_est_djbomb.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -27,7 +28,10 @@ public class MainMenuScreen implements Screen {
         stage.addActor(root);
 
         // Création des labels
-        Label labelTitre = new Label("On est Djbomb", game.skin, "title");
+        //Label labelTitre = new Label("On est Djbomb", game.skin, "title");
+        Image imgTitre = new Image(new Texture(Gdx.files.internal("images/onestDjbomb.png")));
+        Container<Image> ctnImgTitre = new Container<Image>(imgTitre);
+        //userInterfaceTable.add(ctnImgTitre).padTop(100).colspan(2).width(300).height(65);
 
         // Création des boutons
         TextButton newGameButton = new TextButton("Nouvelle partie", game.skin, "title");
@@ -36,7 +40,7 @@ public class MainMenuScreen implements Screen {
         TextButton quitButton = new TextButton("Quitter", game.skin, "title");
 
         // Ajout des acteurs à la Table
-        root.add(setContainer(labelTitre)).expandY();
+        root.add(ctnImgTitre).padTop(30).width(730).height(300);
         root.row();
         root.add(setContainer(newGameButton)).expandY();
         root.row();

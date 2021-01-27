@@ -12,12 +12,11 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 import com.glhf.on_est_djbomb.dialogs.ScenarioDialog;
-import com.glhf.on_est_djbomb.networking.GameSocket;
 
 public class LobbyScreen implements Screen {
     private final Stage stage;
-    private boolean localReady = false;
-    private boolean teammateReady = false;
+    private boolean localReady;
+    private boolean teammateReady;
 
     public LobbyScreen(final OnEstDjbombGame game, boolean host) {
         // Instanciation du stage (Hiérarchie de nos acteurs)
@@ -55,8 +54,6 @@ public class LobbyScreen implements Screen {
         } else {
             lblLocalHostGuest = new Label("Invité :", game.skin, "title");
             lblRemoteHostGuest = new Label("Hébergeur :", game.skin, "title");
-            System.out.println(GameSocket.GameSocketConstant.HOST);
-            System.out.println(game.getGameSocket().getSocketType());
         }
 
         /* Local */

@@ -34,11 +34,11 @@ public class ScenarioDialog extends Dialog {
         /* Section Bouton */
         // Ajout du bouton retour dans la boîte de dialogue
         TextButton cancelBtn = new TextButton(" Retour ", skin, "title");
-        cancelBtn.pad(10, 40, 10, 40);
-        button(cancelBtn, 1L).pad(40);
+        cancelBtn.pad(10, 50, 10, 50);
+        button(cancelBtn, 1L).pad(30);
         TextButton applyBtn = new TextButton("Appliquer", skin, "title");
-        applyBtn.pad(10, 40, 10, 40);
-        button(applyBtn, 2L).pad(40);
+        applyBtn.pad(10, 50, 10, 50);
+        button(applyBtn, 2L).pad(30);
     }
 
     @Override
