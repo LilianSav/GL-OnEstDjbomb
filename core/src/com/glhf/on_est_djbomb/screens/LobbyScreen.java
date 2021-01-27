@@ -26,7 +26,7 @@ public class LobbyScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         // Instanciation de la configuration de la partie
-        String gameConfig = initGameConfig();
+        StringBuilder gameConfig = initGameConfig();
         // Dialog pour modifier la configuration
         ScenarioDialog scenarioDialog = new ScenarioDialog("Choix du scénario", game.skin, gameConfig);
         scenarioDialog.initContent();
@@ -147,11 +147,11 @@ public class LobbyScreen implements Screen {
                 game.switchScreen(new MainMenuScreen(game));
             }
         });
-        scenarioButton.addListener(new ClickListener(){
-           @Override
-           public void clicked(InputEvent event, float x, float y){
-               scenarioDialog.show(stage);
-           }
+        scenarioButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                scenarioDialog.show(stage);
+            }
         });
         pretButton.addListener(new ClickListener() {
             @Override
@@ -172,6 +172,7 @@ public class LobbyScreen implements Screen {
                 } else {
                     commencerButton.setColor(Color.LIGHT_GRAY);
                 }
+                Gdx.app.log("Test", gameConfig.toString());
             }
         });
         commencerButton.addListener(new ClickListener() {
@@ -184,7 +185,7 @@ public class LobbyScreen implements Screen {
                     // On vide le gestionnaire de listeners
                     game.getGameSocket().clearListeners();
                     // Changement d'écran pour revenir au menu principal
-                    game.switchScreen(new GameScreen(game, gameConfig));
+                    game.switchScreen(new GameScreen(game, gameConfig.toString()));
                 }
                 // Sinon on indique à l'utilisateur que les deux équipes ne sont pas prêtes
                 else {
@@ -241,7 +242,7 @@ public class LobbyScreen implements Screen {
                             // On vide le gestionnaire de listeners
                             game.getGameSocket().clearListeners();
                             // Changement d'écran pour revenir au menu principal
-                            game.switchScreen(new GameScreen(game, gameConfig));
+                            game.switchScreen(new GameScreen(game, gameConfig.toString()));
                         }
                     }
                 });
@@ -283,8 +284,9 @@ public class LobbyScreen implements Screen {
         return ctnLabel;
     }
 
-    private String initGameConfig() {
-        return "FindThePath-" +
+    private StringBuilder initGameConfig() {
+        StringBuilder newGameConfig = new StringBuilder();
+        newGameConfig.append("FindThePath-" +
                 "Similarities-" +
                 "Labyrinthe::TutoBis-" +
                 "FindTheImage-" +
@@ -292,8 +294,8 @@ public class LobbyScreen implements Screen {
                 "Labyrinthe::Intermédiaire-" +
                 "Pyramid-" +
                 "Count-" +
-                "Labyrinthe::Hard-" +
-                "CutWire";
+                "CutWire");
+        return newGameConfig;
     }
 
     @Override
