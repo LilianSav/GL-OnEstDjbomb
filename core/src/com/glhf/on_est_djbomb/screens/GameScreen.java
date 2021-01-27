@@ -36,7 +36,7 @@ public class GameScreen implements Screen {
     private final String PSEUDO_INIT = "Discussion";
     private final String MESSAGE_INIT = "En attente de message ...";
 
-    public GameScreen(OnEstDjbombGame game) {
+    public GameScreen(OnEstDjbombGame game, String gameConfig) {
         this.game = game;
         isOver = false;
 
@@ -58,9 +58,9 @@ public class GameScreen implements Screen {
         // Ajout de la table réservée aux énigmes
         // Instanciation du gestionnaire d'énigmes
         if (game.getGameSocket().getSocketType() == GameSocket.GameSocketConstant.HOST) {
-            enigmeManager = new EnigmaManager(true, game, stage);
+            enigmeManager = new EnigmaManager(true, game, stage, gameConfig);
         } else {
-            enigmeManager = new EnigmaManager(false, game, stage);
+            enigmeManager = new EnigmaManager(false, game, stage, gameConfig);
         }
         root.add(enigmeManager).width(Value.percentWidth(0.70f, root)).height(Value.percentHeight(0.70f, root));
 
