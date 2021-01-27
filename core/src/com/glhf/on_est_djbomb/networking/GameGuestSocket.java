@@ -53,22 +53,6 @@ public class GameGuestSocket extends GameSocket {
         }).start();
     }
 
-    /** Modifié, à vérifier **/
-/*
-    @Override
-    public String getInfoSocket() {
-        String infoSocket = "";
-        // Si le socket est connecté
-        if (connexion.isConnected()) {
-            infoSocket = "Connecté à " + connexion.getRemoteSocketAddress();
-        }
-        // Si le socket n'est pas connecté
-        else {
-            infoSocket = "Déconnecté";
-        }
-        return infoSocket;
-    }
-    */
     @Override
     public String getInfoIp() {
         String infoIpAdress = "";

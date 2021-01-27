@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
+import com.glhf.on_est_djbomb.dialogs.ScenarioDialog;
 import com.glhf.on_est_djbomb.networking.GameSocket;
 
 public class LobbyScreen implements Screen {
@@ -24,6 +25,12 @@ public class LobbyScreen implements Screen {
         // Liaison des Inputs au stage
         Gdx.input.setInputProcessor(stage);
 
+        // Instanciation de la configuration de la partie
+        String gameConfig = initGameConfig();
+        // Dialog pour modifier la configuration
+        ScenarioDialog scenarioDialog = new ScenarioDialog("Choix du scénario", game.skin, gameConfig);
+        scenarioDialog.initContent();
+
         // Instanciation d'une table pour contenir nos acteurs
         Table root = new Table();
         root.setFillParent(true);
@@ -33,7 +40,7 @@ public class LobbyScreen implements Screen {
         localReady = false;
         teammateReady = false;
 
-        /** Création des labels **/
+        /* Création des labels */
         // Titre du Lobby
         Label titreLabel = new Label("Lancement d'une partie", game.skin, "title");
         // Label Statut
@@ -42,90 +49,91 @@ public class LobbyScreen implements Screen {
         //Label Hôte/Guest
         Label lblLocalHostGuest;
         Label lblRemoteHostGuest;
-        if(host = true){
-            lblLocalHostGuest = new Label("Hébergeur :",game.skin, "title");
-            lblRemoteHostGuest = new Label("Invité :",game.skin, "title");
-        }else{
-            lblLocalHostGuest = new Label("Invité :",game.skin, "title");
-            lblRemoteHostGuest = new Label("Hébergeur :",game.skin, "title");
+        if (host = true) {
+            lblLocalHostGuest = new Label("Hébergeur :", game.skin, "title");
+            lblRemoteHostGuest = new Label("Invité :", game.skin, "title");
+        } else {
+            lblLocalHostGuest = new Label("Invité :", game.skin, "title");
+            lblRemoteHostGuest = new Label("Hébergeur :", game.skin, "title");
             System.out.println(GameSocket.GameSocketConstant.HOST);
             System.out.println(game.getGameSocket().getSocketType());
         }
 
-        /** Local **/
+        /* Local */
         // Label Identifiant Local
-        Label lblLocalId = new Label(game.getGameSocket().getIdentifiant()+"",game.skin, "title");
+        Label lblLocalId = new Label(game.getGameSocket().getIdentifiant() + "", game.skin, "title");
         // Label État de la connexion Local
         Label lblLocalReady = new Label("Pas prêt", game.skin, "title");
 
-        /** Remote **/
+        /* Remote */
         // Label Identifiant Partenaire
-        Label lblRemoteId = new Label(game.getGameSocket().getRemoteIdentifiant()+"",game.skin, "title");
+        Label lblRemoteId = new Label(game.getGameSocket().getRemoteIdentifiant() + "", game.skin, "title");
         // Label État de la connexion du Partenaire
         Label lblRemoteReady = new Label("Pas prêt", game.skin, "title");
 
-        /** Champs Ip et port **/
+        /* Champs Ip et port */
         // Label Adress IP
-        Label lblIp = new Label("Adresse IP du salon :",game.skin, "title");
+        Label lblIp = new Label("Adresse IP du salon :", game.skin, "title");
         // Label Port
         Label lblPort = new Label("Clé du salon :", game.skin, "title");
 
         // Avertissement de la connexion à l'hôte distant
         game.getGameSocket().sendMessage("STATE::NOTREADY");
 
-        /** Création des TextBox **/
+        /* Création des TextBox */
         // Paramétrage du champ réservé à l'IP
         TextField textIp = new TextField(game.getGameSocket().getInfoIp(), game.skin, "title");
         // Paramétrage du champ réservé au Port
-        TextField textPort = new TextField(game.getGameSocket().getInfoPort(),game.skin,"title");
+        TextField textPort = new TextField(game.getGameSocket().getInfoPort(), game.skin, "title");
 
-        /** Création des Boutons **/
+        /* Création des Boutons */
         TextButton retourButton = new TextButton("Retour", game.skin, "title");
+        TextButton scenarioButton = new TextButton("Scénario", game.skin, "title");
         TextButton commencerButton = new TextButton("Commencer", game.skin, "title");
         TextButton pretButton = new TextButton("Prêt", game.skin, "title");
         commencerButton.setColor(Color.LIGHT_GRAY);
 
-        /** Ajout des acteurs **/
+        /* Ajout des acteurs */
         // Titre
-        root.add(setContainer(titreLabel)).colspan(3).expand();
+        root.add(setContainer(titreLabel)).colspan(4).expand();
         root.row();
 
-        /** Création d'une table contenant les informations **/
+        /* Création d'une table contenant les informations */
         Table infoLobby = new Table();
-        root.add(infoLobby).fillX().colspan(3);
+        root.add(infoLobby).fillX().colspan(4);
 
-        //Statut
-        infoLobby.add(lblReadStatut).pad(10,150,10,20).left();
+        // Statut
+        infoLobby.add(lblReadStatut).pad(10, 150, 10, 20).left();
         infoLobby.row();
 
         // Joueur Local
-        infoLobby.add(lblLocalHostGuest).pad(10,150,10,20).left();
-        infoLobby.add(lblLocalId).pad(10,20,10,20).left();
-        infoLobby.add(lblLocalReady).pad(10,20,10,150).left();
+        infoLobby.add(lblLocalHostGuest).pad(10, 150, 10, 20).left();
+        infoLobby.add(lblLocalId).pad(10, 20, 10, 20).left();
+        infoLobby.add(lblLocalReady).pad(10, 20, 10, 150).left();
         infoLobby.row();
 
         // Partenaire
-        infoLobby.add(lblRemoteHostGuest).pad(10,150,10,20).left();
-        infoLobby.add(lblRemoteId).pad(10,20,10,20).left();
-        infoLobby.add(lblRemoteReady).pad(10,20,10,150).left();
+        infoLobby.add(lblRemoteHostGuest).pad(10, 150, 10, 20).left();
+        infoLobby.add(lblRemoteId).pad(10, 20, 10, 20).left();
+        infoLobby.add(lblRemoteReady).pad(10, 20, 10, 150).left();
         infoLobby.row();
 
         // Informations Ip Salon
-        infoLobby.add(lblIp).pad(70,150,10,20).left();
-        infoLobby.add(textIp).pad(70,20,10,150).left().width(430).colspan(2).left();
+        infoLobby.add(lblIp).pad(70, 150, 10, 20).left();
+        infoLobby.add(textIp).pad(70, 20, 10, 150).left().width(430).colspan(3).left();
         infoLobby.row();
 
         // Informations Port Salon
-        infoLobby.add(lblPort).pad(10,150,10,20).left();
-        infoLobby.add(textPort).pad(10,20,10,150).left().width(430).colspan(2).left();
+        infoLobby.add(lblPort).pad(10, 150, 10, 20).left();
+        infoLobby.add(textPort).pad(10, 20, 10, 150).left().width(430).colspan(3).left();
 
         root.row();
 
-        /** Ajout des boutons **/
-        //root.add().pad(10,250,10,20);
-        root.add(setContainer(retourButton)).pad(10,20,10,20).expandY();//.expand();
-        root.add(setContainer(pretButton)).expandY();//.expand();
-        root.add(setContainer(commencerButton)).expandY();
+        /* Ajout des boutons */
+        root.add(setContainer(retourButton)).expand();
+        root.add(setContainer(scenarioButton)).expand();
+        root.add(setContainer(pretButton)).expand();
+        root.add(setContainer(commencerButton)).expand();
 
         // Gestionnaire d'évènements des boutons
         retourButton.addListener(new ClickListener() {
@@ -138,6 +146,12 @@ public class LobbyScreen implements Screen {
                 // Changement d'écran pour revenir au menu principal
                 game.switchScreen(new MainMenuScreen(game));
             }
+        });
+        scenarioButton.addListener(new ClickListener(){
+           @Override
+           public void clicked(InputEvent event, float x, float y){
+               scenarioDialog.show(stage);
+           }
         });
         pretButton.addListener(new ClickListener() {
             @Override
@@ -164,19 +178,19 @@ public class LobbyScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Si les deux joueurs sont prêts à commencer, on démarre la partie
-                if(localReady && teammateReady){
+                if (localReady && teammateReady) {
                     // On indique le début de la partie à l'autre équipe
                     game.getGameSocket().sendMessage("STATE::START");
                     // On vide le gestionnaire de listeners
                     game.getGameSocket().clearListeners();
                     // Changement d'écran pour revenir au menu principal
-                    game.switchScreen(new GameScreen(game));
+                    game.switchScreen(new GameScreen(game, gameConfig));
                 }
                 // Sinon on indique à l'utilisateur que les deux équipes ne sont pas prêtes
                 else {
                     new Dialog("En attente", game.skin) {
                         {
-                            /** Section Contenu **/
+                            /* Section Contenu */
                             // Paramétrage du titre
                             getTitleLabel().setAlignment(Align.center);
 
@@ -184,11 +198,11 @@ public class LobbyScreen implements Screen {
                             Label lblNeedParameter = new Label("L'une des deux équipes n'est pas prête", game.skin, "title");
                             getContentTable().add(lblNeedParameter).pad(30);
 
-                            /** Section Boutons **/
+                            /* Section Boutons */
                             // Ajout du bouton Retour dans la boîte de dialogue
-                            TextButton txtBtnOk = new TextButton("   Ok   ",game.skin,"title");
-                            txtBtnOk.pad(5,30,5,30);
-                            button(txtBtnOk,1L).pad(30);
+                            TextButton txtBtnOk = new TextButton("   Ok   ", game.skin, "title");
+                            txtBtnOk.pad(5, 30, 5, 30);
+                            button(txtBtnOk, 1L).pad(30);
                         }
                     }.show(stage);
                 }
@@ -227,7 +241,7 @@ public class LobbyScreen implements Screen {
                             // On vide le gestionnaire de listeners
                             game.getGameSocket().clearListeners();
                             // Changement d'écran pour revenir au menu principal
-                            game.switchScreen(new GameScreen(game));
+                            game.switchScreen(new GameScreen(game, gameConfig));
                         }
                     }
                 });
@@ -236,7 +250,7 @@ public class LobbyScreen implements Screen {
     }
 
     // setContainer retourne un TextButton dans son contenant fonction utilisée pour dimensionner le bouton
-    public Container<TextButton> setContainer(TextButton textButton){
+    public Container<TextButton> setContainer(TextButton textButton) {
         // Création du contenant
         Container<TextButton> ctnNewGameButton = new Container<TextButton>(textButton);
 
@@ -254,7 +268,7 @@ public class LobbyScreen implements Screen {
     }
 
     // setContainer retourne un Label dans son contenant fonction utilisée pour dimensionner le bouton
-    public Container<Label> setContainer(Label label){
+    public Container<Label> setContainer(Label label) {
         // Création du contenant
         Container<Label> ctnLabel = new Container<Label>(label);
 
@@ -267,6 +281,19 @@ public class LobbyScreen implements Screen {
         ctnLabel.getActor().setAlignment(Align.center);
 
         return ctnLabel;
+    }
+
+    private String initGameConfig() {
+        return "FindThePath-" +
+                "Similarities-" +
+                "Labyrinthe::TutoBis-" +
+                "FindTheImage-" +
+                "Sum-" +
+                "Labyrinthe::Intermédiaire-" +
+                "Pyramid-" +
+                "Count-" +
+                "Labyrinthe::Hard-" +
+                "CutWire";
     }
 
     @Override

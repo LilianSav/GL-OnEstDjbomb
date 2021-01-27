@@ -9,6 +9,7 @@ import com.glhf.on_est_djbomb.dialogs.ClueDialog;
 import com.glhf.on_est_djbomb.dialogs.SolutionDialog;
 import com.glhf.on_est_djbomb.networking.GameSocket;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class EnigmaManager extends Table {
@@ -23,39 +24,18 @@ public class EnigmaManager extends Table {
 
     private ArrayList<EnigmaLabyrinth> labyrinths;
 
-    public EnigmaManager(boolean isHost, OnEstDjbombGame game, Stage stage) {
+    public EnigmaManager(boolean isHost, OnEstDjbombGame game, Stage stage, String gameConfig) {
         // Initialisation
         super(game.skin);
         enigmes = new ArrayList<EnigmaSkeleton>();
         this.isHost = isHost;
         this.stage = stage;
-        this.socket= game.getGameSocket();
+        this.socket = game.getGameSocket();
 
         labyrinths = new ArrayList<>();
 
         // Ajout des énigmes
-        EnigmaFindThePath enigme1 = new EnigmaFindThePath(isHost);
-        enigmes.add(enigme1);
-        EnigmaSimilarities enigme2 = new EnigmaSimilarities(isHost);
-        enigmes.add(enigme2);
-        EnigmaLabyrinth enigme3 = new EnigmaLabyrinth(isHost, "labyrintheTutoBis.txt", labyrinths.size(), game.getGameSocket());
-        enigmes.add(enigme3); labyrinths.add(enigme3);
-        EnigmaFindTheImage enigme4 = new EnigmaFindTheImage(isHost);
-        enigmes.add(enigme4);
-        EnigmaSum enigme5 = new EnigmaSum(isHost);
-        enigmes.add(enigme5);
-        EnigmaLabyrinth enigme6 = new EnigmaLabyrinth(isHost, "labyrintheIntermédiaire.txt", labyrinths.size(), game.getGameSocket());
-        enigmes.add(enigme6); labyrinths.add(enigme6);
-        EnigmaPyramid enigme7 = new EnigmaPyramid(isHost);
-        enigmes.add(enigme7);
-        EnigmaCount enigme8 = new EnigmaCount(isHost);
-        enigmes.add(enigme8);
-        EnigmaLabyrinth enigme9 = new EnigmaLabyrinth(isHost, "labyrintheHard.txt", labyrinths.size(), game.getGameSocket());
-        enigmes.add(enigme9); labyrinths.add(enigme9);
-        EnigmaCutWire enigme10 = new EnigmaCutWire(isHost);
-        enigmes.add(enigme10);
-
-        enigmeCourante = enigme1;
+        initEnigmeArray(isHost, game, gameConfig);
 
         // Création des dialogues d'indices et de solutions
         clueDialog = new ClueDialog("Indice", game.skin);
@@ -64,7 +44,7 @@ public class EnigmaManager extends Table {
         solutionDialog.initContent();
 
         // Chargement de la première énigme
-        enigmeCourante.load( this);
+        enigmeCourante.load(this);
 
         // Gestion Message et Game State
         game.getGameSocket().addListener(eventMessage -> {
@@ -76,19 +56,75 @@ public class EnigmaManager extends Table {
         });
     }
 
+    private void initEnigmeArray(boolean isHost, OnEstDjbombGame game, String gameConfig) {
+        // Initialisation des variables
+        String[] rows = gameConfig.split("-");
+        int labyrintheNumber = 0;
+        boolean errorManager = false;
+
+        // Création des énigmes
+        for (String row : rows) {
+            String[] tokens = row.split("::");
+            switch (tokens[0]) {
+                case "FindThePath":
+                    enigmes.add(new EnigmaFindThePath(isHost));
+                    break;
+                case "Similarities":
+                    enigmes.add(new EnigmaSimilarities(isHost));
+                    break;
+                case "Labyrinthe":
+                    // On cherche le labyrinthe.txt affilié
+                    String labyrintheName = "labyrinthe" + tokens[1] + ".txt";
+                    File file = new File("assetEnigme/labyrinthe/" + labyrintheName);
+                    // Si le fichier existe bien, on peut initialiser l'énigme
+                    if (file.exists()) {
+                        EnigmaLabyrinth newLabyrinthEnigma = new EnigmaLabyrinth(isHost, labyrintheName, labyrinths.size(), game.getGameSocket());
+                        enigmes.add(newLabyrinthEnigma);
+                        labyrinths.add(newLabyrinthEnigma);
+                    } else {
+                        errorManager = true;
+                    }
+                    break;
+                case "FindTheImage":
+                    enigmes.add(new EnigmaFindTheImage(isHost));
+                    break;
+                case "Sum":
+                    enigmes.add(new EnigmaSum(isHost));
+                    break;
+                case "Pyramid":
+                    enigmes.add(new EnigmaPyramid(isHost));
+                    break;
+                case "Count":
+                    enigmes.add(new EnigmaCount(isHost));
+                    break;
+                case "CutWire":
+                    enigmes.add(new EnigmaCutWire(isHost));
+                    break;
+                default:
+                    errorManager = true;
+                    break;
+            }
+
+            // Gestion des erreurs
+            if (errorManager) {
+                enigmes.clear();
+                labyrinths.clear();
+                enigmes.add(new EnigmaError(isHost));
+            }
+
+            enigmeCourante = enigmes.get(0);
+        }
+    }
+
     public void nextEnigme() {
-    	// On passe à l'énigme suivante
+        // On passe à l'énigme suivante
         enigmeCourante = enigmes.get(enigmes.indexOf(enigmeCourante) + 1);
         // On charge l'énigme courante
-        enigmeCourante.load( this);
+        enigmeCourante.load(this);
     }
 
     public int getSolution() {
         return enigmeCourante.getSolution();
-    }
-    
-    public int getSolution2() {
-        return enigmeCourante.getSolution2();
     }
 
     // Affichage du dialogue d'informations
@@ -156,8 +192,9 @@ public class EnigmaManager extends Table {
         solutionDialog.setText("Cherchez encore un peu !\nLa solution sera disponible plus tard si vous ne trouvez pas.");
         solutionDialog.show(stage);
     }
-    public void dispose(){
-        for(EnigmaLabyrinth lab : labyrinths){
+
+    public void dispose() {
+        for (EnigmaLabyrinth lab : labyrinths) {
             lab.freeLock();
         }
         this.clearChildren();

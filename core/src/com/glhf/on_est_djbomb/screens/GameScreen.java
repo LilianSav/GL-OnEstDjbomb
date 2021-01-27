@@ -36,7 +36,7 @@ public class GameScreen implements Screen {
     private final String PSEUDO_INIT = "Discussion";
     private final String MESSAGE_INIT = "En attente de message ...";
 
-    public GameScreen(OnEstDjbombGame game) {
+    public GameScreen(OnEstDjbombGame game, String gameConfig) {
         this.game = game;
         isOver = false;
 
@@ -58,9 +58,9 @@ public class GameScreen implements Screen {
         // Ajout de la table réservée aux énigmes
         // Instanciation du gestionnaire d'énigmes
         if (game.getGameSocket().getSocketType() == GameSocket.GameSocketConstant.HOST) {
-            enigmeManager = new EnigmaManager(true, game, stage);
+            enigmeManager = new EnigmaManager(true, game, stage, gameConfig);
         } else {
-            enigmeManager = new EnigmaManager(false, game, stage);
+            enigmeManager = new EnigmaManager(false, game, stage, gameConfig);
         }
         root.add(enigmeManager).width(Value.percentWidth(0.70f, root)).height(Value.percentHeight(0.70f, root));
 
@@ -225,7 +225,6 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stopTimer();
-                enigmeManager.dispose();
                 // On vide le gestionnaire de listeners
                 game.getGameSocket().clearListeners();
                 // Fermeture des flux
@@ -238,12 +237,6 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 boolean repTrouve = verificationTextField.getText().equals(String.valueOf(enigmeManager.getSolution()));
-                //cas réponses multiples
-                if(!repTrouve) {
-                	if(enigmeManager.getSolution2()!=0) {
-                		repTrouve = verificationTextField.getText().equals(String.valueOf(enigmeManager.getSolution2()));
-                	}
-            	}
                 finDePartie(repTrouve, false);
             }
         });
@@ -532,6 +525,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         stopTimer();
+        enigmeManager.dispose();
         stage.dispose();
         sound.dispose();
     }

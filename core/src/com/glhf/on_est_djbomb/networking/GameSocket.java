@@ -82,11 +82,7 @@ public abstract class GameSocket {
         }
     }
 
-    /** Modifié, à vérifier **/
-    /*
-    // Fonction à implémenter dans les sous-classes pour afficher les informations pertinentes du Socket
-    public abstract String getInfoSocket();
-     */
+    // Fonctions à implémenter dans les sous-classes pour afficher les informations pertinentes du Socket
     public abstract String getInfoIp();
     public abstract String getInfoPort();
 
