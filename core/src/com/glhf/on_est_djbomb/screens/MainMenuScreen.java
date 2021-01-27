@@ -29,7 +29,7 @@ public class MainMenuScreen implements Screen {
 
         // Création des labels
         //Label labelTitre = new Label("On est Djbomb", game.skin, "title");
-        Image imgTitre = new Image(new Texture(Gdx.files.internal("images/onestDjbomb.png")));
+        Image imgTitre = new Image(new Texture(Gdx.files.internal("images/onEstDjbombTitre.png")));
         Container<Image> ctnImgTitre = new Container<Image>(imgTitre);
         //userInterfaceTable.add(ctnImgTitre).padTop(100).colspan(2).width(300).height(65);
 
