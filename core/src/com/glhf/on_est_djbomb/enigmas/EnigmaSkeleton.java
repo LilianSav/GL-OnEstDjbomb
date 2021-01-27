@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 public abstract class EnigmaSkeleton {
 
     private int solution;
-    private int solution2;
     private String indice;// texte d'indice
     private boolean isHost;
     private int tpsUtilise;
@@ -18,7 +17,6 @@ public abstract class EnigmaSkeleton {
     public EnigmaSkeleton(boolean isHost) {
         super();
         setHost(isHost);
-        setSolution2(0);
     }
 
     // Path de l'image à afficher
@@ -33,14 +31,6 @@ public abstract class EnigmaSkeleton {
     public void setSolution(int solution) {
         this.solution = solution;
     }
-    
-    public int getSolution2() {
-		return solution2;
-	}
-
-	public void setSolution2(int solution2) {
-		this.solution2 = solution2;
-	}
 
 	public String getIndice() {
         return indice;
