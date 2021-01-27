@@ -26,16 +26,11 @@ public class ScenarioDialog extends Dialog {
         // Ajout du texte dans la boîte de dialogue
         Label label = new Label("Veuillez inscrire le nom des énigmes à utiliser pour ce scénario", skin, "title");
         label.setFontScale(0.75f);
-<<<<<<< Updated upstream
-        informationsContentTable.add(label).align(Align.center).pad(10, 30, 10, 30);
-=======
-        textScenario = new TextField(gameConfig.toString(), skin);
 
-        informationsContentTable.add(label).align(Align.center);
->>>>>>> Stashed changes
+        informationsContentTable.add(label).align(Align.center).pad(10, 30, 10, 30);
         informationsContentTable.row();
 
-        textScenario = new TextField(gameConfig, skin, "title");
+        textScenario = new TextField(gameConfig.toString(), skin, "title");
         informationsContentTable.add(textScenario).align(Align.center).width(450).pad(10, 30, 10, 30);
 
         /* Section Bouton */
