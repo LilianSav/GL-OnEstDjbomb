@@ -418,7 +418,7 @@ public class GameScreen implements Screen {
 
                     //effet sonore
                     sound = Gdx.audio.newSound(Gdx.files.internal("audio/wrong_sound_effect.mp3"));
-                    sound.play(game.prefs.getFloat("volumeEffetSonore") / 100);
+                    sound.play(game.prefs.getFloat("volumeEffetSonore") / 500);
 
                     TextButton txtBtnRetour = new TextButton("Retour", game.skin, "title");
                     txtBtnRetour.pad(5, 30, 5, 30);
@@ -439,11 +439,11 @@ public class GameScreen implements Screen {
             if (tpsRestant == tpsInitialEnigme - enigmeManager.getTpsBeforeSolution()) {
                 solutionButton.setColor(Color.WHITE);
             }
-            if (tpsRestant == 30) {
+            if (tpsRestant == 300) {//à 5 minutes de la fin, le timer clignote
                 clignoteTimer();
                 isUnder30s = true;
             }
-            if (tpsRestant == 10) {
+            if (tpsRestant == 60) {//à 1 minute de la fin, le clignotement du timer s'accélère
                 stopClignoteTimer();
                 clignoteRapideTimer();
             }

@@ -40,7 +40,7 @@ public class OnEstDjbombGame extends Game {
             prefs.putFloat("volumeEffetSonore", 100f);
             prefs.putFloat("volumeChatVocal", 100f);
             prefs.putString("pseudo", "Pseudo");
-            prefs.putInteger("meilleurTpsUtilise", 600);//volontairement eleve
+            prefs.putInteger("meilleurTpsUtilise", 2700);//volontairement eleve
             prefs.putString("meilleurTpsUtilisePseudo1", "Bob");
             prefs.putString("meilleurTpsUtilisePseudo2", "Dylan");
             prefs.putString("interfaceColorValue", "000000ff");

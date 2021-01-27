@@ -41,7 +41,6 @@ public class EndGameScreen implements Screen{
         root.setFillParent(true);
         stage.addActor(root);
         
-        
         // Création des labels et ajout des acteurs à la table
         if((tpsInit-tpsLeft)==0) {
         	Label labelTitre = new Label("Game over !", game.skin);
@@ -63,7 +62,7 @@ public class EndGameScreen implements Screen{
         }
         // Gestion meilleur temps
         String ancienMeilleurScore=secToMinSec(game.prefs.getInteger("meilleurTpsUtilise"));
-        String ancienMeilleurScoreAuteurs = "Joueurs : "+game.prefs.getString("meilleurTpsUtilisePseudo1")+" et "+game.prefs.getString("meilleurTpsUtilisePseudo2");
+        //String ancienMeilleurScoreAuteurs = "Joueurs : "+game.prefs.getString("meilleurTpsUtilisePseudo1")+" et "+game.prefs.getString("meilleurTpsUtilisePseudo2"); todo fix
         if(game.prefs.getInteger("meilleurTpsUtilise") >= tpsInit-tpsLeft){//new best score
         	//sauvegarde en local
         	if(isHost) {
@@ -84,26 +83,25 @@ public class EndGameScreen implements Screen{
             root.add(meilleurTpsUtilise).expandY();
             root.row();
         }
-        Label ancienMeilleurTpsUtiliseJoueurs = new Label(ancienMeilleurScoreAuteurs, game.skin);
-        root.add(ancienMeilleurTpsUtiliseJoueurs).expandY();
-        root.row();
+        //Label ancienMeilleurTpsUtiliseJoueurs = new Label(ancienMeilleurScoreAuteurs, game.skin);
+        //root.add(ancienMeilleurTpsUtiliseJoueurs).expandY();
+        //root.row();
         Label tpsInitial = new Label("Temps initial : "+secToMinSec(tpsInit), game.skin);
         root.add(tpsInitial).expandY();
         root.row();
         Label tpsRestant = new Label("Temps restant : "+secToMinSec(tpsLeft), game.skin);
         root.add(tpsRestant).expandY();
         root.row();
-        // todo fix
-        //afficher tps pour chaque enigmes
+        //afficher tps pour chaque enigmes --> todo ajouter scroll pane
         /*
         Label labelEnigmes = new Label("Temps utilisé par énigmes :", game.skin);
     	root.add(labelEnigmes).expandY();        
+    	root.row();
         for(EnigmaSkeleton enigme : enigmes) {
-        	Label labelEnigme = new Label(enigme.getNom()+" : "+enigme.getTpsUtilise()+" s", game.skin);
+        	Label labelEnigme = new Label(enigme.getNom()+" : "+secToMinSec(enigme.getTpsUtilise()), game.skin);
         	root.add(labelEnigme).expandY();
             root.row();
-        }
-        */
+        }*/
         TextButton menuPrincipalButton = new TextButton("Menu principal", game.skin);
         root.add(menuPrincipalButton).expandY();
         
@@ -126,6 +124,7 @@ public class EndGameScreen implements Screen{
 		int minutes=sec/60;
 		return minutes+":"+secondes+" min";
 	}
+	
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
