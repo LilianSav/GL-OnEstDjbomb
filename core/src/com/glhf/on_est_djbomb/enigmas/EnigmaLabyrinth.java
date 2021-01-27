@@ -577,9 +577,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         }
         // FLAG MOVEMENT : Client => Host
         else if (tokens[0].equals("MOVEMENT")) {
-            if(clueEnabled || DISPLAY_ON_HOST_PRECLUE){
                 receivedX=Integer.parseInt(tokens[1]);
                 receivedY=Integer.parseInt(tokens[2]);
+            if(clueEnabled || DISPLAY_ON_HOST_PRECLUE){
                 updateDisplayPlayerHost( receivedX, receivedY);
             }
         }

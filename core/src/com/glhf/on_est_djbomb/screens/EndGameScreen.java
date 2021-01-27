@@ -7,11 +7,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.glhf.on_est_djbomb.OnEstDjbombGame;
 import com.glhf.on_est_djbomb.enigmas.EnigmaSkeleton;
@@ -43,21 +41,21 @@ public class EndGameScreen implements Screen{
         
         // Création des labels et ajout des acteurs à la table
         if((tpsInit-tpsLeft)==0) {
-        	Label labelTitre = new Label("Game over !", game.skin);
-            root.add(labelTitre).expandY();
+        	Label labelTitre = new Label("Game over !", game.skin, "title");
+            root.add(labelTitre).expandY().left();
             root.row();
-        	Label tpsUtilise = new Label("Temps écoulé : la bombe a explosé !", game.skin);
-            root.add(tpsUtilise).expandY();
+        	Label tpsUtilise = new Label("Temps écoulé, la bombe a explosé !", game.skin, "title");
+            root.add(tpsUtilise).expandY().left();
             root.row();
         }else {
-        	Label labelTitre = new Label("Félicitation !", game.skin);
+        	Label labelTitre = new Label("Félicitation !", game.skin, "title");
             root.add(labelTitre).expandY();
             root.row();
-        	Label congrat = new Label("En complétant la dernière énigme, vous avez désamorcé la bombe.", game.skin);
-            root.add(congrat).expandY();
+        	Label congrat = new Label("Vous avez désamorcé la bombe !", game.skin, "title");
+            root.add(congrat).expandY().left();
             root.row();
-        	Label tpsUtilise = new Label("Temps utilisé : "+secToMinSec(tpsInit-tpsLeft), game.skin);
-            root.add(tpsUtilise).expandY();
+        	Label tpsUtilise = new Label("Temps utilisé - "+secToMinSec(tpsInit-tpsLeft), game.skin, "title");
+            root.add(tpsUtilise).expandY().left().padTop(100);
             root.row();
         }
         // Gestion meilleur temps
@@ -72,37 +70,49 @@ public class EndGameScreen implements Screen{
         	}
         	game.prefs.putInteger("meilleurTpsUtilise", tpsInit-tpsLeft);
         	//affichage
-        	Label meilleurTpsUtilise = new Label("Nouveau meilleur temps !", game.skin);
-            root.add(meilleurTpsUtilise).expandY();
+        	Label meilleurTpsUtilise = new Label("Nouveau meilleur temps !", game.skin, "title");
+            root.add(meilleurTpsUtilise).expandY().left();
             root.row();
-            Label ancienMeilleurTpsUtilise = new Label("Ancien meilleur temps : "+ancienMeilleurScore, game.skin);
-            root.add(ancienMeilleurTpsUtilise).expandY();
+            Label ancienMeilleurTpsUtilise = new Label("Ancien meilleur temps - "+ancienMeilleurScore, game.skin, "title");
+            root.add(ancienMeilleurTpsUtilise).expandY().left();
             root.row();
         }else {
-        	Label meilleurTpsUtilise = new Label("Meilleur temps : "+ancienMeilleurScore, game.skin);
-            root.add(meilleurTpsUtilise).expandY();
+        	Label meilleurTpsUtilise = new Label("Meilleur temps - "+ancienMeilleurScore, game.skin, "title");
+            root.add(meilleurTpsUtilise).expandY().left();
             root.row();
         }
-        //Label ancienMeilleurTpsUtiliseJoueurs = new Label(ancienMeilleurScoreAuteurs, game.skin);
+        //Label ancienMeilleurTpsUtiliseJoueurs = new Label(ancienMeilleurScoreAuteurs, game.skin, "title");
         //root.add(ancienMeilleurTpsUtiliseJoueurs).expandY();
         //root.row();
-        Label tpsInitial = new Label("Temps initial : "+secToMinSec(tpsInit), game.skin);
-        root.add(tpsInitial).expandY();
+        Label tpsInitial = new Label("Temps initial - "+secToMinSec(tpsInit), game.skin, "title");
+        root.add(tpsInitial).expandY().left();
         root.row();
-        Label tpsRestant = new Label("Temps restant : "+secToMinSec(tpsLeft), game.skin);
-        root.add(tpsRestant).expandY();
+        Label tpsRestant = new Label("Temps restant - "+secToMinSec(tpsLeft), game.skin, "title");
+        root.add(tpsRestant).expandY().left().padBottom(50);
         root.row();
         //afficher tps pour chaque enigmes --> todo ajouter scroll pane
         /*
-        Label labelEnigmes = new Label("Temps utilisé par énigmes :", game.skin);
+        Label labelEnigmes = new Label("Temps utilisé par énigmes :", game.skin, "title");
     	root.add(labelEnigmes).expandY();        
     	root.row();
         for(EnigmaSkeleton enigme : enigmes) {
-        	Label labelEnigme = new Label(enigme.getNom()+" : "+secToMinSec(enigme.getTpsUtilise()), game.skin);
+        	Label labelEnigme = new Label(enigme.getNom()+" : "+secToMinSec(enigme.getTpsUtilise()), game.skin, "title");
         	root.add(labelEnigme).expandY();
             root.row();
         }*/
-        TextButton menuPrincipalButton = new TextButton("Menu principal", game.skin);
+
+        // Création du contenant
+        TextButton menuPrincipalButton = new TextButton("Menu principal", game.skin, "title");
+        Container<TextButton> ctnmenuPrincipalButton = new Container<TextButton>(menuPrincipalButton);
+        // Paramétrage du TextBouton
+        menuPrincipalButton.pad(10);
+        menuPrincipalButton.getLabel().setFontScale(1.5f);
+        // Paramétrage du contenant et ajout du TextBouton
+        ctnmenuPrincipalButton.width(350);
+        ctnmenuPrincipalButton.setOrigin(Align.center);
+        ctnmenuPrincipalButton.center();
+        ctnmenuPrincipalButton.setTransform(true);
+
         root.add(menuPrincipalButton).expandY();
         
         // Gestionnaire d'évènements des boutons
@@ -122,12 +132,11 @@ public class EndGameScreen implements Screen{
 	public String secToMinSec(int sec) {//affichage des secondes en minutes et secondes
 		int secondes=sec%60;
 		int minutes=sec/60;
-		return minutes+":"+secondes+" min";
+		return String.format("%d:%02d minutes",minutes, secondes);
 	}
 	
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
 	
 	}
 
@@ -145,26 +154,20 @@ public class EndGameScreen implements Screen{
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

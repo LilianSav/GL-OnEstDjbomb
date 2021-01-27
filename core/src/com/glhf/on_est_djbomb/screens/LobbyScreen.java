@@ -130,10 +130,10 @@ public class LobbyScreen implements Screen {
         root.row();
 
         /* Ajout des boutons */
-        root.add(setContainer(retourButton)).expand();
+        root.add(setContainer(retourButton)).expand().padLeft(100);
         root.add(setContainer(scenarioButton)).expand();
         root.add(setContainer(pretButton)).expand();
-        root.add(setContainer(commencerButton)).expand();
+        root.add(setContainer(commencerButton)).expand().padRight(100);
 
         // Gestionnaire d'évènements des boutons
         retourButton.addListener(new ClickListener() {
@@ -259,7 +259,7 @@ public class LobbyScreen implements Screen {
         textButton.getLabel().setFontScale(1.5f);
 
         // Paramétrage du contenant et ajout du TextBouton
-        ctnNewGameButton.width(300);
+        ctnNewGameButton.width(250);
         ctnNewGameButton.setOrigin(Align.center);
         ctnNewGameButton.center();
         ctnNewGameButton.setTransform(true);

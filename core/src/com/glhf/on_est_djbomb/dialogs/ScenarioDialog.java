@@ -25,20 +25,20 @@ public class ScenarioDialog extends Dialog {
         // Ajout du texte dans la boîte de dialogue
         Label label = new Label("Veuillez inscrire le nom des énigmes à utiliser pour ce scénario", skin, "title");
         label.setFontScale(0.75f);
-        textScenario = new TextField(gameConfig, skin);
-
-        informationsContentTable.add(label).align(Align.center);
+        informationsContentTable.add(label).align(Align.center).pad(10, 30, 10, 30);
         informationsContentTable.row();
-        informationsContentTable.add(textScenario).align(Align.center).width(450);
+
+        textScenario = new TextField(gameConfig, skin, "title");
+        informationsContentTable.add(textScenario).align(Align.center).width(450).pad(10, 30, 10, 30);
 
         /* Section Bouton */
         // Ajout du bouton retour dans la boîte de dialogue
-        TextButton cancelBtn = new TextButton("Retour", skin, "title");
-        cancelBtn.pad(15, 30, 15, 30);
-        button(cancelBtn, 1L).pad(30);
+        TextButton cancelBtn = new TextButton(" Retour ", skin, "title");
+        cancelBtn.pad(10, 40, 10, 40);
+        button(cancelBtn, 1L).pad(40);
         TextButton applyBtn = new TextButton("Appliquer", skin, "title");
-        applyBtn.pad(15, 30, 15, 30);
-        button(applyBtn, 2L).pad(30);
+        applyBtn.pad(10, 40, 10, 40);
+        button(applyBtn, 2L).pad(40);
     }
 
     @Override
