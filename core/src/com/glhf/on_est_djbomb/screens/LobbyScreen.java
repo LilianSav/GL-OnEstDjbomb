@@ -169,7 +169,6 @@ public class LobbyScreen implements Screen {
                 } else {
                     commencerButton.setColor(Color.LIGHT_GRAY);
                 }
-                Gdx.app.log("Test", gameConfig.toString());
             }
         });
         commencerButton.addListener(new ClickListener() {

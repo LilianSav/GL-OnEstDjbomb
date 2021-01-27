@@ -1,6 +1,5 @@
 package com.glhf.on_est_djbomb.dialogs;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 
@@ -48,7 +47,6 @@ public class ScenarioDialog extends Dialog {
         if (object.equals(2L)) {
             gameConfig.setLength(0);
             gameConfig.append(textScenario.getText());
-            Gdx.app.log("ScenarioDialogTest", gameConfig.toString());
         }
     }
 }

@@ -81,6 +81,9 @@ public class OnEstDjbombGame extends Game {
         skin.dispose();
         music.dispose();
 
+        // On ferme le socket
+        gameSocket.close();
+
         // Libère les composants avancés de VISUI
         colorPicker.dispose();
         VisUI.dispose();
