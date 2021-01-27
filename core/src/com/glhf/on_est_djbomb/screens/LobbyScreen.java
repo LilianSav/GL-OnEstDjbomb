@@ -290,6 +290,7 @@ public class LobbyScreen implements Screen {
                 "Labyrinthe::Intermédiaire-" +
                 "Pyramid-" +
                 "Count-" +
+                "Labyrinthe::Hard-" +
                 "CutWire");
         return newGameConfig;
     }
