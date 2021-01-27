@@ -41,6 +41,10 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     private int coordXPlayer;
     private int coordYPlayer;
 
+    //Received coordinates
+    private int receivedX;
+    private int receivedY;
+
     // Attributs permettant la communication
     private int numero;
     private GameSocket socket;
@@ -219,6 +223,8 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
                         imgButtonStyle.up = skinLabyrinthe.getDrawable("LabyrinthStart");
                         coordXPlayer = i;
                         coordYPlayer = j;
+                        receivedX=i;
+                        receivedY=j;
                         break;
                     default: //Otherwise, the character corresponds to an element of the password
                         String display = "Labyrinth";
@@ -515,6 +521,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
     public void chargerIndice() {
         clueEnabled = true;
         displaySurroundings(coordXPlayer, coordYPlayer, VISION_HELP);
+        if(isHost()){
+            updateDisplayPlayerHost( receivedX, receivedY);
+        }
     }
 
     public void updateDisplayClue(int coordX, int coordY){
@@ -569,9 +578,9 @@ public class EnigmaLabyrinth extends EnigmaSkeleton {
         // FLAG MOVEMENT : Client => Host
         else if (tokens[0].equals("MOVEMENT")) {
             if(clueEnabled || DISPLAY_ON_HOST_PRECLUE){
-                int newX=Integer.parseInt(tokens[1]);
-                int newY=Integer.parseInt(tokens[2]);
-                updateDisplayPlayerHost( newX, newY);
+                receivedX=Integer.parseInt(tokens[1]);
+                receivedY=Integer.parseInt(tokens[2]);
+                updateDisplayPlayerHost( receivedX, receivedY);
             }
         }
     }
