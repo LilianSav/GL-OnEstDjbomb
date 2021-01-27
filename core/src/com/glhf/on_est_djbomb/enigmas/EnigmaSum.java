@@ -12,7 +12,8 @@ public class EnigmaSum extends EnigmaSkeleton {
 	public EnigmaSum(boolean isHost) {
 		super(isHost);
 		setSolution(1539);
-		setIndice("Résolvez toutes les sommes dans l'ordre ABCD");
+		setIndice("Résolvez toutes les sommes dans l'ordre ABCD\n" +
+				"Les premiers chiffres du code sont 15");
 		setNom("Une somme de sommes");
 		setTitreTable(getNom()+"\n");
 		setTpsBeforeIndice(30);

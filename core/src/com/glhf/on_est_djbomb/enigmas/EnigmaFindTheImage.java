@@ -12,8 +12,8 @@ public class EnigmaFindTheImage extends EnigmaSkeleton {
     public EnigmaFindTheImage(boolean isHost) {
         super(isHost);
         setSolution(3);
-        setIndice("Observez les contours");
-        setNom("Retrouver la bonne image");
+        setIndice("Ce n'est pas la figure 4");
+        setNom("Retrouvez la bonne image");
         setTitreTable(getNom() + "\n");
         setTpsBeforeIndice(20);
         setTpsBeforeSolution(50);

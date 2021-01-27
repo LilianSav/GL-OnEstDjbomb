@@ -12,8 +12,8 @@ public class EnigmaFindThePath extends EnigmaSkeleton {
     public EnigmaFindThePath(boolean isHost) {
         super(isHost);
         setSolution(2865);
-        setIndice("Suivez les flèches");
-        setNom("Retrouver le chemin");
+        setIndice("Les premiers chiffres du code sont 28");
+        setNom("Retrouvez le chemin");
         setTitreTable(getNom() + "\n");
         setTpsBeforeIndice(20);
         setTpsBeforeSolution(50);

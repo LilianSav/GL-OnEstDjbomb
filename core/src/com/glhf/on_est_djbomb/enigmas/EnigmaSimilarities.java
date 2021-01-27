@@ -12,8 +12,8 @@ public class EnigmaSimilarities extends EnigmaSkeleton{
 	public EnigmaSimilarities(boolean isHost) {
 		super(isHost);
 		setSolution(4123);
-		setIndice("Retrouvez l'image en commun de chaque colonne dans l'ordre ABCD");
-		setNom("Retrouvez les similitudes");
+		setIndice("Les premiers chiffres du code sont 41");
+		setNom("Retrouvez l'image en commun de chaque colonne, le code suit l'ordre ABCD");
 		setTitreTable(getNom()+"\n");
 		setTpsBeforeIndice(20);
         setTpsBeforeSolution(50);
