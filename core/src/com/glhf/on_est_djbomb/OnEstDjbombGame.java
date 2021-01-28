@@ -6,7 +6,6 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.glhf.on_est_djbomb.networking.GameSocket;
@@ -82,7 +81,11 @@ public class OnEstDjbombGame extends Game {
         music.dispose();
 
         // On ferme le socket
-        gameSocket.close();
+        try{
+            gameSocket.close();
+        } catch (NullPointerException ignored){
+
+        }
 
         // Libère les composants avancés de VISUI
         colorPicker.dispose();
