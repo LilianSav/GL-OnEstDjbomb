@@ -290,7 +290,7 @@ public class GameScreen implements Screen {
                                     getTitleLabel().setAlignment(Align.center);
 
                                     // Indication que l'autre équipe a trouvé la réponse
-                                    Label lblMessage = new Label("Vos coéquipiers ont trouvés la bonne réponse !", game.skin, "title");
+                                    Label lblMessage = new Label("Vos coéquipiers ont trouvé la bonne réponse !", game.skin, "title");
                                     getContentTable().add(lblMessage).pad(30);
 
                                     // Effet sonore
