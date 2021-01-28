@@ -153,7 +153,7 @@ public class NewGameDialog extends Dialog {
                     getContentTable().row();
 
                     // Label Port
-                    Label lblPort = new Label("Clé de la salle :", game.skin, "title");
+                    Label lblPort = new Label("Clé du salon :", game.skin, "title");
                     getContentTable().add(lblPort).pad(10,30,30,30).left();
 
                     // Paramétrage du champ réservé au texte

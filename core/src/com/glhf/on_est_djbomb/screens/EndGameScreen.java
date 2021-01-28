@@ -48,7 +48,7 @@ public class EndGameScreen implements Screen{
             root.add(tpsUtilise).expandY().left();
             root.row();
         }else {
-        	Label labelTitre = new Label("Félicitation !", game.skin, "title");
+        	Label labelTitre = new Label("Félicitations !", game.skin, "title");
             root.add(labelTitre).expandY();
             root.row();
         	Label congrat = new Label("Vous avez désamorcé la bombe !", game.skin, "title");

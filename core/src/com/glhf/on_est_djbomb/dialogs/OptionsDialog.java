@@ -59,7 +59,8 @@ public class OptionsDialog extends Dialog {
         informationsContentTable.row();
 
         // Label activation de la couleur personnalisée
-        Label labelCheckBoxColor = new Label("Couleur d'interface personnalisée ", skin, "title");
+        Label labelCheckBoxColor = new Label("Couleur d'interface personnalisée \n"
+        		+ "(Redémarrage nécessaire)", skin, "title");
         informationsContentTable.add(labelCheckBoxColor).pad(10, 30, 10, 30).left();
 
         // CheckBox pour activer la couleur personnalisée
