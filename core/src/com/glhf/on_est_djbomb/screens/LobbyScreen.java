@@ -282,9 +282,15 @@ public class LobbyScreen implements Screen {
 
     private StringBuilder initGameConfig() {
         StringBuilder newGameConfig = new StringBuilder();
-        newGameConfig.append("Similarities-" +
+        newGameConfig.append("FindThePath-" +
+                "Similarities-" +
+                "Labyrinthe::TutoBis-" +
+                "FindTheImage-" +
+                "Sum-" +
                 "Labyrinthe::Intermédiaire-" +
+                "Pyramid-" +
                 "Count-" +
+                "Labyrinthe::Hard-" +
                 "CutWire");
         return newGameConfig;
     }
